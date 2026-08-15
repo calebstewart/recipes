@@ -15,7 +15,7 @@ nutrition:
   carbs: 81
   fiber: 10
   sugar: 23
-  sodium: 2607
+  sodium: 1616
   cholesterol: 261
 ---
 
@@ -53,6 +53,7 @@ mixed together in the bowl. One weekend of cooking builds five of these.
 - Don't dress it beyond the three sauces. The cucumber tomato salad brings its own olive oil and lemon, and the pooled juice from the container is the rest of the dressing.
 - Everything is portioned in fifths because that's what a Sunday batch of chicken and salad divides into. The rice pouch splits over two days, so a five-day week takes about three pouches.
 - Feta and tzatziki are the two store-bought things here that vary a lot by brand. Block feta crumbled by hand is better than pre-crumbled, which is drier and often coated in starch.
+- The chicken marinade carries no salt, which is why the bowl comes in around 1,600 mg of sodium rather than 2,600. What's left comes from the feta, hummus, tzatziki, tahini, and the salad — five salted things, which is plenty. Don't salt the bowl at the table without tasting first.
 - Tzatziki brands are not interchangeable on the label. Cedar's Cucumber Garlic Dill, which the numbers here use, is 35 cal, 95 mg sodium, and 2 g protein per 2 Tbsp. The H-E-B house dip is sour-cream based: fewer calories but more salt and no protein at all.
 
 ## Assembly order
