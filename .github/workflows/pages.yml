@@ -1,0 +1,56 @@
+# Builds the static site with build.py and pushes dist/ to the gh-pages branch.
+#
+# One-time manual step: in the repo Settings -> Pages, set the source to branch
+# `gh-pages`, folder `/ (root)`. The branch does not exist until the first
+# successful run on main creates it, so do this after that run finishes.
+#
+# Pull requests build only. A malformed recipe fails the build there, so it
+# fails review rather than production.
+
+---
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          # build.py reads `git log` to derive datePublished, so it needs the
+          # full history rather than a shallow clone.
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build the site
+        run: python3 build.py --out dist
+
+      - name: Deploy to gh-pages
+        if: >-
+          github.ref == 'refs/heads/main'
+          && github.event_name != 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          commit_message: 'Deploy site from ${{ github.sha }}'
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'

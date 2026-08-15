@@ -25,9 +25,43 @@ cp TEMPLATE.md mains/chicken-piccata.md
 ```
 
 Each recipe starts with YAML frontmatter (`title`, `servings`, `prep_time`,
-`cook_time`, `source`, `tags`) so the collection stays machine-readable if it
-ever grows a static site or search. Keep the field names consistent; add new
-ones only when they'd apply to more than one recipe.
+`cook_time`, `source`, `tags`). The [site](#site) is generated from those fields,
+so keep the names consistent; add new ones only when they'd apply to more than
+one recipe.
+
+## Site
+
+The collection is published at <https://calebstewart.github.io/recipes/> and
+rebuilt automatically on every push to `main`. Each recipe gets its own URL:
+
+```
+https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/
+```
+
+Those pages embed schema.org Recipe JSON-LD, with microdata as a fallback, which
+is the reason the site exists: paste a recipe URL into a recipe app's URL
+importer — Umami (umami.recipes), for one — and it pulls in the title,
+ingredients, and steps without any retyping.
+
+To preview locally:
+
+```sh
+nix develop
+recipes-serve   # builds with base URL / and serves on :8000
+```
+
+`nix run .#serve` does the same thing in one command. Without Nix, run the
+generator directly:
+
+```sh
+python3 build.py --base-url / --out dist
+```
+
+That generator is [`build.py`](build.py), Python standard library only, so there
+is nothing to install. Templates and assets live in `site/`.
+
+A malformed recipe fails the build, so CI catches it on the pull request instead
+of publishing it.
 
 ## Conventions
 

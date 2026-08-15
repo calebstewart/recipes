@@ -1,0 +1,27 @@
+<article class="recipe" itemscope itemtype="https://schema.org/Recipe">
+$microdata_meta
+
+  <header class="recipe-head">
+    <p class="eyebrow">$eyebrow</p>
+    <h1 class="recipe-title" itemprop="name">$title_html</h1>
+    <div class="lede" itemprop="description">$description_html</div>
+    <dl class="recipe-meta">$meta_list</dl>
+    <ul class="tags">$tags</ul>
+  </header>
+
+  <div class="recipe-body">
+$ingredients
+$instructions
+  </div>
+
+$extra_sections
+
+  <footer class="recipe-foot">
+$footer
+    <div class="import-url">
+      <label for="import-url-input">Import URL</label>
+      <input id="import-url-input" type="text" readonly value="$canonical">
+      <button type="button" class="copy-btn" data-copy-target="#import-url-input">Copy</button>
+    </div>
+  </footer>
+</article>
