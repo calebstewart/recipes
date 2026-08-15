@@ -5,6 +5,17 @@ prep_time: 5m
 total_time: 5m
 source: original
 tags: [breakfast, no-cook, quick, vegetarian]
+nutrition:
+  serving_size: 1 bowl
+  calories: 290
+  protein: 27
+  fat: 4
+  saturated_fat: 0.5
+  carbs: 35
+  fiber: 4
+  sugar: 17
+  sodium: 88
+  cholesterol: 13
 ---
 
 # Yogurt, Granola, and Strawberries

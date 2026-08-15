@@ -5,6 +5,16 @@ prep_time: 20m
 cook_time: 40m
 source: https://ketodietapp.com/Blog/lchf/how-to-make-harissa-paste
 tags: [condiment, make-ahead, sauce, spicy, vegan]
+nutrition:
+  serving_size: 1 Tbsp.
+  calories: 24
+  protein: 0.5
+  fat: 1.5
+  saturated_fat: 0.5
+  carbs: 2
+  fiber: 1
+  sugar: 0.5
+  sodium: 120
 ---
 
 # Harissa Paste

@@ -5,6 +5,16 @@ prep_time: 15m
 total_time: 15m
 source: https://www.proportionalplate.com/cucumber-tomato-salad/
 tags: [make-ahead, meal-prep, no-cook, salad, vegan]
+nutrition:
+  serving_size: about 1 c.
+  calories: 118
+  protein: 2.5
+  fat: 7
+  saturated_fat: 1
+  carbs: 14
+  fiber: 3
+  sugar: 7
+  sodium: 161
 ---
 
 # Cucumber Tomato Salad

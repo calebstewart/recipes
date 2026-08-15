@@ -5,6 +5,17 @@ prep_time: 20m
 cook_time: 45m
 source: https://www.umami.recipes/recipe/YHzSlU6nzSPjPxovAd8c
 tags: [meal-prep, pasta, spicy]
+nutrition:
+  serving_size: 1/4 of the recipe
+  calories: 1111
+  protein: 37
+  fat: 67
+  saturated_fat: 22
+  carbs: 90
+  fiber: 9
+  sugar: 13
+  sodium: 1794
+  cholesterol: 108
 ---
 
 # Harissa Baked Feta Pasta

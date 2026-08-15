@@ -6,6 +6,17 @@ cook_time: 5m
 total_time: 10m
 source: original
 tags: [assembly, chicken, lunch, meal-prep, salad]
+nutrition:
+  serving_size: 1 bowl
+  calories: 1118
+  protein: 71
+  fat: 59
+  saturated_fat: 13
+  carbs: 81
+  fiber: 10
+  sugar: 23
+  sodium: 2607
+  cholesterol: 261
 ---
 
 # Mediterranean Lunch Bowl
@@ -20,7 +31,7 @@ mixed together in the bowl. One weekend of cooking builds five of these.
 - 1/2 pouch ready brown rice (Ben's Original Whole Grain, 8.8 oz. pouch)
 - 1/5 of a batch of [Cava-style chicken](https://calebstewart.github.io/recipes/mains/cava-style-chicken/)
 - 1/5 of a batch of [cucumber tomato salad](https://calebstewart.github.io/recipes/sides/cucumber-tomato-salad/)
-- 2 Tbsp. tzatziki
+- 2 Tbsp. tzatziki (Cedar's Cucumber Garlic Dill)
 - 2 Tbsp. roasted red pepper hummus (H-E-B Deli)
 - 2 Tbsp. [lemon herb tahini](https://calebstewart.github.io/recipes/basics/lemon-herb-tahini/)
 - 2 Tbsp. crumbled feta
@@ -42,6 +53,7 @@ mixed together in the bowl. One weekend of cooking builds five of these.
 - Don't dress it beyond the three sauces. The cucumber tomato salad brings its own olive oil and lemon, and the pooled juice from the container is the rest of the dressing.
 - Everything is portioned in fifths because that's what a Sunday batch of chicken and salad divides into. The rice pouch splits over two days, so a five-day week takes about three pouches.
 - Feta and tzatziki are the two store-bought things here that vary a lot by brand. Block feta crumbled by hand is better than pre-crumbled, which is drier and often coated in starch.
+- Tzatziki brands are not interchangeable on the label. Cedar's Cucumber Garlic Dill, which the numbers here use, is 35 cal, 95 mg sodium, and 2 g protein per 2 Tbsp. The H-E-B house dip is sour-cream based: fewer calories but more salt and no protein at all.
 
 ## Assembly order
 

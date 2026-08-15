@@ -6,6 +6,17 @@ cook_time: 25m
 total_time: 1h5m
 source: https://homechefdaily.com/cava-grilled-chicken-recipe/
 tags: [chicken, meal-prep, oven, spicy]
+nutrition:
+  serving_size: 1/3 of the recipe, about 5 oz. cooked
+  calories: 269
+  protein: 30
+  fat: 13
+  saturated_fat: 2.5
+  carbs: 7
+  fiber: 1
+  sugar: 5
+  sodium: 730
+  cholesterol: 141
 ---
 
 # Cava-Style Chicken

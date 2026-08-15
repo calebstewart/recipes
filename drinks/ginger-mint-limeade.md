@@ -5,6 +5,14 @@ prep_time: 10m
 cook_time: 30m
 source: original
 tags: [non-alcoholic, summer, make-ahead]
+nutrition:
+  serving_size: about 1 c., before ice
+  calories: 141
+  protein: 0
+  fat: 0
+  carbs: 37
+  sugar: 34
+  sodium: 1
 ---
 
 # Ginger Mint Limeade

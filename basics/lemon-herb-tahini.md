@@ -5,6 +5,16 @@ prep_time: 5m
 total_time: 5m
 source: https://infinetaste.com/lemon-herb-tahini/
 tags: [condiment, dressing, no-cook, sauce, vegan]
+nutrition:
+  serving_size: 2 Tbsp.
+  calories: 93
+  protein: 2.5
+  fat: 8
+  saturated_fat: 1
+  carbs: 4
+  fiber: 1.5
+  sugar: 0.5
+  sodium: 122
 ---
 
 # Lemon Herb Tahini

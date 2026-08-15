@@ -5,6 +5,15 @@ prep_time: 10m
 cook_time: 5m
 source: original
 tags: [condiment, make-ahead, vegetarian]
+nutrition:
+  serving_size: about 1/4 c., drained
+  calories: 14
+  protein: 0.5
+  fat: 0
+  carbs: 3
+  fiber: 0.5
+  sugar: 1.5
+  sodium: 145
 ---
 
 # Quick Pickled Red Onions
