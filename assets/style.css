@@ -948,6 +948,54 @@ main {
   background: var(--accent);
 }
 
+/* Nutrition ------------------------------------------------------------ */
+
+.nutrition {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  max-width: var(--measure);
+}
+
+.nutrition h2 {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.15rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.nutrition-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.9rem 1.25rem;
+  margin: 0;
+}
+
+.nutrient dt {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.15rem;
+}
+
+.nutrient dd {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: 1.25;
+}
+
+.nutrition-note {
+  margin: 1.1rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
 /* An ordered extra-section list keeps its numbers */
 ol.note-list {
   list-style: decimal;

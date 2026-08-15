@@ -31,36 +31,89 @@
 <main id="main"><div class="home-intro">
   <h1>Recipes</h1>
   <p class="tagline">Things worth cooking twice &mdash; written down before they get forgotten.</p>
-  <p class="home-count">3 recipes</p>
+  <p class="home-count">9 recipes</p>
 </div>
 
 <form class="search" role="search" hidden>
   <input type="search" id="q" placeholder="Search recipes…" autocomplete="off">
-  <p class="result-count" aria-live="polite">3 recipes</p>
+  <p class="result-count" aria-live="polite">9 recipes</p>
 </form>
 
 <div class="tag-filters" hidden>
+  <button class="chip" type="button" data-tag="assembly">assembly</button>
+  <button class="chip" type="button" data-tag="breakfast">breakfast</button>
+  <button class="chip" type="button" data-tag="chicken">chicken</button>
   <button class="chip" type="button" data-tag="condiment">condiment</button>
+  <button class="chip" type="button" data-tag="dressing">dressing</button>
+  <button class="chip" type="button" data-tag="lunch">lunch</button>
   <button class="chip" type="button" data-tag="make-ahead">make-ahead</button>
   <button class="chip" type="button" data-tag="meal-prep">meal-prep</button>
+  <button class="chip" type="button" data-tag="no-cook">no-cook</button>
   <button class="chip" type="button" data-tag="non-alcoholic">non-alcoholic</button>
+  <button class="chip" type="button" data-tag="oven">oven</button>
   <button class="chip" type="button" data-tag="pasta">pasta</button>
+  <button class="chip" type="button" data-tag="quick">quick</button>
+  <button class="chip" type="button" data-tag="salad">salad</button>
+  <button class="chip" type="button" data-tag="sauce">sauce</button>
   <button class="chip" type="button" data-tag="spicy">spicy</button>
   <button class="chip" type="button" data-tag="summer">summer</button>
+  <button class="chip" type="button" data-tag="vegan">vegan</button>
   <button class="chip" type="button" data-tag="vegetarian">vegetarian</button>
 </div>
 
 <p class="empty-state" hidden>No recipes match that search.</p>
 
+<section class="category" id="breakfast" data-category="breakfast">
+  <h2 class="category-title">Breakfast</h2>
+  <ul class="card-grid">
+    <li class="card" data-id="breakfast/yogurt-granola-and-strawberries">
+      <a class="card-link" href="/recipes/breakfast/yogurt-granola-and-strawberries/">
+        <h3 class="card-title">Yogurt, Granola, and Strawberries</h3>
+        <p class="card-desc">The everyday breakfast: vanilla Greek yogurt, oat and honey granola, and a few fresh strawberries cut over the top. Five minutes, one bowl, no cooking, and nothing about it works…</p>
+        <p class="card-meta"><span>1 servings</span><span>5 min</span></p>
+        <ul class="card-tags"><li>breakfast</li><li>no-cook</li><li>quick</li><li>vegetarian</li></ul>
+      </a>
+    </li>
+  </ul>
+</section>
 <section class="category" id="mains" data-category="mains">
   <h2 class="category-title">Mains</h2>
   <ul class="card-grid">
+    <li class="card" data-id="mains/cava-style-chicken">
+      <a class="card-link" href="/recipes/mains/cava-style-chicken/">
+        <h3 class="card-title">Cava-Style Chicken</h3>
+        <p class="card-desc">Chicken thighs in a harissa marinade — lemon, honey, garlic, paprika, and cumin — baked in the oven and finished under the broiler. The honey and the harissa do most of the work…</p>
+        <p class="card-meta"><span>3 servings</span><span>1 hr 5 min</span></p>
+        <ul class="card-tags"><li>chicken</li><li>meal-prep</li><li>oven</li><li>spicy</li></ul>
+      </a>
+    </li>
     <li class="card" data-id="mains/harissa-baked-feta-pasta">
       <a class="card-link" href="/recipes/mains/harissa-baked-feta-pasta/">
         <h3 class="card-title">Harissa Baked Feta Pasta</h3>
         <p class="card-desc">An adaptation of Delish&#x27;s baked feta pasta, reworked for meal prep, with harissa in place of the red pepper flakes and chickpeas and sausage to make it a full dinner. The core…</p>
         <p class="card-meta"><span>4 servings</span><span>1 hr 5 min</span></p>
         <ul class="card-tags"><li>meal-prep</li><li>pasta</li><li>spicy</li></ul>
+      </a>
+    </li>
+    <li class="card" data-id="mains/mediterranean-lunch-bowl">
+      <a class="card-link" href="/recipes/mains/mediterranean-lunch-bowl/">
+        <h3 class="card-title">Mediterranean Lunch Bowl</h3>
+        <p class="card-desc">The thing all the Sunday prep is for. Greens, warm brown rice, harissa chicken, cucumber tomato salad, and three sauces, assembled in about five minutes and mixed together in the…</p>
+        <p class="card-meta"><span>1 servings</span><span>10 min</span></p>
+        <ul class="card-tags"><li>assembly</li><li>chicken</li><li>lunch</li><li>meal-prep</li><li>salad</li></ul>
+      </a>
+    </li>
+  </ul>
+</section>
+<section class="category" id="sides" data-category="sides">
+  <h2 class="category-title">Sides</h2>
+  <ul class="card-grid">
+    <li class="card" data-id="sides/cucumber-tomato-salad">
+      <a class="card-link" href="/recipes/sides/cucumber-tomato-salad/">
+        <h3 class="card-title">Cucumber Tomato Salad</h3>
+        <p class="card-desc">Mediterranean chopped salad — cucumber, tomato, red onion, and a lot of parsley, dressed with nothing but olive oil, lemon, salt, and pepper. Fifteen minutes of knife work and no…</p>
+        <p class="card-meta"><span>4 servings</span><span>15 min</span></p>
+        <ul class="card-tags"><li>make-ahead</li><li>meal-prep</li><li>no-cook</li><li>salad</li><li>vegan</li></ul>
       </a>
     </li>
   </ul>
@@ -81,6 +134,22 @@
 <section class="category" id="basics" data-category="basics">
   <h2 class="category-title">Basics</h2>
   <ul class="card-grid">
+    <li class="card" data-id="basics/harissa-paste">
+      <a class="card-link" href="/recipes/basics/harissa-paste/">
+        <h3 class="card-title">Harissa Paste</h3>
+        <p class="card-desc">A North African chile paste built on rehydrated dried chiles and roasted red peppers, with caraway, coriander, and cumin toasted whole. Smoky and deep rather than sharply hot —…</p>
+        <p class="card-meta"><span>40 servings</span><span>1 hr</span></p>
+        <ul class="card-tags"><li>condiment</li><li>make-ahead</li><li>sauce</li><li>spicy</li><li>vegan</li></ul>
+      </a>
+    </li>
+    <li class="card" data-id="basics/lemon-herb-tahini">
+      <a class="card-link" href="/recipes/basics/lemon-herb-tahini/">
+        <h3 class="card-title">Lemon Herb Tahini</h3>
+        <p class="card-desc">A CAVA copycat: six ingredients into a blender, nutty and lemon-sharp with a lot of cilantro. Five minutes, no cooking, and it goes on roasted vegetables, grain bowls, falafel…</p>
+        <p class="card-meta"><span>8 servings</span><span>5 min</span></p>
+        <ul class="card-tags"><li>condiment</li><li>dressing</li><li>no-cook</li><li>sauce</li><li>vegan</li></ul>
+      </a>
+    </li>
     <li class="card" data-id="basics/quick-pickled-red-onions">
       <a class="card-link" href="/recipes/basics/quick-pickled-red-onions/">
         <h3 class="card-title">Quick Pickled Red Onions</h3>
@@ -93,6 +162,54 @@
 </section>
 
 <script type="application/json" id="search-index">[
+  {
+    "id": "breakfast/yogurt-granola-and-strawberries",
+    "title": "Yogurt, Granola, and Strawberries",
+    "url": "/recipes/breakfast/yogurt-granola-and-strawberries/",
+    "category": "breakfast",
+    "categoryLabel": "Breakfast",
+    "description": "The everyday breakfast: vanilla Greek yogurt, oat and honey granola, and a few fresh strawberries cut over the top. Five minutes, one bowl, no cooking, and nothing about it works better made ahead — the granola is the whole point and it softens within the hour.",
+    "tags": [
+      "breakfast",
+      "no-cook",
+      "quick",
+      "vegetarian"
+    ],
+    "ingredients": [
+      "1 c. (8 oz.) vanilla Greek yogurt (Oikos Triple Zero)",
+      "1/3 c. oat and honey granola (H-E-B Organics)",
+      "3 to 4 fresh strawberries"
+    ],
+    "time": "5 min",
+    "servings": "1 servings"
+  },
+  {
+    "id": "mains/cava-style-chicken",
+    "title": "Cava-Style Chicken",
+    "url": "/recipes/mains/cava-style-chicken/",
+    "category": "mains",
+    "categoryLabel": "Mains",
+    "description": "Chicken thighs in a harissa marinade — lemon, honey, garlic, paprika, and cumin — baked in the oven and finished under the broiler. The honey and the harissa do most of the work: it browns hard at the edges and stays juicy in the middle. Built for lunches, over rice or salad or in a pita.",
+    "tags": [
+      "chicken",
+      "meal-prep",
+      "oven",
+      "spicy"
+    ],
+    "ingredients": [
+      "1 lb. boneless, skinless chicken thighs (4 to 6 pieces)",
+      "2 Tbsp. harissa paste",
+      "2 Tbsp. olive oil",
+      "1 Tbsp. fresh lemon juice",
+      "1 Tbsp. honey",
+      "1 garlic clove, minced",
+      "1 tsp. paprika",
+      "1 tsp. ground cumin",
+      "1 tsp. black pepper"
+    ],
+    "time": "1 hr 5 min",
+    "servings": "3 servings"
+  },
   {
     "id": "mains/harissa-baked-feta-pasta",
     "title": "Harissa Baked Feta Pasta",
@@ -124,6 +241,60 @@
     "servings": "4 servings"
   },
   {
+    "id": "mains/mediterranean-lunch-bowl",
+    "title": "Mediterranean Lunch Bowl",
+    "url": "/recipes/mains/mediterranean-lunch-bowl/",
+    "category": "mains",
+    "categoryLabel": "Mains",
+    "description": "The thing all the Sunday prep is for. Greens, warm brown rice, harissa chicken, cucumber tomato salad, and three sauces, assembled in about five minutes and mixed together in the bowl. One weekend of cooking builds five of these.",
+    "tags": [
+      "assembly",
+      "chicken",
+      "lunch",
+      "meal-prep",
+      "salad"
+    ],
+    "ingredients": [
+      "About 1 oz. lettuce blend, 1/5 of a 5 oz. box (H-E-B Organics romaine, butter lettuce, and arugula)",
+      "1/2 pouch ready brown rice (Ben's Original Whole Grain, 8.8 oz. pouch)",
+      "1/5 of a batch of Cava-style chicken",
+      "1/5 of a batch of cucumber tomato salad",
+      "2 Tbsp. tzatziki (Cedar's Cucumber Garlic Dill)",
+      "2 Tbsp. roasted red pepper hummus (H-E-B Deli)",
+      "2 Tbsp. lemon herb tahini",
+      "2 Tbsp. crumbled feta"
+    ],
+    "time": "10 min",
+    "servings": "1 servings"
+  },
+  {
+    "id": "sides/cucumber-tomato-salad",
+    "title": "Cucumber Tomato Salad",
+    "url": "/recipes/sides/cucumber-tomato-salad/",
+    "category": "sides",
+    "categoryLabel": "Sides",
+    "description": "Mediterranean chopped salad — cucumber, tomato, red onion, and a lot of parsley, dressed with nothing but olive oil, lemon, salt, and pepper. Fifteen minutes of knife work and no cooking. Good with pita and hummus, alongside marinated meats, or as the vegetable half of a prep container.",
+    "tags": [
+      "make-ahead",
+      "meal-prep",
+      "no-cook",
+      "salad",
+      "vegan"
+    ],
+    "ingredients": [
+      "1 lb. Persian cucumbers",
+      "1 lb. Roma tomatoes",
+      "1/3 lb. red onion, finely diced",
+      "1 1/2 oz. fresh parsley, minced",
+      "2 Tbsp. extra-virgin olive oil",
+      "2 Tbsp. fresh lemon juice",
+      "1/4 tsp. salt, plus more to taste",
+      "1/4 tsp. black pepper, plus more to taste"
+    ],
+    "time": "15 min",
+    "servings": "4 servings"
+  },
+  {
     "id": "drinks/ginger-mint-limeade",
     "title": "Ginger Mint Limeade",
     "url": "/recipes/drinks/ginger-mint-limeade/",
@@ -147,6 +318,61 @@
     ],
     "time": "40 min",
     "servings": "6 servings"
+  },
+  {
+    "id": "basics/harissa-paste",
+    "title": "Harissa Paste",
+    "url": "/recipes/basics/harissa-paste/",
+    "category": "basics",
+    "categoryLabel": "Basics",
+    "description": "A North African chile paste built on rehydrated dried chiles and roasted red peppers, with caraway, coriander, and cumin toasted whole. Smoky and deep rather than sharply hot — the heat is whatever you pick out of the chile bin. Makes about 2 1/2 cups (40 Tbsp.), which is a lot; it freezes well.",
+    "tags": [
+      "condiment",
+      "make-ahead",
+      "sauce",
+      "spicy",
+      "vegan"
+    ],
+    "ingredients": [
+      "5 oz. (140 g) dried chiles, mixed — guajillo, New Mexico, ancho, chipotle, árbol",
+      "2 medium red bell peppers (about 8 1/2 oz. / 240 g)",
+      "4 to 6 sun-dried tomato pieces, drained (about 1 oz. / 28 g)",
+      "6 garlic cloves, peeled",
+      "1 tsp. ground turmeric",
+      "2 tsp. salt",
+      "1/4 c. extra-virgin olive oil",
+      "Juice of 1 lemon",
+      "1 tsp. caraway seeds",
+      "1 tsp. coriander seeds",
+      "1 tsp. cumin seeds"
+    ],
+    "time": "1 hr",
+    "servings": "40 servings"
+  },
+  {
+    "id": "basics/lemon-herb-tahini",
+    "title": "Lemon Herb Tahini",
+    "url": "/recipes/basics/lemon-herb-tahini/",
+    "category": "basics",
+    "categoryLabel": "Basics",
+    "description": "A CAVA copycat: six ingredients into a blender, nutty and lemon-sharp with a lot of cilantro. Five minutes, no cooking, and it goes on roasted vegetables, grain bowls, falafel, pitas, grilled meat, or anything that needs a creamy dressing. Makes about 1 cup (eight 2-Tbsp. servings).",
+    "tags": [
+      "condiment",
+      "dressing",
+      "no-cook",
+      "sauce",
+      "vegan"
+    ],
+    "ingredients": [
+      "1/2 c. tahini",
+      "1/4 c. fresh lemon juice (about 2 medium lemons)",
+      "3/4 c. cilantro, roughly chopped, stems included",
+      "2 garlic cloves",
+      "3/8 tsp. salt (1/4 tsp. plus 1/8 tsp.)",
+      "2 to 4 Tbsp. water"
+    ],
+    "time": "5 min",
+    "servings": "8 servings"
   },
   {
     "id": "basics/quick-pickled-red-onions",
