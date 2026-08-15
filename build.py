@@ -68,7 +68,26 @@ KNOWN_KEYS = {
     "tags",
     "image",
     "notes_in_jsonld",
+    "nutrition",
 }
+
+#: Nutrition fields in display order: frontmatter key, label, schema.org
+#: property, and the unit the number is written in. Everything but
+#: `serving_size` is a bare number in the frontmatter; the unit is added here so
+#: the recipe files stay free of `g`/`mg` noise.
+NUTRITION_FIELDS: tuple[tuple[str, str, str, str], ...] = (
+    ("serving_size", "Serving size", "servingSize", ""),
+    ("calories", "Calories", "calories", "calories"),
+    ("protein", "Protein", "proteinContent", "g"),
+    ("fat", "Fat", "fatContent", "g"),
+    ("saturated_fat", "Saturated fat", "saturatedFatContent", "g"),
+    ("carbs", "Carbohydrates", "carbohydrateContent", "g"),
+    ("fiber", "Fiber", "fiberContent", "g"),
+    ("sugar", "Sugar", "sugarContent", "g"),
+    ("sodium", "Sodium", "sodiumContent", "mg"),
+    ("cholesterol", "Cholesterol", "cholesterolContent", "mg"),
+)
+NUTRITION_KEYS = {key for key, _, _, _ in NUTRITION_FIELDS}
 
 #: Heading names that mark the two structural sections.
 INGREDIENT_HEADINGS = {"ingredients"}
@@ -173,6 +192,16 @@ class Duration:
 
 
 @dataclass
+class Nutrient:
+    """One nutrition row, in the three forms the page needs."""
+
+    label: str
+    prop: str  # schema.org NutritionInformation property
+    display: str  # "28 g", "320", "1 bowl"
+    schema_value: str  # "28 g", "320 calories", "1 bowl"
+
+
+@dataclass
 class Recipe:
     path: Path
     rel_path: str
@@ -194,6 +223,7 @@ class Recipe:
     tags: list[str]
     image: str | None
     notes_in_jsonld: bool
+    nutrition: list[Nutrient]
     date_published: str | None
 
     @property
@@ -319,6 +349,7 @@ def _inline_text(text: str) -> str:
 
 _KEY_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$")
 _SEQ_RE = re.compile(r"^\s*-\s+(.*)$")
+_NESTED_RE = re.compile(r"^\s+([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$")
 
 
 def split_frontmatter(text: str, rel_path: str) -> tuple[str, str]:
@@ -361,12 +392,13 @@ def _inline_list(value: str) -> list[str]:
 def parse_frontmatter(block: str, rel_path: str) -> dict[str, object]:
     """Parse the subset of YAML the recipe files actually use.
 
-    Handles `key: value`, quoted scalars, inline lists, block sequences,
-    comments and blank lines. Deliberately not a YAML implementation: anything
-    fancier than the above is a sign the recipe format has drifted.
+    Handles `key: value`, quoted scalars, inline lists, block sequences, one
+    level of indented block mapping (`nutrition:` and its fields), comments and
+    blank lines. Deliberately not a YAML implementation: anything fancier than
+    the above is a sign the recipe format has drifted.
     """
     data: dict[str, object] = {}
-    pending: str | None = None  # key currently collecting a block sequence
+    pending: str | None = None  # key currently collecting a sequence or mapping
 
     for raw in block.splitlines():
         line = raw.rstrip()
@@ -381,6 +413,22 @@ def parse_frontmatter(block: str, rel_path: str) -> dict[str, object]:
             values = data.setdefault(pending, [])
             if isinstance(values, list):
                 values.append(entry)
+            continue
+
+        nested = _NESTED_RE.match(line)
+        if nested and pending is not None:
+            # An indented `key: value` turns the pending key into a mapping. It
+            # starts life as an empty list, since a bare `key:` cannot yet say
+            # which of the two it will become.
+            container = data.get(pending)
+            if isinstance(container, list) and not container:
+                container = {}
+                data[pending] = container
+            if isinstance(container, dict):
+                subkey = nested.group(1)
+                container[subkey] = _scalar(_strip_comment(nested.group(2)).strip())
+            else:
+                warn(f"{rel_path}: ignoring indented line under {pending!r}: {line.strip()!r}")
             continue
 
         match = _KEY_RE.match(line)
@@ -439,6 +487,67 @@ def as_list(value: object) -> list[str]:
     if not text:
         return []
     return [part.strip() for part in text.split(",") if part.strip()]
+
+
+def as_map(value: object) -> dict[str, str]:
+    """Nested mapping frontmatter value. Anything else reads as empty."""
+    if not isinstance(value, dict):
+        return {}
+    return {str(key): str(entry).strip() for key, entry in value.items()}
+
+
+# --------------------------------------------------------------------------
+# Nutrition
+# --------------------------------------------------------------------------
+
+_NUMBER_RE = re.compile(r"^(\d+(?:\.\d+)?)\s*([a-z]*)$")
+
+
+def _format_number(raw: str) -> str:
+    """`7.0` reads as `7`; `2.50` as `2.5`. Keeps the tables tidy."""
+    number = float(raw)
+    if number == int(number):
+        return str(int(number))
+    return f"{number:g}"
+
+
+def parse_nutrition(value: object, rel_path: str) -> list[Nutrient]:
+    """Build the nutrition rows from the `nutrition:` mapping.
+
+    Values are bare numbers in the units named by NUTRITION_FIELDS; a written
+    unit is accepted as long as it is the expected one, so `28` and `28 g` both
+    work. `serving_size` is free text.
+    """
+    mapping = as_map(value)
+    if not mapping:
+        return []
+
+    for key in mapping:
+        if key not in NUTRITION_KEYS:
+            warn(f"{rel_path}: unknown nutrition field {key!r} (ignored)")
+
+    rows: list[Nutrient] = []
+    for key, label, prop, unit in NUTRITION_FIELDS:
+        raw = mapping.get(key, "").strip()
+        if not raw:
+            continue
+        if not unit:  # serving_size
+            rows.append(Nutrient(label, prop, raw, raw))
+            continue
+        match = _NUMBER_RE.match(raw.lower())
+        if not match:
+            raise ValidationError(
+                f"nutrition.{key}: expected a number in {unit}, got {raw!r}"
+            )
+        written = match.group(2)
+        if written and written not in (unit, unit.rstrip("s"), "kcal"):
+            raise ValidationError(
+                f"nutrition.{key}: expected {unit}, got {raw!r}"
+            )
+        number = _format_number(match.group(1))
+        display = number if unit == "calories" else f"{number} {unit}"
+        rows.append(Nutrient(label, prop, display, f"{number} {unit}"))
+    return rows
 
 
 # --------------------------------------------------------------------------
@@ -777,6 +886,12 @@ def load_recipe(path: Path, category: str, errors: list[str]) -> Recipe | None:
     source = as_text(meta.get("source")) or None
     image = as_text(meta.get("image")) or None
 
+    try:
+        nutrition = parse_nutrition(meta.get("nutrition"), rel_path)
+    except ValidationError as exc:
+        fail(str(exc))
+        nutrition = []
+
     return Recipe(
         path=path,
         rel_path=rel_path,
@@ -798,6 +913,7 @@ def load_recipe(path: Path, category: str, errors: list[str]) -> Recipe | None:
         tags=as_list(meta.get("tags")),
         image=image,
         notes_in_jsonld=as_bool(meta.get("notes_in_jsonld"), default=True),
+        nutrition=nutrition,
         date_published=git_date(path),
     )
 
@@ -910,6 +1026,29 @@ def render_extras(recipe: Recipe) -> str:
     return "\n".join(out)
 
 
+def render_nutrition(recipe: Recipe) -> str:
+    """The visible nutrition table. Microdata for it lives in render_microdata."""
+    if not recipe.nutrition:
+        return ""
+    out = [
+        '  <section class="nutrition" id="nutrition" aria-labelledby="nutrition-h">',
+        '    <h2 id="nutrition-h">Nutrition</h2>',
+        '    <dl class="nutrition-list">',
+    ]
+    for row in recipe.nutrition:
+        out.append(
+            f'      <div class="nutrient"><dt>{esc(row.label)}</dt>'
+            f"<dd>{esc(row.display)}</dd></div>"
+        )
+    out.append("    </dl>")
+    out.append(
+        '    <p class="nutrition-note">Estimated from the ingredient list, '
+        "per serving. Not a substitute for a label.</p>"
+    )
+    out.append("  </section>")
+    return "\n".join(out)
+
+
 def render_meta_list(recipe: Recipe) -> str:
     rows: list[tuple[str, str]] = []
     if recipe.servings:
@@ -982,6 +1121,18 @@ def render_microdata(recipe: Recipe, canonical: str, image_url: str | None) -> s
         '  <div itemprop="author" itemscope itemtype="https://schema.org/Person" hidden>'
         f'<meta itemprop="name" content="{esc(AUTHOR_NAME)}"></div>'
     )
+    if recipe.nutrition:
+        # The visible table carries the numbers without their units, so the
+        # microdata values live here rather than on the rendered rows.
+        out.append(
+            '  <div itemprop="nutrition" itemscope '
+            'itemtype="https://schema.org/NutritionInformation" hidden>'
+        )
+        for row in recipe.nutrition:
+            out.append(
+                f'    <meta itemprop="{row.prop}" content="{esc(row.schema_value)}">'
+            )
+        out.append("  </div>")
     return "\n".join(out)
 
 
@@ -1126,6 +1277,12 @@ def build_jsonld(recipe: Recipe, canonical: str, image_url: str | None) -> dict[
                 )
         data["recipeInstructions"] = sections
 
+    if recipe.nutrition:
+        nutrition: dict[str, object] = {"@type": "NutritionInformation"}
+        for row in recipe.nutrition:
+            nutrition[row.prop] = row.schema_value
+        data["nutrition"] = nutrition
+
     if recipe.date_published:
         data["datePublished"] = recipe.date_published
     return data
@@ -1262,6 +1419,7 @@ def render_recipe_page(site: Site, recipe: Recipe) -> str:
             "ingredients": render_ingredients(recipe),
             "instructions": render_instructions(recipe),
             "extra_sections": render_extras(recipe),
+            "nutrition": render_nutrition(recipe),
             "footer": render_footer(recipe, site.repository, site.branch),
             "canonical": esc(canonical),
             "microdata_meta": render_microdata(recipe, canonical, image_url),

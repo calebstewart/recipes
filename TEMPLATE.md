@@ -5,6 +5,17 @@ prep_time: 15m
 cook_time: 30m
 source: where this came from (cookbook, person, URL) or "original"
 tags: [weeknight, vegetarian]
+nutrition: # optional, per serving; bare numbers, omit any line you don't have
+  serving_size: 1/4 of the recipe
+  calories: 420
+  protein: 28 # grams
+  fat: 19 # grams
+  saturated_fat: 6 # grams
+  carbs: 34 # grams
+  fiber: 5 # grams
+  sugar: 7 # grams
+  sodium: 640 # milligrams
+  cholesterol: 85 # milligrams
 ---
 
 # Recipe Name

@@ -25,9 +25,21 @@ cp TEMPLATE.md mains/chicken-piccata.md
 ```
 
 Each recipe starts with YAML frontmatter (`title`, `servings`, `prep_time`,
-`cook_time`, `source`, `tags`). The [site](#site) is generated from those fields,
-so keep the names consistent; add new ones only when they'd apply to more than
-one recipe.
+`cook_time`, `source`, `tags`, and an optional `nutrition` block). The
+[site](#site) is generated from those fields, so keep the names consistent; add
+new ones only when they'd apply to more than one recipe.
+
+`nutrition` is a nested block of per-serving values, written as bare numbers —
+grams for the macros, milligrams for sodium and cholesterol, and free text for
+`serving_size`. Omit any line you don't have, or the whole block:
+
+```yaml
+nutrition:
+  serving_size: 1/4 of the recipe
+  calories: 420
+  protein: 28
+  sodium: 640
+```
 
 ## Site
 
@@ -67,6 +79,9 @@ of publishing it.
 
 - Volume/weight measurements in US units, with grams alongside for baking where
   precision matters.
+- Nutrition figures are estimates worked out from the ingredient list, not label
+  data. Note the assumptions that move them (salt type, how much marinade or
+  brine is actually eaten) in `## Notes` when they matter.
 - Note the source when a recipe is adapted from somewhere else.
 - Record what actually worked under `## Notes` — a recipe you've cooked twice is
   worth more than one you copied.
