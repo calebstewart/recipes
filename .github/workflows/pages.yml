@@ -28,16 +28,19 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # build.py reads `git log` to derive datePublished, so it needs the
           # full history rather than a shallow clone.
           fetch-depth: 0
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+          # There is no lockfile: the dependencies are the PEP 723 header in
+          # build.py, so that is what the cache key has to follow.
+          cache-dependency-glob: build.py
 
       - name: Build the site
         # build.py declares its dependencies in a PEP 723 header; uv resolves
