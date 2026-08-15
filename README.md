@@ -90,6 +90,31 @@ read a recipe.
 The service worker's version is a hash of every built file, so each deploy
 replaces the cache rather than pinning an installed copy to stale pages.
 
+### Cooking mode
+
+Every recipe page has a **Start cooking** button under the times. It turns the
+page into something usable with your hands full:
+
+- Ingredients get checkboxes. They are hidden and disabled the rest of the time,
+  so an ordinary read of the recipe is just the list.
+- Steps that name a duration get a timer button. Durations are found in the step
+  prose at build time — `find_step_timers()` in [`build.py`](build.py) — so
+  "Bake 20–25 min, flipping once at 10–12 min" offers two timers. A range starts
+  at the **low** end, because a timer is a prompt to go look at the food.
+- Running timers count down in a small card that stays out of the recipe's way.
+  Several can run at once. When one finishes it posts a notification, beeps, and
+  vibrates.
+- The screen is asked to stay awake while cooking mode is on.
+- Cooking mode, checked ingredients, and running timers survive a reload; timers
+  are stored as absolute end times, so they resume mid-flight rather than
+  restarting.
+
+Worth knowing before you rely on it: a web page cannot ring like an alarm clock.
+If the browser evicts the page, nothing fires until you open it again — at which
+point an expired timer alarms immediately. The wake lock makes that unlikely
+while you are actually cooking. Vibration is Android-only, and on iOS
+notifications need the site installed to the home screen (16.4+).
+
 The home screen icons are PNGs in `site/static/`, rasterized from the sources in
 `site/icons/`. After editing a source, regenerate them:
 

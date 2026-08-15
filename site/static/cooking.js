@@ -1,0 +1,613 @@
+/* Cooking mode: check ingredients off, run step timers, keep the screen awake.
+
+   Everything here is an enhancement. Without JavaScript the page is the plain
+   recipe: no toggle, no timer buttons, and the ingredient checkboxes stay
+   disabled and hidden, which is how build.py emits them. */
+(function () {
+  "use strict";
+
+  var recipe = document.querySelector(".recipe");
+  if (!recipe) return;
+
+  var head = recipe.querySelector(".recipe-head");
+  if (!head) return;
+
+  function slice(nodes) {
+    return Array.prototype.slice.call(nodes);
+  }
+
+  var boxes = slice(recipe.querySelectorAll('.ing-list input[type="checkbox"]'));
+  var timerGroups = slice(recipe.querySelectorAll(".step-timers"));
+  var steps = slice(document.querySelectorAll(".step-list > li"));
+
+  if (!boxes.length && !timerGroups.length) return;
+
+  var STORAGE_KEY = "recipes:cook:" + window.location.pathname;
+  var TICK_MS = 250;
+
+  var cooking = false;
+  var timers = [];
+  var nextId = 1;
+  var ticker = null;
+  var wakeLock = null;
+  var audio = null;
+  var askedNotify = false;
+  var baseTitle = document.title;
+  var recipeName = (recipe.querySelector(".recipe-title") || {}).textContent || baseTitle;
+  var announcer = null;
+
+  var toggle = null;
+  var bar = null;
+  var barList = null;
+  var barHint = null;
+
+  /* ---------------------------------------------------------------- utils */
+
+  function announce(message) {
+    if (!announcer) {
+      announcer = document.createElement("span");
+      announcer.className = "visually-hidden";
+      announcer.setAttribute("role", "status");
+      announcer.setAttribute("aria-live", "polite");
+      document.body.appendChild(announcer);
+    }
+    announcer.textContent = "";
+    window.setTimeout(function () {
+      announcer.textContent = message;
+    }, 30);
+  }
+
+  function clock(ms) {
+    var total = Math.max(0, Math.round(ms / 1000));
+    var hours = Math.floor(total / 3600);
+    var minutes = Math.floor((total % 3600) / 60);
+    var seconds = total % 60;
+    function pad(value) {
+      return value < 10 ? "0" + value : String(value);
+    }
+    if (hours) return hours + ":" + pad(minutes) + ":" + pad(seconds);
+    return minutes + ":" + pad(seconds);
+  }
+
+  /* Step numbers follow the CSS counter, which keeps counting across grouped
+     lists rather than restarting at 1. */
+  function stepNumber(el) {
+    var node = el;
+    /* An exact class-token test, not a substring one: the button's own wrapper
+       is `.step-timers`, which a substring match would mistake for the step. */
+    while (node && node !== document.body) {
+      if (node.classList && node.classList.contains("step")) {
+        var index = steps.indexOf(node);
+        return index === -1 ? 0 : index + 1;
+      }
+      node = node.parentNode;
+    }
+    return 0;
+  }
+
+  /* --------------------------------------------------------------- storage */
+
+  function save() {
+    var checked = [];
+    boxes.forEach(function (box, index) {
+      if (box.checked) checked.push(index);
+    });
+
+    var stored = timers.map(function (timer) {
+      return {
+        seconds: timer.seconds,
+        label: timer.label,
+        step: timer.step,
+        endsAt: timer.endsAt,
+        remaining: timer.remaining,
+        state: timer.state
+      };
+    });
+
+    try {
+      if (!cooking && !stored.length && !checked.length) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          mode: cooking,
+          count: boxes.length,
+          checked: checked,
+          timers: stored
+        })
+      );
+    } catch (err) {
+      /* private mode, file://, or a full quota — the feature still works */
+    }
+  }
+
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      return data && typeof data === "object" ? data : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  /* ----------------------------------------------------------------- alarm */
+
+  function unlockAudio() {
+    var Ctor = window.AudioContext || window.webkitAudioContext;
+    if (!Ctor) return;
+    try {
+      if (!audio) audio = new Ctor();
+      if (audio.state === "suspended" && audio.resume) audio.resume();
+    } catch (err) {
+      audio = null;
+    }
+  }
+
+  /* Three short pips. Synthesised rather than an audio file, so there is
+     nothing extra to cache and it works offline like the rest of the site. */
+  function beep() {
+    if (!audio) return;
+    try {
+      if (audio.state === "suspended" && audio.resume) audio.resume();
+      for (var i = 0; i < 3; i++) {
+        var start = audio.currentTime + i * 0.28;
+        var osc = audio.createOscillator();
+        var gain = audio.createGain();
+        osc.type = "sine";
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.3, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
+        osc.connect(gain);
+        gain.connect(audio.destination);
+        osc.start(start);
+        osc.stop(start + 0.2);
+      }
+    } catch (err) {
+      /* nothing to fall back to; the notification and vibration remain */
+    }
+  }
+
+  function askNotify() {
+    if (askedNotify) return;
+    askedNotify = true;
+    if (typeof window.Notification === "undefined") return;
+    if (window.Notification.permission !== "default") return;
+    try {
+      var request = window.Notification.requestPermission();
+      if (request && request.then) request.then(function () {}, function () {});
+    } catch (err) {
+      /* older callback-style implementations; not worth supporting */
+    }
+  }
+
+  function notify(timer) {
+    if (typeof window.Notification === "undefined") return;
+    if (window.Notification.permission !== "granted") return;
+
+    var title = "Timer done — " + timer.label;
+    var options = {
+      /* The recipe's own heading, not document.title — by the time an alarm
+         fires the title already carries the "timer done" prefix. */
+      body: "Step " + timer.step + " · " + recipeName,
+      tag: "recipe-timer-" + timer.id,
+      renotify: true,
+      requireInteraction: true,
+      vibrate: [300, 150, 300],
+      data: { url: window.location.href }
+    };
+
+    /* Android Chrome throws on `new Notification()`, so the service worker is
+       the only path that works there. The constructor is the fallback for
+       desktop browsers without a controlling worker. */
+    if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+      navigator.serviceWorker.ready.then(
+        function (registration) {
+          registration.showNotification(title, options);
+        },
+        function () {}
+      );
+      return;
+    }
+
+    try {
+      new window.Notification(title, options);
+    } catch (err) {
+      /* no notification, but the beep and the bar still fired */
+    }
+  }
+
+  function retitle() {
+    var done = timers.filter(function (timer) {
+      return timer.state === "done";
+    }).length;
+    /* Catches a backgrounded desktop tab, where the tab title is the only
+       thing the cook can see. */
+    document.title = done ? "⏰ " + done + " timer done — " + baseTitle : baseTitle;
+  }
+
+  function alarm(timer) {
+    timer.state = "done";
+    timer.endsAt = null;
+    timer.remaining = 0;
+    drawRow(timer);
+    retitle();
+
+    notify(timer);
+    beep();
+    if (navigator.vibrate) {
+      try {
+        navigator.vibrate([300, 150, 300, 150, 500]);
+      } catch (err) {
+        /* iOS Safari has no vibration at all; nothing to do */
+      }
+    }
+    announce("Timer done: step " + timer.step + ", " + timer.label);
+  }
+
+  /* ------------------------------------------------------------- wake lock */
+
+  function acquireWake() {
+    if (!navigator.wakeLock || document.visibilityState !== "visible") return;
+    try {
+      navigator.wakeLock.request("screen").then(
+        function (lock) {
+          wakeLock = lock;
+          lock.addEventListener("release", function () {
+            wakeLock = null;
+          });
+          if (barHint) barHint.textContent = "Screen stays awake";
+        },
+        function () {
+          /* refused: low battery, or a policy that forbids it */
+        }
+      );
+    } catch (err) {
+      /* older engines throw synchronously */
+    }
+  }
+
+  function releaseWake() {
+    if (!wakeLock) return;
+    try {
+      wakeLock.release();
+    } catch (err) {
+      /* already gone */
+    }
+    wakeLock = null;
+  }
+
+  /* ------------------------------------------------------------------- bar */
+
+  function buildBar() {
+    if (bar) return bar;
+
+    bar = document.createElement("aside");
+    bar.className = "cook-bar";
+    bar.setAttribute("aria-label", "Timers");
+    bar.hidden = true;
+
+    barList = document.createElement("ul");
+    barList.className = "timer-list";
+
+    barHint = document.createElement("p");
+    barHint.className = "cook-hint";
+    barHint.textContent = navigator.wakeLock ? "Screen stays awake" : "Screen may sleep";
+
+    bar.appendChild(barList);
+    bar.appendChild(barHint);
+    document.body.appendChild(bar);
+    return bar;
+  }
+
+  function showBar() {
+    buildBar();
+    bar.hidden = false;
+    document.body.classList.add("has-timers");
+  }
+
+  function hideBarIfEmpty() {
+    if (timers.length || !bar) return;
+    bar.hidden = true;
+    document.body.classList.remove("has-timers");
+  }
+
+  function drawRow(timer) {
+    if (!timer.row) return;
+    timer.row.setAttribute("data-state", timer.state);
+
+    var left =
+      timer.state === "paused"
+        ? timer.remaining
+        : timer.endsAt
+          ? timer.endsAt - Date.now()
+          : 0;
+    timer.clock.textContent = timer.state === "done" ? "Done" : clock(left);
+
+    if (timer.state === "done") {
+      timer.pause.hidden = true;
+      timer.cancel.textContent = "Dismiss";
+      timer.cancel.setAttribute("aria-label", "Dismiss finished timer for step " + timer.step);
+      return;
+    }
+
+    timer.pause.hidden = false;
+    timer.pause.textContent = timer.state === "paused" ? "Resume" : "Pause";
+    timer.pause.setAttribute("aria-pressed", timer.state === "paused" ? "true" : "false");
+  }
+
+  function addRow(timer) {
+    var row = document.createElement("li");
+    row.className = "timer";
+
+    var name = document.createElement("span");
+    name.className = "timer-name";
+    name.textContent = "Step " + timer.step + " · " + timer.label;
+
+    var readout = document.createElement("span");
+    readout.className = "timer-clock";
+    /* Not a live region: a countdown announced every second is unusable. The
+       finish is announced once, through announce(). */
+    readout.setAttribute("aria-live", "off");
+
+    var pause = document.createElement("button");
+    pause.type = "button";
+    pause.className = "timer-pause";
+    pause.setAttribute("aria-label", "Pause timer for step " + timer.step);
+
+    var cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "timer-cancel";
+    cancel.textContent = "Cancel";
+    cancel.setAttribute("aria-label", "Cancel timer for step " + timer.step);
+
+    pause.addEventListener("click", function () {
+      if (timer.state === "running") {
+        timer.remaining = Math.max(0, timer.endsAt - Date.now());
+        timer.endsAt = null;
+        timer.state = "paused";
+      } else if (timer.state === "paused") {
+        timer.endsAt = Date.now() + timer.remaining;
+        timer.state = "running";
+        ensureTicker();
+      }
+      drawRow(timer);
+      save();
+    });
+
+    cancel.addEventListener("click", function () {
+      removeTimer(timer);
+    });
+
+    row.appendChild(name);
+    row.appendChild(readout);
+    row.appendChild(pause);
+    row.appendChild(cancel);
+
+    timer.row = row;
+    timer.clock = readout;
+    timer.pause = pause;
+    timer.cancel = cancel;
+
+    buildBar();
+    barList.appendChild(row);
+    drawRow(timer);
+  }
+
+  function removeTimer(timer) {
+    var index = timers.indexOf(timer);
+    if (index !== -1) timers.splice(index, 1);
+    if (timer.row && timer.row.parentNode) timer.row.parentNode.removeChild(timer.row);
+    if (timer.button) timer.button.removeAttribute("data-running");
+    stopTickerIfIdle();
+    retitle();
+    hideBarIfEmpty();
+    save();
+  }
+
+  /* ---------------------------------------------------------------- timers */
+
+  function tick() {
+    var now = Date.now();
+    timers.forEach(function (timer) {
+      if (timer.state !== "running") return;
+      if (now >= timer.endsAt) {
+        alarm(timer);
+        return;
+      }
+      timer.clock.textContent = clock(timer.endsAt - now);
+    });
+    stopTickerIfIdle();
+  }
+
+  function ensureTicker() {
+    if (ticker) return;
+    ticker = window.setInterval(tick, TICK_MS);
+  }
+
+  function stopTickerIfIdle() {
+    var live = timers.some(function (timer) {
+      return timer.state === "running";
+    });
+    if (live || !ticker) return;
+    window.clearInterval(ticker);
+    ticker = null;
+  }
+
+  function startTimer(seconds, label, step, button) {
+    var timer = {
+      id: nextId++,
+      seconds: seconds,
+      label: label,
+      step: step,
+      endsAt: Date.now() + seconds * 1000,
+      remaining: seconds * 1000,
+      state: "running",
+      button: button || null
+    };
+    timers.push(timer);
+    addRow(timer);
+    showBar();
+    ensureTicker();
+    if (button) button.setAttribute("data-running", "true");
+    announce("Timer started: " + label + " for step " + step);
+    save();
+    return timer;
+  }
+
+  /* ------------------------------------------------------------------ mode */
+
+  function setBoxesEnabled(enabled) {
+    boxes.forEach(function (box) {
+      box.disabled = !enabled;
+    });
+  }
+
+  function enter(restoring) {
+    cooking = true;
+    document.body.classList.add("cooking");
+    setBoxesEnabled(true);
+    timerGroups.forEach(function (group) {
+      group.hidden = false;
+    });
+    toggle.textContent = "Stop cooking";
+    toggle.setAttribute("aria-pressed", "true");
+
+    buildBar();
+    acquireWake();
+
+    if (!restoring) {
+      unlockAudio();
+      announce("Cooking mode on. Ingredients can be checked off, and steps with times have timers.");
+    }
+    save();
+  }
+
+  function exit() {
+    cooking = false;
+    document.body.classList.remove("cooking");
+    setBoxesEnabled(false);
+    boxes.forEach(function (box) {
+      box.checked = false;
+    });
+    timerGroups.forEach(function (group) {
+      group.hidden = true;
+    });
+    toggle.textContent = "Start cooking";
+    toggle.setAttribute("aria-pressed", "false");
+
+    timers.slice().forEach(removeTimer);
+    releaseWake();
+    announce("Cooking mode off.");
+    save();
+  }
+
+  /* ------------------------------------------------------------------ init */
+
+  toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "cook-toggle";
+  toggle.textContent = "Start cooking";
+  toggle.setAttribute("aria-pressed", "false");
+  toggle.addEventListener("click", function () {
+    if (cooking) exit();
+    else enter(false);
+  });
+
+  var actions = document.createElement("div");
+  actions.className = "cook-actions";
+  actions.appendChild(toggle);
+
+  var meta = head.querySelector(".recipe-meta");
+  if (meta && meta.nextSibling) head.insertBefore(actions, meta.nextSibling);
+  else head.appendChild(actions);
+
+  timerGroups.forEach(function (group) {
+    slice(group.querySelectorAll(".step-timer")).forEach(function (button) {
+      var seconds = parseInt(button.getAttribute("data-seconds"), 10);
+      if (!seconds) return;
+      var step = stepNumber(button);
+      button.setAttribute("aria-label", "Start a " + button.textContent + " timer for step " + step);
+
+      button.addEventListener("click", function () {
+        askNotify();
+        unlockAudio();
+
+        var running = null;
+        timers.forEach(function (timer) {
+          if (timer.button === button && timer.state !== "done") running = timer;
+        });
+        if (running) {
+          removeTimer(running);
+          return;
+        }
+        startTimer(seconds, button.textContent, step, button);
+      });
+    });
+  });
+
+  boxes.forEach(function (box) {
+    box.addEventListener("change", save);
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState !== "visible") return;
+    /* A throttled or suspended background tab leaves the display stale and can
+       sail past an expiry. Recompute the moment the cook looks at the phone. */
+    tick();
+    if (cooking) acquireWake();
+  });
+
+  window.addEventListener("pagehide", save);
+
+  /* Restore a session: the mode, what was checked, and any timer still owed
+     time. Timers are stored as absolute end times, so a reload picks them up
+     mid-flight rather than restarting them. */
+  (function restore() {
+    var data = load();
+    if (!data) return;
+
+    if (data.mode) enter(true);
+
+    if (data.count === boxes.length && data.checked) {
+      data.checked.forEach(function (index) {
+        if (boxes[index]) boxes[index].checked = true;
+      });
+    }
+
+    if (!data.timers || !data.timers.length) return;
+
+    data.timers.forEach(function (stored) {
+      var timer = {
+        id: nextId++,
+        seconds: stored.seconds,
+        label: stored.label,
+        step: stored.step,
+        endsAt: stored.endsAt,
+        remaining: stored.remaining,
+        state: stored.state,
+        button: null
+      };
+
+      /* Anything that ran out while the page was closed comes back already
+         finished rather than firing a burst of alarms on load. */
+      if (timer.state === "running" && (!timer.endsAt || Date.now() >= timer.endsAt)) {
+        timer.state = "done";
+        timer.endsAt = null;
+      }
+
+      timers.push(timer);
+      addRow(timer);
+    });
+
+    if (timers.length) {
+      showBar();
+      ensureTicker();
+      retitle();
+    }
+  })();
+})();

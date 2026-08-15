@@ -545,6 +545,56 @@ def parse_duration(raw: str, rel_path: str, fieldname: str) -> Duration:
     return duration_from_minutes(int(round(total)))
 
 
+#: Durations named in step prose: `5 min`, `1–2 min`, `20–25 min`, `2 to 4
+#: hours`, `about 45 seconds`. Only the first number of a range is captured —
+#: the low end is when you want to look at the food.
+_STEP_TIMER_RE = re.compile(
+    r"(\d+(?:\.\d+)?)\s*(?:[–—-]|to|or)?\s*(?:\d+(?:\.\d+)?)?\s*"
+    r"(secs?|seconds?|mins?|minutes?|hrs?|hours?)\b",
+    re.IGNORECASE,
+)
+
+#: Anything longer is a marinade or a cure, not something to stand around for.
+MAX_TIMER_SECONDS = 8 * 60 * 60
+
+
+def timer_label(seconds: int) -> str:
+    """`45 sec`, `20 min`, `1 hr 30 min` — how the button reads."""
+    if seconds < 60:
+        return f"{seconds} sec"
+    minutes, rest = divmod(seconds, 60)
+    if minutes < 60:
+        return f"{minutes} min"
+    hours, minutes = divmod(minutes, 60)
+    return f"{hours} hr" if not minutes else f"{hours} hr {minutes} min"
+
+
+def find_step_timers(text: str) -> list[tuple[int, str]]:
+    """Every duration a step names, as (seconds, label), in the order written.
+
+    Deliberately only seconds, minutes and hours: days and weeks in a recipe are
+    storage advice ("keeps 3 weeks refrigerated"), never a countdown.
+    """
+    found: list[tuple[int, str]] = []
+    seen: set[int] = set()
+
+    for match in _STEP_TIMER_RE.finditer(text):
+        amount, unit = float(match.group(1)), match.group(2).lower()
+        if unit.startswith("s"):
+            seconds = int(round(amount))
+        elif unit.startswith("m"):
+            seconds = int(round(amount * 60))
+        else:
+            seconds = int(round(amount * 3600))
+
+        if not 5 <= seconds <= MAX_TIMER_SECONDS or seconds in seen:
+            continue
+        seen.add(seconds)
+        found.append((seconds, timer_label(seconds)))
+
+    return found
+
+
 def duration_from_minutes(minutes: int) -> Duration:
     hours, mins = divmod(max(minutes, 0), 60)
     iso = "PT" + (f"{hours}H" if hours else "") + (f"{mins}M" if mins or not hours else "")
@@ -925,13 +975,34 @@ def render_ingredients(recipe: Recipe) -> str:
         out.append('        <ul class="ing-list">')
         for item in group.items:
             out.append(
-                "          <li><label><input type=\"checkbox\">"
+                # Disabled until cooking mode enables it: the checkbox is hidden
+                # in the ordinary view, and a hidden control that still toggles
+                # on a label click would strike ingredients out invisibly.
+                "          <li><label><input type=\"checkbox\" disabled>"
                 f'<span itemprop="recipeIngredient">{item.html}</span></label></li>'
             )
         out.append("        </ul>")
         out.append("      </div>")
     out.append("    </section>")
     return "\n".join(out)
+
+
+def render_step_timers(text: str) -> str:
+    """Timer buttons for the durations a step names, or nothing.
+
+    Ships `hidden`: the buttons do nothing without JavaScript, and they only
+    belong on screen in cooking mode. They sit outside the `itemprop="text"`
+    span so the machine-readable step text stays exactly the prose.
+    """
+    timers = find_step_timers(text)
+    if not timers:
+        return ""
+    buttons = "".join(
+        f'<button type="button" class="step-timer" data-seconds="{seconds}">'
+        f"{esc(label)}</button>"
+        for seconds, label in timers
+    )
+    return f'<span class="step-timers" hidden>{buttons}</span>'
 
 
 def render_instructions(recipe: Recipe) -> str:
@@ -949,7 +1020,8 @@ def render_instructions(recipe: Recipe) -> str:
             out.append(
                 '        <li class="step" itemprop="recipeInstructions" itemscope '
                 'itemtype="https://schema.org/HowToStep">'
-                f'<span itemprop="text">{item.html}</span></li>'
+                f'<span itemprop="text">{item.html}</span>'
+                f"{render_step_timers(item.text)}</li>"
             )
         out.append("      </ol>")
     out.append("    </section>")
@@ -1384,7 +1456,10 @@ def render_recipe_page(site: Site, recipe: Recipe) -> str:
         ),
         content=content,
         nav=f'<a class="back-link" href="{esc(site.base)}">All recipes</a>',
-        scripts=f'<script src="{esc(site.base)}assets/recipe.js" defer></script>',
+        scripts=(
+            f'<script src="{esc(site.base)}assets/recipe.js" defer></script>\n'
+            f'<script src="{esc(site.base)}assets/cooking.js" defer></script>'
+        ),
     )
 
 
@@ -1488,6 +1563,29 @@ self.addEventListener('fetch', (event) => {
         });
 
       return hit || fresh;
+    })
+  );
+});
+
+// Cooking mode posts its timer alarms through this registration, because
+// `new Notification()` throws on Android Chrome. Tapping one should land on the
+// recipe that set it rather than opening a second copy of the site.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const data = event.notification.data || {};
+  const target = data.url || START_URL;
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if (client.url === target && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.length && 'focus' in clients[0]) {
+        return clients[0].focus();
+      }
+      return self.clients.openWindow(target);
     })
   );
 });
