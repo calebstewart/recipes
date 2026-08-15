@@ -34,13 +34,16 @@ jobs:
           # full history rather than a shallow clone.
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: '3.12'
+          enable-cache: true
 
       - name: Build the site
-        run: python3 build.py --out dist
+        # build.py declares its dependencies in a PEP 723 header; uv resolves
+        # them and picks the interpreter, so there is no requirements file and
+        # no separate Python setup step.
+        run: uv run build.py --out dist
 
       - name: Deploy to gh-pages
         if: >-

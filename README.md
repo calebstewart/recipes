@@ -63,17 +63,43 @@ recipes-serve   # builds with base URL / and serves on :8000
 ```
 
 `nix run .#serve` does the same thing in one command. Without Nix, run the
-generator directly:
+generator through [uv](https://docs.astral.sh/uv/), which needs nothing
+installed beforehand:
 
 ```sh
-python3 build.py --base-url / --out dist
+uv run build.py --base-url / --out dist
 ```
 
-That generator is [`build.py`](build.py), Python standard library only, so there
-is nothing to install. Templates and assets live in `site/`.
+That generator is [`build.py`](build.py). It declares its dependencies in a
+PEP 723 header at the top of the file, so `uv run` resolves them and picks the
+interpreter; CI does exactly the same. The Nix dev shell installs those packages
+into its Python, so a plain `python3 build.py` works there too. Templates and
+assets live in `site/`.
 
 A malformed recipe fails the build, so CI catches it on the pull request instead
 of publishing it.
+
+## Installing it on a phone
+
+The site is a progressive web app, so Chrome on Android offers "Install app" and
+it lands on the home screen without a browser frame. `build.py` writes the
+manifest and a service worker that precaches every page, so an installed copy
+opens instantly and works with no signal — which is the point, given where you
+read a recipe.
+
+The service worker's version is a hash of every built file, so each deploy
+replaces the cache rather than pinning an installed copy to stale pages.
+
+The home screen icons are PNGs in `site/static/`, rasterized from the sources in
+`site/icons/`. After editing a source, regenerate them:
+
+```sh
+nix shell nixpkgs#resvg --command sh -c '
+  resvg --width 192 --height 192 site/icons/icon-source.svg site/static/icon-192.png
+  resvg --width 512 --height 512 site/icons/icon-source.svg site/static/icon-512.png
+  resvg --width 512 --height 512 site/icons/icon-maskable-source.svg site/static/icon-maskable-512.png
+'
+```
 
 ## Conventions
 

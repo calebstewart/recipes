@@ -1,0 +1,15 @@
+<!--
+  Source for assets/icon-192.png and assets/icon-512.png. Kept outside
+  site/static/ so it is not published; regenerate the PNGs with the command in
+  the README after changing it.
+
+  Opaque on purpose: a home screen icon has no page behind it, so the
+  light/dark treatment in favicon.svg would leave transparent corners here.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="512" height="512" role="img" aria-labelledby="t">
+  <title id="t">Recipes</title>
+  <rect fill="#17140f" width="32" height="32" rx="7"/>
+  <rect fill="#342d25" x="4.5" y="6" width="23" height="1.6" rx="0.8"/>
+  <rect fill="#e0805a" x="4.5" y="12" width="23" height="3" rx="1.5"/>
+  <path fill="#e0805a" d="M6.5 16.5h19a9.5 9.5 0 0 1-19 0z"/>
+</svg>

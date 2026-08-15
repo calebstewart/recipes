@@ -13,9 +13,10 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        # build.py is stdlib-only on purpose, so a bare interpreter is the
-        # entire toolchain. CI installs the same thing via actions/setup-python.
-        python = pkgs.python3;
+        # build.py declares its dependencies in a PEP 723 header. CI runs it
+        # with `uv run`, which resolves that header; here the same packages come
+        # from nixpkgs so a plain `python3 build.py` works in the dev shell.
+        python = pkgs.python3.withPackages (ps: [ ps.pyyaml ]);
 
         build = pkgs.writeShellApplication {
           name = "recipes-build";
@@ -37,6 +38,7 @@
         devShells.default = pkgs.mkShell {
           packages = [
             python
+            pkgs.uv
             build
             serve
           ];
@@ -46,6 +48,7 @@
             echo "  recipes-build           build to dist/ (Pages base URL)"
             echo "  recipes-serve           build with base URL / and serve on :8000"
             echo "  python3 build.py --help other options"
+            echo "  uv run build.py         resolve deps from the PEP 723 header instead"
           '';
         };
 

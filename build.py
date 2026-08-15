@@ -1,22 +1,30 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["PyYAML>=6.0"]
+# ///
 """Static site generator for the recipe collection.
 
-Reads the Markdown recipes in the category directories, parses the frontmatter
-and body by hand, and writes a static site to the output directory: a homepage
-with cards and a client-side search index, one page per recipe with schema.org
-Recipe markup (both JSON-LD and microdata), and the static assets.
+Reads the Markdown recipes in the category directories, parses the YAML
+frontmatter and the body, and writes a static site to the output directory: a
+homepage with cards and a client-side search index, one page per recipe with
+schema.org Recipe markup (both JSON-LD and microdata), a web app manifest and
+service worker so the site installs on a phone, and the static assets.
 
-Standard library only, on purpose. The build has to run from a bare checkout
-with nothing installed but Python.
+Dependencies are declared in the PEP 723 header above, so `uv run build.py`
+resolves them with nothing installed. The Nix dev shell provides the same
+packages, so a plain `python3 build.py` works there too.
 
 Usage:
-    python3 build.py [--out dist] [--base-url /recipes/] [--serve]
+    uv run build.py [--out dist] [--base-url /recipes/] [--serve]
+    python3 build.py ...        # inside the dev shell
 """
 
 from __future__ import annotations
 
 import argparse
 import functools
+import hashlib
 import html
 import json
 import os
@@ -28,6 +36,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from string import Template
 from urllib.parse import urljoin, urlparse
+
+import yaml
 
 # --------------------------------------------------------------------------
 # Configuration
@@ -347,11 +357,6 @@ def _inline_text(text: str) -> str:
 # Frontmatter
 # --------------------------------------------------------------------------
 
-_KEY_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$")
-_SEQ_RE = re.compile(r"^\s*-\s+(.*)$")
-_NESTED_RE = re.compile(r"^\s+([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$")
-
-
 def split_frontmatter(text: str, rel_path: str) -> tuple[str, str]:
     """Split a `---` delimited frontmatter block off the front of the file."""
     lines = text.splitlines()
@@ -363,95 +368,29 @@ def split_frontmatter(text: str, rel_path: str) -> tuple[str, str]:
     raise ValidationError("frontmatter opened with --- but never closed")
 
 
-def _strip_comment(value: str) -> str:
-    """Drop a trailing `# comment`, unless the value is quoted or looks like one."""
-    if value[:1] in ("'", '"'):
-        return value
-    return re.sub(r"\s+#.*$", "", value)
-
-
-def _scalar(value: str) -> str:
-    value = value.strip()
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
-        inner = value[1:-1]
-        if value[0] == '"':
-            inner = inner.replace('\\"', '"').replace("\\\\", "\\")
-        else:
-            inner = inner.replace("''", "'")
-        return inner
-    return value
-
-
-def _inline_list(value: str) -> list[str]:
-    inner = value.strip()[1:-1].strip()
-    if not inner:
-        return []
-    return [_scalar(part) for part in inner.split(",") if part.strip()]
-
-
 def parse_frontmatter(block: str, rel_path: str) -> dict[str, object]:
-    """Parse the subset of YAML the recipe files actually use.
+    """Parse the frontmatter block as YAML.
 
-    Handles `key: value`, quoted scalars, inline lists, block sequences, one
-    level of indented block mapping (`nutrition:` and its fields), comments and
-    blank lines. Deliberately not a YAML implementation: anything fancier than
-    the above is a sign the recipe format has drifted.
+    `safe_load` keeps this to plain data — no arbitrary tags — and gives back
+    real types: `servings: 4` is an int, `tags: [...]` a list, `nutrition:` a
+    mapping. The `as_*` helpers below normalise those back to what the rest of
+    the build wants.
     """
-    data: dict[str, object] = {}
-    pending: str | None = None  # key currently collecting a sequence or mapping
+    if not block.strip():
+        return {}
+    try:
+        data = yaml.safe_load(block)
+    except yaml.YAMLError as exc:
+        raise ValidationError(f"frontmatter is not valid YAML: {exc}") from exc
 
-    for raw in block.splitlines():
-        line = raw.rstrip()
-        if not line.strip():
-            continue
-        if line.lstrip().startswith("#"):
-            continue
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        raise ValidationError("frontmatter must be a mapping of keys to values")
 
-        seq = _SEQ_RE.match(line)
-        if seq and pending is not None:
-            entry = _scalar(_strip_comment(seq.group(1).strip()))
-            values = data.setdefault(pending, [])
-            if isinstance(values, list):
-                values.append(entry)
-            continue
-
-        nested = _NESTED_RE.match(line)
-        if nested and pending is not None:
-            # An indented `key: value` turns the pending key into a mapping. It
-            # starts life as an empty list, since a bare `key:` cannot yet say
-            # which of the two it will become.
-            container = data.get(pending)
-            if isinstance(container, list) and not container:
-                container = {}
-                data[pending] = container
-            if isinstance(container, dict):
-                subkey = nested.group(1)
-                container[subkey] = _scalar(_strip_comment(nested.group(2)).strip())
-            else:
-                warn(f"{rel_path}: ignoring indented line under {pending!r}: {line.strip()!r}")
-            continue
-
-        match = _KEY_RE.match(line)
-        if not match:
-            warn(f"{rel_path}: ignoring unparseable frontmatter line: {line.strip()!r}")
-            continue
-
-        key, rawval = match.group(1), _strip_comment(match.group(2)).strip()
+    for key in data:
         if key not in KNOWN_KEYS:
             warn(f"{rel_path}: unknown frontmatter key {key!r} (ignored)")
-
-        if not rawval:
-            # An empty value means a block sequence follows (or nothing at all).
-            data[key] = []
-            pending = key
-            continue
-
-        pending = None
-        if rawval.startswith("[") and rawval.endswith("]"):
-            data[key] = _inline_list(rawval)
-        else:
-            data[key] = _scalar(rawval)
-
     return data
 
 
@@ -470,20 +409,23 @@ def as_bool(value: object, default: bool = True) -> bool:
 def as_text(value: object) -> str:
     """Scalar frontmatter value as a string.
 
-    An empty `key:` parses as an empty sequence, so a list here means the file
-    said nothing useful — not the literal text `[]`.
+    Containers mean the file said nothing useful in a scalar position, so they
+    read as empty rather than as their repr. Booleans stringify as YAML wrote
+    them, since `servings: yes` is a mistake worth seeing rather than `True`.
     """
-    if value is None or isinstance(value, list):
+    if value is None or isinstance(value, (list, dict)):
         return ""
+    if isinstance(value, bool):
+        return "true" if value else "false"
     return str(value).strip()
 
 
 def as_list(value: object) -> list[str]:
-    if value is None:
+    if value is None or isinstance(value, dict):
         return []
     if isinstance(value, list):
-        return [str(entry).strip() for entry in value if str(entry).strip()]
-    text = str(value).strip()
+        return [as_text(entry) for entry in value if as_text(entry)]
+    text = as_text(value)
     if not text:
         return []
     return [part.strip() for part in text.split(",") if part.strip()]
@@ -493,7 +435,7 @@ def as_map(value: object) -> dict[str, str]:
     """Nested mapping frontmatter value. Anything else reads as empty."""
     if not isinstance(value, dict):
         return {}
-    return {str(key): str(entry).strip() for key, entry in value.items()}
+    return {str(key): as_text(entry) for key, entry in value.items()}
 
 
 # --------------------------------------------------------------------------
@@ -1467,6 +1409,156 @@ def build_search_index(site: Site, recipes: list[Recipe]) -> list[dict[str, obje
 
 
 # --------------------------------------------------------------------------
+# Progressive web app
+# --------------------------------------------------------------------------
+
+#: Manifest icons, as (asset path, size, purpose).
+MANIFEST_ICONS: tuple[tuple[str, str, str], ...] = (
+    ("assets/icon-192.png", "192x192", "any"),
+    ("assets/icon-512.png", "512x512", "any"),
+    ("assets/icon-maskable-512.png", "512x512", "maskable"),
+)
+
+THEME_COLOR = "#17140f"
+BACKGROUND_COLOR = "#faf7f2"
+
+#: Written to the site root. `$version` changes whenever any built file does,
+#: which is what makes a deploy replace the old cache instead of stranding an
+#: installed copy on stale pages.
+SERVICE_WORKER = Template(
+    """\
+// Generated by build.py. Edit the template there, not this file.
+//
+// Cache-first with a background refresh: an installed copy opens instantly and
+// works with no signal, and each visit quietly re-fetches what it served. A new
+// build changes VERSION, so the install step below replaces the whole cache.
+
+const VERSION = '$version';
+const CACHE = 'recipes-' + VERSION;
+const SCOPE = '$base';
+const START_URL = '$base';
+const PRECACHE = $urls;
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(PRECACHE))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  if (request.method !== 'GET') {
+    return;
+  }
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(SCOPE)) {
+    return;
+  }
+
+  event.respondWith(
+    caches.match(request, { ignoreSearch: true }).then((hit) => {
+      const fresh = fetch(request)
+        .then((response) => {
+          if (response && response.ok && response.type === 'basic') {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => {
+          // Offline. A navigation with nothing cached still gets the home page,
+          // which is enough to reach every recipe already in the cache.
+          if (hit) {
+            return hit;
+          }
+          return request.mode === 'navigate' ? caches.match(START_URL) : Response.error();
+        });
+
+      return hit || fresh;
+    })
+  );
+});
+"""
+)
+
+
+def build_manifest(site: Site) -> dict[str, object]:
+    return {
+        "name": f"{SITE_TITLE} — {AUTHOR_NAME}",
+        "short_name": SITE_TITLE,
+        "description": SITE_DESCRIPTION,
+        "id": site.base,
+        "start_url": site.base,
+        "scope": site.base,
+        "display": "standalone",
+        "theme_color": THEME_COLOR,
+        "background_color": BACKGROUND_COLOR,
+        "lang": "en",
+        "categories": ["food", "lifestyle"],
+        "icons": [
+            {
+                "src": f"{site.base}{path}",
+                "sizes": sizes,
+                "type": "image/png",
+                "purpose": purpose,
+            }
+            for path, sizes, purpose in MANIFEST_ICONS
+        ],
+    }
+
+
+def precache_urls(site: Site) -> tuple[list[str], str]:
+    """Every built file as a URL, plus a version stamp over their contents.
+
+    Walks the output directory rather than tracking writes, so anything the
+    build produces — pages, assets, the search index — is offline by default.
+    """
+    entries: list[tuple[str, bytes]] = []
+    for path in sorted(site.out.rglob("*")):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(site.out)
+        if relative.name in ("sw.js", ".nojekyll"):
+            continue
+        if relative.name == "index.html":
+            url = site.base + relative.parent.as_posix().removeprefix(".").removeprefix("/")
+            if not url.endswith("/"):
+                url += "/"
+        else:
+            url = site.base + relative.as_posix()
+        entries.append((url, path.read_bytes()))
+
+    digest = hashlib.sha256()
+    for url, payload in entries:
+        digest.update(url.encode("utf-8"))
+        digest.update(hashlib.sha256(payload).digest())
+
+    return [url for url, _ in entries], digest.hexdigest()[:16]
+
+
+def render_service_worker(site: Site) -> str:
+    urls, version = precache_urls(site)
+    return SERVICE_WORKER.substitute(
+        version=version,
+        base=site.base,
+        urls=json.dumps(urls, indent=2),
+    )
+
+
+# --------------------------------------------------------------------------
 # Output
 # --------------------------------------------------------------------------
 
@@ -1519,6 +1611,10 @@ def build(site: Site, recipes: list[Recipe]) -> None:
         write(out / recipe.category / recipe.slug / "index.html", render_recipe_page(site, recipe))
 
     copy_static(out)
+
+    # Last, so the precache list and version cover everything above.
+    write(out / "manifest.webmanifest", dump_json(build_manifest(site)) + "\n")
+    write(out / "sw.js", render_service_worker(site))
 
 
 # --------------------------------------------------------------------------
