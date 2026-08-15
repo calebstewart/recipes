@@ -192,21 +192,21 @@
       <h2 id="ingredients-h">Ingredients</h2>
       <div class="ing-group">
         <ul class="ing-list">
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">About 1 oz. lettuce blend, 1/5 of a 5 oz. box (H-E-B Organics romaine, butter lettuce, and arugula)</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1/2 pouch ready brown rice (Ben&#x27;s Original Whole Grain, 8.8 oz. pouch)</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1/5 of a batch of <a href="https://calebstewart.github.io/recipes/mains/cava-style-chicken/" rel="noopener">Cava-style chicken</a></span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1/5 of a batch of <a href="https://calebstewart.github.io/recipes/sides/cucumber-tomato-salad/" rel="noopener">cucumber tomato salad</a></span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">2 Tbsp. tzatziki (Cedar&#x27;s Cucumber Garlic Dill)</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">2 Tbsp. roasted red pepper hummus (H-E-B Deli)</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">2 Tbsp. <a href="https://calebstewart.github.io/recipes/basics/lemon-herb-tahini/" rel="noopener">lemon herb tahini</a></span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">2 Tbsp. crumbled feta</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">About 1 oz. lettuce blend, 1/5 of a 5 oz. box (H-E-B Organics romaine, butter lettuce, and arugula)</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1/2 pouch ready brown rice (Ben&#x27;s Original Whole Grain, 8.8 oz. pouch)</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1/5 of a batch of <a href="https://calebstewart.github.io/recipes/mains/cava-style-chicken/" rel="noopener">Cava-style chicken</a></span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1/5 of a batch of <a href="https://calebstewart.github.io/recipes/sides/cucumber-tomato-salad/" rel="noopener">cucumber tomato salad</a></span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">2 Tbsp. tzatziki (Cedar&#x27;s Cucumber Garlic Dill)</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">2 Tbsp. roasted red pepper hummus (H-E-B Deli)</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">2 Tbsp. <a href="https://calebstewart.github.io/recipes/basics/lemon-herb-tahini/" rel="noopener">lemon herb tahini</a></span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">2 Tbsp. crumbled feta</span></label></li>
         </ul>
       </div>
     </section>
     <section class="instructions" aria-labelledby="instructions-h">
       <h2 id="instructions-h">Instructions</h2>
       <ol class="step-list">
-        <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Microwave half the rice pouch, about 45 seconds, and the chicken portion until warmed through, 1–2 min.</span></li>
+        <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Microwave half the rice pouch, about 45 seconds, and the chicken portion until warmed through, 1–2 min.</span><span class="step-timers" hidden><button type="button" class="step-timer" data-seconds="45">45 sec</button><button type="button" class="step-timer" data-seconds="60">1 min</button></span></li>
         <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Slice the chicken.</span></li>
         <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Put the lettuce in a wide bowl. Add the rice, then the chicken.</span></li>
         <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Top with the cucumber tomato salad, using its juices as part of the dressing.</span></li>
@@ -260,6 +260,7 @@
 </footer>
 
 <script src="/recipes/assets/recipe.js" defer></script>
+<script src="/recipes/assets/cooking.js" defer></script>
 <script>
   // Registers the service worker that makes the site installable and lets an
   // installed copy work with no signal. Nothing else depends on it, so a

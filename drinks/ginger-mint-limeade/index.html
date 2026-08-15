@@ -125,27 +125,27 @@
       <div class="ing-group">
         <h3 class="group-title">Ginger-mint syrup</h3>
         <ul class="ing-list">
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1 c. water</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1 c. granulated sugar</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">3 oz. fresh ginger (a 4-inch piece), unpeeled, sliced into thin coins</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1 packed c. fresh mint leaves and tender stems</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1 c. water</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1 c. granulated sugar</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">3 oz. fresh ginger (a 4-inch piece), unpeeled, sliced into thin coins</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1 packed c. fresh mint leaves and tender stems</span></label></li>
         </ul>
       </div>
       <div class="ing-group">
         <h3 class="group-title">To assemble</h3>
         <ul class="ing-list">
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">1 c. fresh lime juice (from about 8 limes)</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">4 c. cold water or sparkling water</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">Ice</span></label></li>
-          <li><label><input type="checkbox"><span itemprop="recipeIngredient">Lime wheels and mint sprigs, to serve</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">1 c. fresh lime juice (from about 8 limes)</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">4 c. cold water or sparkling water</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">Ice</span></label></li>
+          <li><label><input type="checkbox" disabled><span itemprop="recipeIngredient">Lime wheels and mint sprigs, to serve</span></label></li>
         </ul>
       </div>
     </section>
     <section class="instructions" aria-labelledby="instructions-h">
       <h2 id="instructions-h">Instructions</h2>
       <ol class="step-list">
-        <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Combine the water, sugar, and ginger in a small saucepan. Bring to a boil, stirring to dissolve the sugar, then reduce to a bare simmer for 5 minutes.</span></li>
-        <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Off heat, stir in the mint, cover, and steep 20 minutes. Any longer and the mint turns grassy.</span></li>
+        <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Combine the water, sugar, and ginger in a small saucepan. Bring to a boil, stirring to dissolve the sugar, then reduce to a bare simmer for 5 minutes.</span><span class="step-timers" hidden><button type="button" class="step-timer" data-seconds="300">5 min</button></span></li>
+        <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Off heat, stir in the mint, cover, and steep 20 minutes. Any longer and the mint turns grassy.</span><span class="step-timers" hidden><button type="button" class="step-timer" data-seconds="1200">20 min</button></span></li>
         <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Strain into a jar, pressing the solids to get everything out. Cool to room temperature. You should have about 1 1/4 cups.</span></li>
         <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">In a pitcher, stir together the syrup, lime juice, and cold water. Taste and adjust with more water or lime.</span></li>
         <li class="step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/HowToStep"><span itemprop="text">Serve over plenty of ice, with a lime wheel and a mint sprig in each glass.</span></li>
@@ -187,6 +187,7 @@
 </footer>
 
 <script src="/recipes/assets/recipe.js" defer></script>
+<script src="/recipes/assets/cooking.js" defer></script>
 <script>
   // Registers the service worker that makes the site installable and lets an
   // installed copy work with no signal. Nothing else depends on it, so a

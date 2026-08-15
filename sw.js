@@ -4,11 +4,12 @@
 // works with no signal, and each visit quietly re-fetches what it served. A new
 // build changes VERSION, so the install step below replaces the whole cache.
 
-const VERSION = 'f6e4d6d0986bb37b';
+const VERSION = '604cccf1bff2b7f4';
 const CACHE = 'recipes-' + VERSION;
 const SCOPE = '/recipes/';
 const START_URL = '/recipes/';
 const PRECACHE = [
+  "/recipes/assets/cooking.js",
   "/recipes/assets/favicon.svg",
   "/recipes/assets/icon-192.png",
   "/recipes/assets/icon-512.png",
@@ -79,6 +80,29 @@ self.addEventListener('fetch', (event) => {
         });
 
       return hit || fresh;
+    })
+  );
+});
+
+// Cooking mode posts its timer alarms through this registration, because
+// `new Notification()` throws on Android Chrome. Tapping one should land on the
+// recipe that set it rather than opening a second copy of the site.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const data = event.notification.data || {};
+  const target = data.url || START_URL;
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if (client.url === target && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.length && 'focus' in clients[0]) {
+        return clients[0].focus();
+      }
+      return self.clients.openWindow(target);
     })
   );
 });
