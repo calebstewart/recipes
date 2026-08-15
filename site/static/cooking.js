@@ -25,6 +25,11 @@
   var STORAGE_KEY = "recipes:cook:" + window.location.pathname;
   var TICK_MS = 250;
 
+  /* A finished timer keeps sounding until it is dismissed or this long passes */
+  var ALARM_MAX_MS = 60 * 1000;
+  var ALARM_GAP_S = 4; // seconds between bursts
+  var ALARM_PEAK = 0.6; // gain at the top of a pip
+
   var cooking = false;
   var timers = [];
   var nextId = 1;
@@ -148,28 +153,93 @@
     }
   }
 
-  /* Three short pips. Synthesised rather than an audio file, so there is
-     nothing extra to cache and it works offline like the rest of the site. */
-  function beep() {
+  /* A burst of three pips, repeating every few seconds until the timer is
+     dismissed or a minute has passed — whichever comes first. Synthesised
+     rather than an audio file, so there is nothing extra to cache and it works
+     offline like the rest of the site.
+
+     Every burst is scheduled on the audio clock up front rather than fired from
+     a repeating setTimeout, because a background tab throttles timers and would
+     silence the repeats exactly when the cook has walked away from the phone.
+     The scheduled nodes are kept so a dismissal can stop them early. */
+  function scheduleAlarm(timer) {
     if (!audio) return;
     try {
       if (audio.state === "suspended" && audio.resume) audio.resume();
-      for (var i = 0; i < 3; i++) {
-        var start = audio.currentTime + i * 0.28;
-        var osc = audio.createOscillator();
-        var gain = audio.createGain();
-        osc.type = "sine";
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.exponentialRampToValueAtTime(0.3, start + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
-        osc.connect(gain);
-        gain.connect(audio.destination);
-        osc.start(start);
-        osc.stop(start + 0.2);
+
+      var nodes = [];
+      var bursts = Math.ceil(ALARM_MAX_MS / 1000 / ALARM_GAP_S);
+
+      for (var b = 0; b < bursts; b++) {
+        for (var i = 0; i < 3; i++) {
+          var start = audio.currentTime + b * ALARM_GAP_S + i * 0.28;
+          var osc = audio.createOscillator();
+          var gain = audio.createGain();
+          osc.type = "sine";
+          osc.frequency.value = 880;
+          gain.gain.setValueAtTime(0.0001, start);
+          gain.gain.exponentialRampToValueAtTime(ALARM_PEAK, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
+          osc.connect(gain);
+          gain.connect(audio.destination);
+          osc.start(start);
+          osc.stop(start + 0.2);
+          nodes.push(osc);
+        }
       }
+
+      timer.alarmNodes = nodes;
     } catch (err) {
       /* nothing to fall back to; the notification and vibration remain */
+    }
+  }
+
+  /* Vibration cannot be scheduled ahead the way audio can, so it repeats on an
+     interval and stops itself at the one-minute mark. */
+  function scheduleBuzz(timer) {
+    if (!navigator.vibrate) return;
+
+    function buzz() {
+      try {
+        navigator.vibrate([300, 150, 300, 150, 500]);
+      } catch (err) {
+        /* iOS Safari has no vibration at all */
+      }
+    }
+
+    buzz();
+    var until = Date.now() + ALARM_MAX_MS;
+    timer.buzzTicker = window.setInterval(function () {
+      if (Date.now() >= until) {
+        window.clearInterval(timer.buzzTicker);
+        timer.buzzTicker = null;
+        return;
+      }
+      buzz();
+    }, ALARM_GAP_S * 1000);
+  }
+
+  function stopAlarm(timer) {
+    if (timer.alarmNodes) {
+      timer.alarmNodes.forEach(function (osc) {
+        try {
+          osc.stop();
+        } catch (err) {
+          /* already finished */
+        }
+      });
+      timer.alarmNodes = null;
+    }
+    if (timer.buzzTicker) {
+      window.clearInterval(timer.buzzTicker);
+      timer.buzzTicker = null;
+    }
+    if (navigator.vibrate) {
+      try {
+        navigator.vibrate(0);
+      } catch (err) {
+        /* nothing to cancel */
+      }
     }
   }
 
@@ -239,14 +309,8 @@
     retitle();
 
     notify(timer);
-    beep();
-    if (navigator.vibrate) {
-      try {
-        navigator.vibrate([300, 150, 300, 150, 500]);
-      } catch (err) {
-        /* iOS Safari has no vibration at all; nothing to do */
-      }
-    }
+    scheduleAlarm(timer);
+    scheduleBuzz(timer);
     announce("Timer done: step " + timer.step + ", " + timer.label);
   }
 
@@ -438,6 +502,7 @@
   }
 
   function removeTimer(timer) {
+    stopAlarm(timer);
     var index = timers.indexOf(timer);
     if (index !== -1) timers.splice(index, 1);
     if (timer.row && timer.row.parentNode) timer.row.parentNode.removeChild(timer.row);
