@@ -10,6 +10,8 @@
 <meta name="theme-color" content="#17140f" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://calebstewart.github.io/recipes/">
 <link rel="icon" type="image/svg+xml" href="/recipes/assets/favicon.svg">
+<link rel="apple-touch-icon" href="/recipes/assets/icon-192.png">
+<link rel="manifest" href="/recipes/manifest.webmanifest">
 <link rel="stylesheet" href="/recipes/assets/style.css">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Recipes">
@@ -407,5 +409,15 @@
 </footer>
 
 <script src="/recipes/assets/search.js" defer></script>
+<script>
+  // Registers the service worker that makes the site installable and lets an
+  // installed copy work with no signal. Nothing else depends on it, so a
+  // browser without support just gets the ordinary site.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/recipes/sw.js', { scope: '/recipes/' });
+    });
+  }
+</script>
 </body>
 </html>

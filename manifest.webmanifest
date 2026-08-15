@@ -1,0 +1,36 @@
+{
+  "name": "Recipes — Caleb Stewart",
+  "short_name": "Recipes",
+  "description": "A personal collection of recipes, kept as plain Markdown.",
+  "id": "/recipes/",
+  "start_url": "/recipes/",
+  "scope": "/recipes/",
+  "display": "standalone",
+  "theme_color": "#17140f",
+  "background_color": "#faf7f2",
+  "lang": "en",
+  "categories": [
+    "food",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "/recipes/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/recipes/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/recipes/assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
