@@ -8,14 +8,14 @@ source: original
 tags: [assembly, chicken, lunch, meal-prep, salad]
 nutrition:
   serving_size: 1 bowl
-  calories: 1118
-  protein: 71
-  fat: 59
+  calories: 1149
+  protein: 72
+  fat: 61
   saturated_fat: 13
-  carbs: 81
-  fiber: 10
-  sugar: 23
-  sodium: 1616
+  carbs: 83
+  fiber: 11
+  sugar: 24
+  sodium: 1627
   cholesterol: 261
 ---
 

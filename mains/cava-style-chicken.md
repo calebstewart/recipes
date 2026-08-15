@@ -8,14 +8,14 @@ source: https://homechefdaily.com/cava-grilled-chicken-recipe/
 tags: [chicken, meal-prep, oven, spicy]
 nutrition:
   serving_size: 1/3 of the recipe, about 5 oz. cooked
-  calories: 269
+  calories: 287
   protein: 30
-  fat: 13
+  fat: 14
   saturated_fat: 2.5
-  carbs: 7
-  fiber: 1
-  sugar: 5
-  sodium: 180
+  carbs: 8
+  fiber: 1.5
+  sugar: 6
+  sodium: 185
   cholesterol: 141
 ---
 
@@ -57,7 +57,7 @@ Built for lunches, over rice or salad or in a pita.
 - Foil-line the pan. Honey plus harissa welds itself to bare metal.
 - Marinate up to overnight but not much past it — the lemon juice starts working on the texture of the meat.
 - The harissa sets the heat. Uses [homemade harissa paste](https://calebstewart.github.io/recipes/basics/harissa-paste/); a hot commercial one at 2 Tbsp. is a lot.
-- No salt in the marinade, on purpose. The harissa is already salted, and this chicken is built for bowls that also carry feta, hummus, tzatziki, and tahini — the salt was stacking on top of four other salty things. A serving lands around 180 mg of sodium instead of the ~730 mg a teaspoon of salt would make it, which is close to 1,000 mg per bowl at the prep-batch scale.
+- No salt in the marinade, on purpose. The harissa is already salted, and this chicken is built for bowls that also carry feta, hummus, tzatziki, and tahini — the salt was stacking on top of four other salty things. A serving lands around 185 mg of sodium instead of the ~735 mg a teaspoon of salt would make it, which is close to 1,000 mg per bowl at the prep-batch scale.
 - Add 1 tsp. of salt per pound back if you're eating it plain — over rice, in a pita, with nothing else going on. On its own it does read flat without it.
 - What the salt was quietly doing is brining: it helps the meat hold moisture. Thighs at 400° are forgiving enough that skipping it barely shows, but breasts would notice.
 - The pan juices are worth keeping. Spoon them back over the sliced chicken instead of leaving them on the foil.

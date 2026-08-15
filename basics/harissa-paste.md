@@ -1,61 +1,59 @@
 ---
 title: Harissa Paste
-servings: 40
-prep_time: 20m
-cook_time: 40m
-source: https://ketodietapp.com/Blog/lchf/how-to-make-harissa-paste
+servings: 8
+prep_time: 30m
+total_time: 30m
+source: https://www.umami.recipes/recipe/ramqExcqafYj4CYxFZWF
 tags: [condiment, make-ahead, sauce, spicy, vegan]
 nutrition:
-  serving_size: 1 Tbsp.
-  calories: 24
-  protein: 0.5
-  fat: 1.5
-  saturated_fat: 0.5
-  carbs: 2
-  fiber: 1
-  sugar: 0.5
-  sodium: 120
+  serving_size: 2 Tbsp.
+  calories: 123
+  protein: 1.8
+  fat: 8.3
+  saturated_fat: 1
+  carbs: 9.8
+  fiber: 4.2
+  sugar: 2.9
+  sodium: 266
 ---
 
 # Harissa Paste
 
-A North African chile paste built on rehydrated dried chiles and roasted red
-peppers, with caraway, coriander, and cumin toasted whole. Smoky and deep rather
-than sharply hot — the heat is whatever you pick out of the chile bin. Makes
-about 2 1/2 cups (40 Tbsp.), which is a lot; it freezes well.
+Rehydrated dried chiles blended with garlic, smoked paprika, cumin, coriander,
+and caraway, loosened with olive oil. Smoky and deep rather than punishing — the
+heat is set by how many árbol chiles go in. Makes about 1 cup, and it is the
+backbone of the chicken and the baked feta pasta.
 
 ## Ingredients
 
-- 5 oz. (140 g) dried chiles, mixed — guajillo, New Mexico, ancho, chipotle, árbol
-- 2 medium red bell peppers (about 8 1/2 oz. / 240 g)
-- 4 to 6 sun-dried tomato pieces, drained (about 1 oz. / 28 g)
-- 6 garlic cloves, peeled
-- 1 tsp. ground turmeric
-- 2 tsp. salt
-- 1/4 c. extra-virgin olive oil
-- Juice of 1 lemon
-
-### Spices, toasted whole
-
+- 10 dried New Mexico chiles, or another large mild-to-medium dried chile
+- 7 dried chiles de árbol
+- 2 1/2 tsp. ground cumin
+- 1 1/2 tsp. ground coriander
 - 1 tsp. caraway seeds
-- 1 tsp. coriander seeds
-- 1 tsp. cumin seeds
+- 4 garlic cloves, minced
+- 1 1/2 tsp. smoked paprika
+- 1 tsp. sea salt
+- 2 Tbsp. fresh lemon juice
+- 1 Tbsp. white wine vinegar or apple cider vinegar
+- 1 Tbsp. tomato paste
+- 1/4 c. olive oil
 
 ## Instructions
 
-1. Heat the oven to 350° convection (380° conventional). Roast the bell peppers whole until the skins blister and char, 30–40 min.
-2. While the peppers roast, cover the dried chiles with boiling water and let them soften, 20–30 min. Keep them submerged — a plate on top works.
-3. Toast the caraway, coriander, and cumin in a dry pan over medium heat until fragrant, 1–2 min, shaking the pan. Grind in a mortar or spice grinder.
-4. Cool the peppers enough to handle, then peel off the skins and pull out the stems and seeds.
-5. Drain the chiles. Pull off the stems and shake out the seeds.
-6. Combine everything — chiles, peppers, sun-dried tomatoes, garlic, ground spices, turmeric, salt, oil, and lemon juice — in a food processor or blender. Process until smooth.
-7. Transfer to a jar and top with a thin film of olive oil.
+1. Cover the dried chiles with hot water in a bowl or measuring cup. Cover and let them steam and soften, 15–20 min.
+2. Meanwhile, combine the cumin, coriander, caraway, garlic, smoked paprika, and salt in the food processor. Add the lemon juice, vinegar, and tomato paste.
+3. Drain the chiles. Pull off the stems and shake out the seeds — wear gloves — then add them to the processor.
+4. Blend 1–2 min, scraping down the sides, until smooth.
+5. With the motor running, stream in the olive oil. Add more oil, or water, until it is as loose as you want it.
+6. Taste and adjust: lemon or vinegar for acidity, smoked paprika for smoke, tomato paste for depth, salt for salt. For more heat, add rehydrated árbol chiles or a pinch of cayenne.
+7. Scoop into a jar.
 
 ## Notes
 
-- Keeps 1 week refrigerated. For longer, freeze in an ice cube tray, then bag the cubes — up to 3 months. A cube is roughly 1 Tbsp., which is the unit most recipes call for anyway.
-- The chile mix is the whole dial. Guajillo and New Mexico are mild and fruity, ancho is mild and raisiny, chipotle brings smoke, árbol brings actual heat. The blend above lands moderately mild; push it hotter with more árbol.
-- Toast the whole seeds, don't substitute pre-ground. Ground spices in a jar have already lost most of what toasting is meant to wake up, and they scorch instantly in a dry pan.
-- Reserve a little of the chile soaking liquid before draining. If the paste is too stiff to blend smoothly, that thins it without watering down the flavor — though it carries bitterness, so add it a spoonful at a time.
-- Wear gloves for stemming and seeding, especially with árbol.
-- Used in [Harissa Baked Feta Pasta](https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/).
+- Ground cumin and coriander rather than toasting and grinding whole seeds — slightly less by volume than the whole-seed amounts, since ground spice packs tighter. The caraway stays whole; the food processor deals with it.
+- The árbol count is the heat dial. Ten New Mexico chiles to seven árbol lands medium-hot. Fewer árbol for a paste that tastes of chile rather than burn.
+- Wear gloves for stemming and seeding, especially the árbol.
+- Keeps 1 month refrigerated. For longer, freeze in an ice cube tray and bag the cubes — 2 months. A cube is about 1 Tbsp., which is the unit most recipes want. Drop frozen cubes straight into anything hot; thaw them first for a dressing or a dip.
+- The nutrition above is the source's own per-serving panel, not an estimate worked out here — one serving is 2 Tbsp., an eighth of the batch.
+- Used in [Cava-style chicken](https://calebstewart.github.io/recipes/mains/cava-style-chicken/) and [harissa baked feta pasta](https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/).

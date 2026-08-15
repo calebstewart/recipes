@@ -7,14 +7,14 @@ source: https://www.umami.recipes/recipe/YHzSlU6nzSPjPxovAd8c
 tags: [meal-prep, pasta, spicy]
 nutrition:
   serving_size: 1/4 of the recipe
-  calories: 1111
+  calories: 1127
   protein: 37
-  fat: 67
+  fat: 68
   saturated_fat: 22
-  carbs: 90
+  carbs: 91
   fiber: 9
-  sugar: 13
-  sodium: 1794
+  sugar: 14
+  sodium: 1800
   cholesterol: 108
 ---
 
@@ -73,10 +73,10 @@ fresh each night. Pasta does not survive storage in sauce; everything else does.
 ## Meatless variant
 
 - Leave the sausage out entirely and keep the chickpeas. The dish stands up on its own — harissa, feta, and roasted tomatoes were always carrying it.
-- Per serving that lands at about 836 cal, 26 g protein, 43 g fat (13 g saturated), 90 g carbohydrate, 9 g fiber, and 1,161 mg sodium: roughly 275 fewer calories, 9 g less saturated fat, and 630 mg less sodium than the version with sausage.
+- Per serving that lands at about 852 cal, 26 g protein, 44 g fat (13 g saturated), 91 g carbohydrate, 9 g fiber, and 1,167 mg sodium: roughly 275 fewer calories, 9 g less saturated fat, and 630 mg less sodium than the version with sausage.
 - Keep the chickpeas in. They supply about 5 g of the 26 g protein, and without them the dish is mostly pasta and fat.
 - The sausage was doing structural work, not just flavor: its rendered fat emulsified into the sauce. Without it, reserve more pasta water than usual — closer to 3/4 c. — and toss harder off heat to bring the sauce together.
-- A whole 10.8-oz. bag of frozen broccoli florets (Birds Eye Steamfresh), microwaved in the bag, is the side that fits: 105 cal, 7 g protein, 14 g carbohydrate, 7 g fiber, and 70 mg sodium for the whole bag. Dinner comes to about 941 cal with 16 g fiber.
+- A whole 10.8-oz. bag of frozen broccoli florets (Birds Eye Steamfresh), microwaved in the bag, is the side that fits: 105 cal, 7 g protein, 14 g carbohydrate, 7 g fiber, and 70 mg sodium for the whole bag. Dinner comes to about 957 cal with 16 g fiber.
 - Prep is simpler too — no browning step and one less container, since the sausage was the component that had to be stored separately.
 
 ## Meal prep
