@@ -269,7 +269,7 @@
       renotify: true,
       requireInteraction: true,
       vibrate: [300, 150, 300],
-      data: { url: window.location.href }
+      data: { url: window.location.href, timerId: timer.id }
     };
 
     /* Android Chrome throws on `new Notification()`, so the service worker is
@@ -286,10 +286,40 @@
     }
 
     try {
-      new window.Notification(title, options);
+      /* Kept so dismissing the row can close it, the way the service worker
+         path does through getNotifications(). */
+      timer.notification = new window.Notification(title, options);
+      timer.notification.addEventListener("close", function () {
+        if (timers.indexOf(timer) !== -1) removeTimer(timer);
+      });
     } catch (err) {
       /* no notification, but the beep and the bar still fired */
     }
+  }
+
+  /* Dismissing a timer takes its notification with it. */
+  function closeNotification(timer) {
+    if (timer.notification) {
+      try {
+        timer.notification.close();
+      } catch (err) {
+        /* already gone */
+      }
+      timer.notification = null;
+    }
+
+    if (!navigator.serviceWorker || !navigator.serviceWorker.ready) return;
+    navigator.serviceWorker.ready.then(function (registration) {
+      if (!registration.getNotifications) return;
+      registration.getNotifications({ tag: "recipe-timer-" + timer.id }).then(
+        function (list) {
+          list.forEach(function (note) {
+            note.close();
+          });
+        },
+        function () {}
+      );
+    }, function () {});
   }
 
   function retitle() {
@@ -503,6 +533,7 @@
 
   function removeTimer(timer) {
     stopAlarm(timer);
+    closeNotification(timer);
     var index = timers.indexOf(timer);
     if (index !== -1) timers.splice(index, 1);
     if (timer.row && timer.row.parentNode) timer.row.parentNode.removeChild(timer.row);
@@ -659,6 +690,33 @@
   boxes.forEach(function (box) {
     box.addEventListener("change", save);
   });
+
+  /* The other half of the sync: notificationclick and notificationclose only
+     reach the service worker, which relays them here. The url check matters
+     because timer ids are per-page counters, so two recipes open at once would
+     otherwise dismiss each other's timers. */
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.addEventListener("message", function (event) {
+      var data = event.data || {};
+      if (data.url && data.url !== window.location.href) return;
+
+      var match = null;
+      timers.forEach(function (timer) {
+        if (timer.id === data.id) match = timer;
+      });
+      if (!match) return;
+
+      if (data.type === "timer-dismissed") {
+        removeTimer(match);
+      } else if (data.type === "timer-acknowledged") {
+        /* Tapping the notification means "I heard it" — stop the noise, but
+           leave the row, since the tap is bringing the cook back to the page. */
+        stopAlarm(match);
+      }
+    });
+    /* Messages queue until this is called when using addEventListener */
+    if (navigator.serviceWorker.startMessages) navigator.serviceWorker.startMessages();
+  }
 
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState !== "visible") return;

@@ -4,7 +4,7 @@
 // works with no signal, and each visit quietly re-fetches what it served. A new
 // build changes VERSION, so the install step below replaces the whole cache.
 
-const VERSION = 'e602c1af72607b35';
+const VERSION = 'ea4edc00cf5b52d0';
 const CACHE = 'recipes-' + VERSION;
 const SCOPE = '/recipes/';
 const START_URL = '/recipes/';
@@ -84,7 +84,18 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Cooking mode posts its timer alarms through this registration, because
+// Timer alarms and the page they came from are two views of one thing, so they
+// are kept in step: the page closes the notification when its timer is
+// dismissed, and these handlers tell the page when the notification is the one
+// that was dismissed. Messages carry the recipe URL because timer ids are
+// per-page counters — two recipes open at once would otherwise collide.
+function tellPages(message) {
+  return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+    clients.forEach((client) => client.postMessage(message));
+  });
+}
+
+// Cooking mode posts its alarms through this registration, because
 // `new Notification()` throws on Android Chrome. Tapping one should land on the
 // recipe that set it rather than opening a second copy of the site.
 self.addEventListener('notificationclick', (event) => {
@@ -93,16 +104,24 @@ self.addEventListener('notificationclick', (event) => {
   const target = data.url || START_URL;
 
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-      for (const client of clients) {
-        if (client.url === target && 'focus' in client) {
-          return client.focus();
+    tellPages({ type: 'timer-acknowledged', id: data.timerId, url: data.url })
+      .then(() => self.clients.matchAll({ type: 'window', includeUncontrolled: true }))
+      .then((clients) => {
+        for (const client of clients) {
+          if (client.url === target && 'focus' in client) {
+            return client.focus();
+          }
         }
-      }
-      if (clients.length && 'focus' in clients[0]) {
-        return clients[0].focus();
-      }
-      return self.clients.openWindow(target);
-    })
+        if (clients.length && 'focus' in clients[0]) {
+          return clients[0].focus();
+        }
+        return self.clients.openWindow(target);
+      })
   );
+});
+
+// Swiping the notification away is a dismissal: drop the timer with it.
+self.addEventListener('notificationclose', (event) => {
+  const data = event.notification.data || {};
+  event.waitUntil(tellPages({ type: 'timer-dismissed', id: data.timerId, url: data.url }));
 });
