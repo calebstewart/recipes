@@ -1,0 +1,81 @@
+[
+  {
+    "id": "mains/harissa-baked-feta-pasta",
+    "title": "Harissa Baked Feta Pasta",
+    "url": "/recipes/mains/harissa-baked-feta-pasta/",
+    "category": "mains",
+    "categoryLabel": "Mains",
+    "description": "An adaptation of Delish's baked feta pasta, reworked for meal prep, with harissa in place of the red pepper flakes and chickpeas and sausage to make it a full dinner. The core idea driving every change: make the sauce ahead, cook pasta fresh each night. Pasta does not survive storage in sauce; everything else does.",
+    "tags": [
+      "meal-prep",
+      "pasta",
+      "spicy"
+    ],
+    "ingredients": [
+      "2 pt. cherry or grape tomatoes",
+      "1 shallot, quartered",
+      "3 garlic cloves, smashed",
+      "1/2 c. extra-virgin olive oil, divided",
+      "1 1/2 to 2 Tbsp. harissa paste (homemade)",
+      "1/2 tsp. dried thyme leaves",
+      "Kosher salt",
+      "1 (8-oz.) block feta",
+      "1 (15-oz.) can chickpeas, drained, rinsed, patted dry",
+      "12 oz. short tubular pasta, macaroni or cavatappi (3 oz. per serving)",
+      "12 oz. pork sausage, casings removed (3 oz. per serving)",
+      "1 Tbsp. fresh lemon juice (about 1 tsp. per serving)",
+      "Fresh basil leaves"
+    ],
+    "time": "1 hr 5 min",
+    "servings": "4 servings"
+  },
+  {
+    "id": "drinks/ginger-mint-limeade",
+    "title": "Ginger Mint Limeade",
+    "url": "/recipes/drinks/ginger-mint-limeade/",
+    "category": "drinks",
+    "categoryLabel": "Drinks",
+    "description": "Tart and properly gingery, with the mint steeped into the hot syrup rather than muddled into the glass. The syrup keeps for two weeks, so the drink itself is a one-minute job once it's made.",
+    "tags": [
+      "non-alcoholic",
+      "summer",
+      "make-ahead"
+    ],
+    "ingredients": [
+      "1 c. water",
+      "1 c. granulated sugar",
+      "3 oz. fresh ginger (a 4-inch piece), unpeeled, sliced into thin coins",
+      "1 packed c. fresh mint leaves and tender stems",
+      "1 c. fresh lime juice (from about 8 limes)",
+      "4 c. cold water or sparkling water",
+      "Ice",
+      "Lime wheels and mint sprigs, to serve"
+    ],
+    "time": "40 min",
+    "servings": "6 servings"
+  },
+  {
+    "id": "basics/quick-pickled-red-onions",
+    "title": "Quick Pickled Red Onions",
+    "url": "/recipes/basics/quick-pickled-red-onions/",
+    "category": "basics",
+    "categoryLabel": "Basics",
+    "description": "Sharp, sweet-sour, and bright pink within an hour. They keep for weeks and go on tacos, sandwiches, grain bowls, and anything rich enough to need cutting through.",
+    "tags": [
+      "condiment",
+      "make-ahead",
+      "vegetarian"
+    ],
+    "ingredients": [
+      "1 large red onion (about 8 oz.), halved and sliced thin",
+      "1/2 c. distilled white vinegar",
+      "1/2 c. water",
+      "1 Tbsp. granulated sugar",
+      "1 1/2 tsp. kosher salt",
+      "1 tsp. black peppercorns",
+      "1 bay leaf"
+    ],
+    "time": "15 min",
+    "servings": "8 servings"
+  }
+]
