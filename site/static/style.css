@@ -1298,15 +1298,28 @@ body.cooking .ing-list input[type="checkbox"] {
   outline-offset: 2px;
 }
 
+/* Always on while cooking mode is, so there is a standing sign the mode is on */
 .cook-hint {
-  margin: 0.4rem 0 0;
+  margin: 0;
+  font-family: var(--font-ui);
   font-size: var(--text-xs);
-  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.timer-list:not(:empty) {
+  margin-bottom: 0.5rem;
 }
 
 /* Keep the last step clear of the band */
-body.has-timers {
-  padding-bottom: 8rem;
+body.cook-bar-open {
+  padding-bottom: 4rem;
+}
+
+body.cook-bar-open.has-timers {
+  padding-bottom: 9rem;
 }
 
 @media (min-width: 900px) {
@@ -1320,7 +1333,8 @@ body.has-timers {
     padding: 0.75rem 1rem;
   }
 
-  body.has-timers {
+  body.cook-bar-open,
+  body.cook-bar-open.has-timers {
     padding-bottom: 0;
   }
 }
@@ -1431,7 +1445,8 @@ body.has-timers {
     display: none !important;
   }
 
-  body.has-timers {
+  body.cook-bar-open,
+  body.cook-bar-open.has-timers {
     padding-bottom: 0;
   }
 

@@ -30,6 +30,7 @@
   var nextId = 1;
   var ticker = null;
   var wakeLock = null;
+  var wakeState = "unknown"; // "unknown" | "on" | "off"
   var audio = null;
   var askedNotify = false;
   var baseTitle = document.title;
@@ -251,27 +252,53 @@
 
   /* ------------------------------------------------------------- wake lock */
 
+  /* The bar is the only sign that cooking mode is on, so it says so — and it
+     reports what the screen is actually doing rather than what the browser
+     claims to support. */
+  function setHint() {
+    if (!barHint) return;
+    var text = "Cooking mode";
+    if (wakeState === "on") text += " — screen stays awake";
+    else if (wakeState === "off") text += " — screen may sleep";
+    barHint.textContent = text;
+  }
+
   function acquireWake() {
-    if (!navigator.wakeLock || document.visibilityState !== "visible") return;
+    if (!navigator.wakeLock) {
+      wakeState = "off";
+      setHint();
+      return;
+    }
+    if (document.visibilityState !== "visible") return;
     try {
       navigator.wakeLock.request("screen").then(
         function (lock) {
           wakeLock = lock;
+          wakeState = "on";
+          setHint();
           lock.addEventListener("release", function () {
             wakeLock = null;
+            /* Released whenever the page hides; visibilitychange re-requests */
+            if (cooking) {
+              wakeState = "off";
+              setHint();
+            }
           });
-          if (barHint) barHint.textContent = "Screen stays awake";
         },
         function () {
           /* refused: low battery, or a policy that forbids it */
+          wakeState = "off";
+          setHint();
         }
       );
     } catch (err) {
-      /* older engines throw synchronously */
+      wakeState = "off";
+      setHint();
     }
   }
 
   function releaseWake() {
+    wakeState = "unknown";
     if (!wakeLock) return;
     try {
       wakeLock.release();
@@ -296,24 +323,35 @@
 
     barHint = document.createElement("p");
     barHint.className = "cook-hint";
-    barHint.textContent = navigator.wakeLock ? "Screen stays awake" : "Screen may sleep";
 
+    /* Timers stack above the hint, so the hint is a steady footer line and the
+       bar simply grows upward as timers are added. */
     bar.appendChild(barList);
     bar.appendChild(barHint);
     document.body.appendChild(bar);
+    setHint();
     return bar;
   }
 
   function showBar() {
     buildBar();
     bar.hidden = false;
-    document.body.classList.add("has-timers");
+    document.body.classList.add("cook-bar-open");
+  }
+
+  /* On a phone the bar overlays the page, so the body needs to reserve room for
+     it — more once timers are stacked above the hint line. */
+  function syncBarHeight() {
+    if (timers.length) document.body.classList.add("has-timers");
+    else document.body.classList.remove("has-timers");
   }
 
   function hideBarIfEmpty() {
-    if (timers.length || !bar) return;
+    /* The bar belongs to the mode, not to the timers: it stays up as long as
+       cooking mode is on, so there is always something saying so. */
+    if (cooking || timers.length || !bar) return;
     bar.hidden = true;
-    document.body.classList.remove("has-timers");
+    document.body.classList.remove("cook-bar-open");
   }
 
   function drawRow(timer) {
@@ -396,6 +434,7 @@
     buildBar();
     barList.appendChild(row);
     drawRow(timer);
+    syncBarHeight();
   }
 
   function removeTimer(timer) {
@@ -405,6 +444,7 @@
     if (timer.button) timer.button.removeAttribute("data-running");
     stopTickerIfIdle();
     retitle();
+    syncBarHeight();
     hideBarIfEmpty();
     save();
   }
@@ -477,7 +517,7 @@
     toggle.textContent = "Stop cooking";
     toggle.setAttribute("aria-pressed", "true");
 
-    buildBar();
+    showBar();
     acquireWake();
 
     if (!restoring) {
@@ -502,6 +542,7 @@
 
     timers.slice().forEach(removeTimer);
     releaseWake();
+    hideBarIfEmpty();
     announce("Cooking mode off.");
     save();
   }
