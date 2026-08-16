@@ -97,6 +97,15 @@ page into something usable with your hands full:
 
 - Ingredients get checkboxes. They are hidden and disabled the rest of the time,
   so an ordinary read of the recipe is just the list.
+- **Batch** sets a multiplier — ½× to 3× — and every amount is recalculated in
+  place, the serving count with it. `render_amount()` in [`build.py`](build.py)
+  finds the quantity an ingredient line leads with and hands the numbers to the
+  page; a number further in is a package size (`1 (8-oz.) block feta`) or a
+  per-serving aside, and neither scales with the batch. Results are rounded to
+  fractions a measuring spoon can hit, and a scaled number is coloured so it
+  cannot be mistaken for the written one. Times are not scaled — a double batch
+  in one pan takes longer, and only the cook can see the pan — and neither is
+  the nutrition table, which is per serving either way.
 - Steps that name a duration get a timer button. Durations are found in the step
   prose at build time — `find_step_timers()` in [`build.py`](build.py) — so
   "Bake 20–25 min, flipping once at 10–12 min" offers two timers. A range starts
@@ -105,9 +114,9 @@ page into something usable with your hands full:
   Several can run at once. When one finishes it posts a notification, beeps, and
   vibrates.
 - The screen is asked to stay awake while cooking mode is on.
-- Cooking mode, checked ingredients, and running timers survive a reload; timers
-  are stored as absolute end times, so they resume mid-flight rather than
-  restarting.
+- Cooking mode, checked ingredients, the multiplier, and running timers survive a
+  reload; timers are stored as absolute end times, so they resume mid-flight
+  rather than restarting.
 
 Worth knowing before you rely on it: a web page cannot ring like an alarm clock.
 If the browser evicts the page, nothing fires until you open it again — at which

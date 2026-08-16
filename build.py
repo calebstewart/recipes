@@ -961,6 +961,91 @@ def render_blocks(blocks: list[Block], list_class: str, indent: str = "    ") ->
     return "\n".join(out)
 
 
+#: Fractions written as one character, and what they are worth.
+_VULGAR = {
+    "½": 0.5,
+    "⅓": 1 / 3,
+    "⅔": 2 / 3,
+    "¼": 0.25,
+    "¾": 0.75,
+    "⅕": 0.2,
+    "⅙": 1 / 6,
+    "⅛": 0.125,
+    "⅜": 0.375,
+    "⅝": 0.625,
+    "⅞": 0.875,
+}
+
+#: One quantity, in the forms people write: `2`, `1.5`, `1/2`, `1 1/2`, `1½`, `½`.
+_QUANTITY = (
+    r"\d+\s+\d+/\d+"
+    rf"|\d+\s*[{''.join(_VULGAR)}]"
+    r"|\d+/\d+"
+    r"|\d+(?:\.\d+)?"
+    rf"|[{''.join(_VULGAR)}]"
+)
+
+#: The amount an ingredient line leads with, optionally a range (`2 to 4 Tbsp.`).
+#: Anchored at the start on purpose: a number later in the line is a size on a
+#: package (`1 (8-oz.) block feta`) or a per-serving aside, and neither scales
+#: with the batch. A leading hedge is stepped over so `About 1 oz.` still scales.
+_AMOUNT_RE = re.compile(
+    r"^(?:(?:about|around|roughly|approximately)\s+)?"
+    rf"(?P<low>{_QUANTITY})"
+    rf"(?:(?P<sep>\s*(?:to|or|[–—-])\s*)(?P<high>{_QUANTITY}))?"
+    r"(?=[\s(]|$)",
+    re.IGNORECASE,
+)
+
+_PART_RE = re.compile(
+    rf"(\d+)/(\d+)|(\d+(?:\.\d+)?)|([{''.join(_VULGAR)}])"
+)
+
+
+def amount_value(raw: str) -> float:
+    """What a written quantity is worth. `1 1/2` and `1½` are both 1.5."""
+    total = 0.0
+    for match in _PART_RE.finditer(raw):
+        if match.group(1):
+            total += int(match.group(1)) / int(match.group(2))
+        elif match.group(3):
+            total += float(match.group(3))
+        else:
+            total += _VULGAR[match.group(4)]
+    return total
+
+
+def render_amount(html: str) -> str:
+    """Wrap a leading quantity so cooking mode can scale it.
+
+    The span carries the numbers; its text stays exactly what was written, so
+    the page reads the same and JavaScript only has to swap the text back in
+    when the multiplier returns to 1×.
+    """
+    match = _AMOUNT_RE.match(html)
+    if not match:
+        return html
+
+    low = amount_value(match.group("low"))
+    if low <= 0:
+        return html
+
+    attrs = f' data-amount="{low:.6g}"'
+    end = match.end("low")
+    if match.group("high"):
+        high = amount_value(match.group("high"))
+        if high > 0:
+            attrs += f' data-amount-high="{high:.6g}"'
+            attrs += f' data-amount-sep="{esc(match.group("sep"))}"'
+            end = match.end("high")
+
+    start = match.start("low")
+    return (
+        f'{html[:start]}<span class="amount"{attrs}>{html[start:end]}</span>'
+        f"{html[end:]}"
+    )
+
+
 def render_ingredients(recipe: Recipe) -> str:
     section = recipe.ingredients
     assert section is not None
@@ -979,7 +1064,8 @@ def render_ingredients(recipe: Recipe) -> str:
                 # in the ordinary view, and a hidden control that still toggles
                 # on a label click would strike ingredients out invisibly.
                 "          <li><label><input type=\"checkbox\" disabled>"
-                f'<span itemprop="recipeIngredient">{item.html}</span></label></li>'
+                f'<span itemprop="recipeIngredient">{render_amount(item.html)}</span>'
+                "</label></li>"
             )
         out.append("        </ul>")
         out.append("      </div>")
@@ -1066,8 +1152,13 @@ def render_nutrition(recipe: Recipe) -> str:
 def render_meta_list(recipe: Recipe) -> str:
     rows: list[tuple[str, str]] = []
     if recipe.servings:
+        # Scalable too: a doubled ingredient list that still claims to serve
+        # four would be lying to the cook.
         rows.append(
-            ("Serves", f'<dd itemprop="recipeYield">{esc(recipe.servings)}</dd>')
+            (
+                "Serves",
+                f'<dd itemprop="recipeYield">{render_amount(esc(recipe.servings))}</dd>',
+            )
         )
     for label, value in (
         ("Prep", recipe.prep),

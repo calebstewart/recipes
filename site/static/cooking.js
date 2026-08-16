@@ -1,4 +1,5 @@
-/* Cooking mode: check ingredients off, run step timers, keep the screen awake.
+/* Cooking mode: check ingredients off, scale the batch, run step timers, keep
+   the screen awake.
 
    Everything here is an enhancement. Without JavaScript the page is the plain
    recipe: no toggle, no timer buttons, and the ingredient checkboxes stay
@@ -20,6 +21,24 @@
   var timerGroups = slice(recipe.querySelectorAll(".step-timers"));
   var steps = slice(document.querySelectorAll(".step-list > li"));
 
+  /* Every quantity build.py could parse: the ingredient amounts and the serving
+     count. `written` is what the recipe says, kept so 1× is the page verbatim
+     rather than the formatter's idea of it. */
+  var amounts = slice(recipe.querySelectorAll(".amount"))
+    .map(function (el) {
+      var high = parseFloat(el.getAttribute("data-amount-high"));
+      return {
+        el: el,
+        written: el.textContent,
+        low: parseFloat(el.getAttribute("data-amount")),
+        high: isFinite(high) ? high : null,
+        sep: el.getAttribute("data-amount-sep") || " to "
+      };
+    })
+    .filter(function (amount) {
+      return isFinite(amount.low) && amount.low > 0;
+    });
+
   if (!boxes.length && !timerGroups.length) return;
 
   var STORAGE_KEY = "recipes:cook:" + window.location.pathname;
@@ -29,6 +48,16 @@
   var ALARM_MAX_MS = 60 * 1000;
   var ALARM_GAP_S = 4; // seconds between bursts
   var ALARM_PEAK = 0.6; // gain at the top of a pip
+
+  /* Multipliers worth a button. Anything finer is arithmetic the cook can do
+     faster than they can tap. */
+  var SCALES = [
+    { value: 0.5, label: "½×", name: "half" },
+    { value: 1, label: "1×", name: "the written amounts" },
+    { value: 1.5, label: "1½×", name: "one and a half times" },
+    { value: 2, label: "2×", name: "double" },
+    { value: 3, label: "3×", name: "triple" }
+  ];
 
   var cooking = false;
   var timers = [];
@@ -41,6 +70,10 @@
   var baseTitle = document.title;
   var recipeName = (recipe.querySelector(".recipe-title") || {}).textContent || baseTitle;
   var announcer = null;
+
+  var scale = 1;
+  var scaleGroup = null;
+  var scaleButtons = [];
 
   var toggle = null;
   var bar = null;
@@ -91,6 +124,122 @@
     return 0;
   }
 
+  /* ----------------------------------------------------------------- scale */
+
+  /* Denominators to try, simplest first. Past the obvious ones: fifths because
+     a portion of a batch is written that way, and sixths and sixteenths because
+     that is what a third and three eighths become when halved. */
+  var DENOMINATORS = [1, 2, 3, 4, 5, 6, 8, 16];
+
+  /* How far off a denominator may land and still be used. Wide enough to
+     absorb the rounding in a value like 1/3, tight enough that the number
+     shown is never more than a hair from the real one. */
+  var SNAP = 1 / 128;
+
+  function gcd(a, b) {
+    while (b) {
+      var rest = a % b;
+      a = b;
+      b = rest;
+    }
+    return a;
+  }
+
+  /* A scaled amount the way a recipe writes it: `3`, `1 1/2`, `2/3`. Decimals
+     are the fallback for anything that will not sit on a kitchen fraction. */
+  function quantity(value) {
+    for (var i = 0; i < DENOMINATORS.length; i++) {
+      var d = DENOMINATORS[i];
+      var n = Math.round(value * d);
+      if (n <= 0 || Math.abs(value * d - n) >= SNAP) continue;
+      var factor = gcd(n, d);
+      n /= factor;
+      d /= factor;
+      if (d === 1) return String(n);
+      var whole = Math.floor(n / d);
+      return (whole ? whole + " " : "") + (n - whole * d) + "/" + d;
+    }
+    return String(Math.round(value * 100) / 100);
+  }
+
+  function drawAmounts() {
+    amounts.forEach(function (amount) {
+      if (scale === 1) {
+        amount.el.textContent = amount.written;
+        return;
+      }
+      var text = quantity(amount.low * scale);
+      if (amount.high) text += amount.sep + quantity(amount.high * scale);
+      amount.el.textContent = text;
+    });
+    /* Marks the numbers as no longer the ones on the page, so a glance at a
+       propped-up phone cannot mistake a scaled list for the written one. */
+    if (scale === 1) document.body.classList.remove("scaled");
+    else document.body.classList.add("scaled");
+  }
+
+  function setScale(value, restoring) {
+    var choice = null;
+    SCALES.forEach(function (option) {
+      if (option.value === value) choice = option;
+    });
+    if (!choice) return; // an unknown multiplier from an older stored session
+
+    scale = choice.value;
+    scaleButtons.forEach(function (button) {
+      var on = parseFloat(button.getAttribute("data-scale")) === scale;
+      button.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    drawAmounts();
+
+    if (restoring) return;
+    announce(
+      scale === 1
+        ? "Ingredients back to the written amounts."
+        : "Ingredients scaled to " + choice.name + "."
+    );
+    save();
+  }
+
+  function buildScale() {
+    if (!amounts.length) return null;
+    var section = recipe.querySelector(".ingredients");
+    if (!section) return null;
+
+    var group = document.createElement("div");
+    group.className = "ing-scale";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", "Scale the ingredients");
+    /* Like the timer buttons: it does nothing outside cooking mode, so it is
+       not on screen outside cooking mode. */
+    group.hidden = true;
+
+    var caption = document.createElement("span");
+    caption.className = "ing-scale-label";
+    caption.textContent = "Batch";
+    group.appendChild(caption);
+
+    SCALES.forEach(function (option) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "scale-btn";
+      button.textContent = option.label;
+      button.setAttribute("data-scale", String(option.value));
+      button.setAttribute("aria-pressed", option.value === scale ? "true" : "false");
+      button.setAttribute("aria-label", "Scale ingredients to " + option.name);
+      button.addEventListener("click", function () {
+        setScale(option.value, false);
+      });
+      scaleButtons.push(button);
+      group.appendChild(button);
+    });
+
+    var heading = section.querySelector("h2");
+    if (heading && heading.nextSibling) section.insertBefore(group, heading.nextSibling);
+    else section.appendChild(group);
+    return group;
+  }
+
   /* --------------------------------------------------------------- storage */
 
   function save() {
@@ -121,6 +270,7 @@
           mode: cooking,
           count: boxes.length,
           checked: checked,
+          scale: scale,
           timers: stored
         })
       );
@@ -610,6 +760,7 @@
     timerGroups.forEach(function (group) {
       group.hidden = false;
     });
+    if (scaleGroup) scaleGroup.hidden = false;
     toggle.textContent = "Stop cooking";
     toggle.setAttribute("aria-pressed", "true");
 
@@ -633,6 +784,10 @@
     timerGroups.forEach(function (group) {
       group.hidden = true;
     });
+    /* The multiplier belongs to the session, like the checkboxes: leaving the
+       mode puts the written amounts back. */
+    setScale(1, true);
+    if (scaleGroup) scaleGroup.hidden = true;
     toggle.textContent = "Start cooking";
     toggle.setAttribute("aria-pressed", "false");
 
@@ -654,6 +809,8 @@
     if (cooking) exit();
     else enter(false);
   });
+
+  scaleGroup = buildScale();
 
   var actions = document.createElement("div");
   actions.className = "cook-actions";
@@ -742,6 +899,8 @@
         if (boxes[index]) boxes[index].checked = true;
       });
     }
+
+    if (data.mode && data.scale) setScale(data.scale, true);
 
     if (!data.timers || !data.timers.length) return;
 
