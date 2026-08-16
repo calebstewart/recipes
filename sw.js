@@ -4,7 +4,7 @@
 // works with no signal, and each visit quietly re-fetches what it served. A new
 // build changes VERSION, so the install step below replaces the whole cache.
 
-const VERSION = '75e69ea71ccffd10';
+const VERSION = '2eac927310f0985b';
 const CACHE = 'recipes-' + VERSION;
 const SCOPE = '/recipes/';
 const START_URL = '/recipes/';
