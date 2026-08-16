@@ -49,8 +49,8 @@
   var ALARM_GAP_S = 4; // seconds between bursts
   var ALARM_PEAK = 0.6; // gain at the top of a pip
 
-  /* Multipliers worth a button. Anything finer is arithmetic the cook can do
-     faster than they can tap. */
+  /* Multipliers worth a button of their own. Anything else is typed into the
+     dialog behind the last one. */
   var SCALES = [
     { value: 0.5, label: "½×", name: "half" },
     { value: 1, label: "1×", name: "the written amounts" },
@@ -58,6 +58,14 @@
     { value: 2, label: "2×", name: "double" },
     { value: 3, label: "3×", name: "triple" }
   ];
+
+  var CUSTOM_LABEL = "Other…";
+
+  /* Bounds on a typed multiplier: past them the arithmetic is fine and the
+     cooking is not, and a slip on a number pad should not silently produce a
+     list nobody can read. */
+  var MIN_SCALE = 0.01;
+  var MAX_SCALE = 100;
 
   var cooking = false;
   var timers = [];
@@ -74,6 +82,10 @@
   var scale = 1;
   var scaleGroup = null;
   var scaleButtons = [];
+  var customButton = null;
+  var customDialog = null;
+  var customInput = null;
+  var customError = null;
 
   var toggle = null;
   var bar = null;
@@ -178,27 +190,164 @@
     else document.body.classList.add("scaled");
   }
 
-  function setScale(value, restoring) {
-    var choice = null;
-    SCALES.forEach(function (option) {
-      if (option.value === value) choice = option;
-    });
-    if (!choice) return; // an unknown multiplier from an older stored session
+  /* A multiplier as a button reads it: `2×`, `2.5×`, `0.75×`. */
+  function scaleLabel(value) {
+    return String(Math.round(value * 1000) / 1000) + "×";
+  }
 
-    scale = choice.value;
+  function preset(value) {
+    var found = null;
+    SCALES.forEach(function (option) {
+      if (option.value === value) found = option;
+    });
+    return found;
+  }
+
+  function setScale(value, restoring) {
+    /* Anything outside the range is a typo or a stored value from a version
+       that allowed it; either way the page keeps the multiplier it has. */
+    if (!isFinite(value) || value < MIN_SCALE || value > MAX_SCALE) return;
+
+    scale = value;
+    var chosen = preset(value);
+
     scaleButtons.forEach(function (button) {
       var on = parseFloat(button.getAttribute("data-scale")) === scale;
       button.setAttribute("aria-pressed", on ? "true" : "false");
     });
+    if (customButton) {
+      /* The custom button doubles as the readout for a multiplier no preset
+         covers, so the row always shows what the list is scaled to. */
+      customButton.textContent = chosen ? CUSTOM_LABEL : scaleLabel(scale);
+      customButton.setAttribute("aria-pressed", chosen ? "false" : "true");
+    }
     drawAmounts();
 
     if (restoring) return;
     announce(
       scale === 1
         ? "Ingredients back to the written amounts."
-        : "Ingredients scaled to " + choice.name + "."
+        : "Ingredients scaled to " + (chosen ? chosen.name : scaleLabel(scale)) + "."
     );
     save();
+  }
+
+  /* --------------------------------------------------------- custom scale */
+
+  /* Only ever opened by the button that owns it, so the dialog is built the
+     first time it is asked for rather than on every recipe page. */
+  function buildDialog() {
+    if (customDialog) return customDialog;
+
+    var dialog = document.createElement("dialog");
+    dialog.className = "scale-dialog";
+    dialog.setAttribute("aria-labelledby", "scale-dialog-h");
+
+    var form = document.createElement("form");
+    form.className = "scale-form";
+    /* The bounds stay on the input, for the number pad and for anything
+       reading the form, but the checking is done below: one message in the
+       dialog beats a native bubble that a phone may never show. */
+    form.noValidate = true;
+
+    var heading = document.createElement("h2");
+    heading.id = "scale-dialog-h";
+    heading.textContent = "Custom batch";
+
+    var label = document.createElement("label");
+    label.htmlFor = "scale-input";
+    label.textContent = "Multiply every ingredient by";
+
+    var field = document.createElement("div");
+    field.className = "scale-field";
+
+    customInput = document.createElement("input");
+    customInput.id = "scale-input";
+    customInput.type = "number";
+    /* A phone keyboard with a decimal point on it, and no spinner steps to
+       fight when the answer is 1.75. */
+    customInput.inputMode = "decimal";
+    customInput.step = "any";
+    customInput.min = String(MIN_SCALE);
+    customInput.max = String(MAX_SCALE);
+    customInput.autocomplete = "off";
+
+    var times = document.createElement("span");
+    times.className = "scale-times";
+    times.setAttribute("aria-hidden", "true");
+    times.textContent = "×";
+
+    var error = document.createElement("p");
+    error.className = "scale-error";
+    error.setAttribute("role", "alert");
+    error.hidden = true;
+
+    var menu = document.createElement("div");
+    menu.className = "scale-menu";
+
+    var cancel = document.createElement("button");
+    cancel.type = "button";
+    cancel.className = "scale-cancel";
+    cancel.textContent = "Cancel";
+
+    var apply = document.createElement("button");
+    apply.type = "submit";
+    apply.className = "scale-apply";
+    apply.textContent = "Scale";
+
+    cancel.addEventListener("click", function () {
+      dialog.close();
+    });
+
+    /* Tapping the dark outside is how a sheet on a phone gets dismissed, and a
+       modal dialog does not do it on its own. */
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) dialog.close();
+    });
+
+    form.addEventListener("submit", function (event) {
+      /* Kept out of the browser's hands so a bad number can be reported
+         without the dialog closing under it. */
+      event.preventDefault();
+      var value = parseFloat(customInput.value);
+      if (!isFinite(value) || value < MIN_SCALE || value > MAX_SCALE) {
+        error.textContent =
+          "Enter a number between " + MIN_SCALE + " and " + MAX_SCALE + ".";
+        error.hidden = false;
+        customInput.focus();
+        customInput.select();
+        return;
+      }
+      dialog.close();
+      setScale(value, false);
+    });
+
+    field.appendChild(customInput);
+    field.appendChild(times);
+    form.appendChild(heading);
+    form.appendChild(label);
+    form.appendChild(field);
+    form.appendChild(error);
+    menu.appendChild(cancel);
+    menu.appendChild(apply);
+    form.appendChild(menu);
+    dialog.appendChild(form);
+    document.body.appendChild(dialog);
+
+    customError = error;
+    customDialog = dialog;
+    return dialog;
+  }
+
+  function openDialog() {
+    var dialog = buildDialog();
+    customError.hidden = true;
+    /* Opens on the multiplier in force, so a nudge from 1.5 to 1.6 is an
+       edit rather than a retype. */
+    customInput.value = String(Math.round(scale * 1000) / 1000);
+    dialog.showModal();
+    customInput.focus();
+    customInput.select();
   }
 
   function buildScale() {
@@ -233,6 +382,20 @@
       scaleButtons.push(button);
       group.appendChild(button);
     });
+
+    /* Needs a modal dialog, which is the one part of this that an old browser
+       may not have. Without it the presets are still the whole feature. */
+    if (typeof window.HTMLDialogElement !== "undefined") {
+      customButton = document.createElement("button");
+      customButton.type = "button";
+      customButton.className = "scale-btn scale-custom";
+      customButton.textContent = CUSTOM_LABEL;
+      customButton.setAttribute("aria-pressed", "false");
+      customButton.setAttribute("aria-haspopup", "dialog");
+      customButton.setAttribute("aria-label", "Scale ingredients by a number you enter");
+      customButton.addEventListener("click", openDialog);
+      group.appendChild(customButton);
+    }
 
     var heading = section.querySelector("h2");
     if (heading && heading.nextSibling) section.insertBefore(group, heading.nextSibling);
@@ -786,6 +949,7 @@
     });
     /* The multiplier belongs to the session, like the checkboxes: leaving the
        mode puts the written amounts back. */
+    if (customDialog && customDialog.open) customDialog.close();
     setScale(1, true);
     if (scaleGroup) scaleGroup.hidden = true;
     toggle.textContent = "Start cooking";

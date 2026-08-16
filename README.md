@@ -97,7 +97,8 @@ page into something usable with your hands full:
 
 - Ingredients get checkboxes. They are hidden and disabled the rest of the time,
   so an ordinary read of the recipe is just the list.
-- **Batch** sets a multiplier — ½× to 3× — and every amount is recalculated in
+- **Batch** sets a multiplier — ½× to 3×, or **Other…** for a number you type,
+  like 1.25 for a jar you want filled — and every amount is recalculated in
   place, the serving count with it. `render_amount()` in [`build.py`](build.py)
   finds the quantity an ingredient line leads with and hands the numbers to the
   page; a number further in is a package size (`1 (8-oz.) block feta`) or a
