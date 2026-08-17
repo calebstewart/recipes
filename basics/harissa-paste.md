@@ -1,59 +1,63 @@
 ---
 title: Harissa Paste
-servings: 8
-prep_time: 30m
-total_time: 30m
-source: https://www.umami.recipes/recipe/ramqExcqafYj4CYxFZWF
+servings: 12
+prep_time: 20m
+total_time: 45m
+source: original, mimicking Zwita Spicy Harissa (https://zwitafoods.com/products/spicy-harissa)
 tags: [condiment, make-ahead, sauce, spicy, vegan]
 nutrition:
   serving_size: 2 Tbsp.
-  calories: 123
-  protein: 1.8
-  fat: 8.3
-  saturated_fat: 1
-  carbs: 9.8
-  fiber: 4.2
-  sugar: 2.9
-  sodium: 266
+  calories: 65
+  protein: 0.8
+  fat: 5.1
+  saturated_fat: 0.8
+  carbs: 5.1
+  fiber: 2
+  sugar: 1.6
+  sodium: 290
 ---
 
 # Harissa Paste
 
-Rehydrated dried chiles blended with garlic, smoked paprika, cumin, coriander,
-and caraway, loosened with olive oil. Smoky and deep rather than punishing — the
-heat is set by how many árbol chiles go in. Makes about 1 cup, and it is the
-backbone of the chicken and the baked feta pasta.
+Tunisian-style, built to mimic Zwita Spicy: rehydrated dried chiles ground with
+raw garlic, freshly toasted coriander and caraway, salt, and a splash of
+vinegar, then loosened with olive oil and no further. Thick enough to hold a
+ridge on the spoon, garlicky, with heat that arrives slowly and stays. Makes
+about 1 1/2 cups, and it is the backbone of the chicken and the baked feta
+pasta.
 
 ## Ingredients
 
-- 10 dried New Mexico chiles, or another large mild-to-medium dried chile
-- 7 dried chiles de árbol
-- 2 1/2 tsp. ground cumin
-- 1 1/2 tsp. ground coriander
-- 1 tsp. caraway seeds
-- 4 garlic cloves, minced
-- 1 1/2 tsp. smoked paprika
-- 1 tsp. sea salt
-- 2 Tbsp. fresh lemon juice
-- 1 Tbsp. white wine vinegar or apple cider vinegar
-- 1 Tbsp. tomato paste
-- 1/4 c. olive oil
+- 12 dried guajillo chiles
+- 10 dried chiles de árbol
+- 6 garlic cloves, peeled
+- 2 tsp. coriander seeds
+- 1 1/2 tsp. caraway seeds
+- 1 1/2 tsp. fine sea salt, plus more to taste
+- 1 Tbsp. white wine vinegar
+- 1/4 c. extra-virgin olive oil, plus more for the jar
 
 ## Instructions
 
-1. Cover the dried chiles with hot water in a bowl or measuring cup. Cover and let them steam and soften, 15–20 min.
-2. Meanwhile, combine the cumin, coriander, caraway, garlic, smoked paprika, and salt in the food processor. Add the lemon juice, vinegar, and tomato paste.
-3. Drain the chiles. Pull off the stems and shake out the seeds — wear gloves — then add them to the processor.
-4. Blend 1–2 min, scraping down the sides, until smooth.
-5. With the motor running, stream in the olive oil. Add more oil, or water, until it is as loose as you want it.
-6. Taste and adjust: lemon or vinegar for acidity, smoked paprika for smoke, tomato paste for depth, salt for salt. For more heat, add rehydrated árbol chiles or a pinch of cayenne.
-7. Scoop into a jar.
+1. Snip the stems off the guajillos and árbols with scissors and shake out the seeds — wear gloves. Rinse and drain.
+2. Cover the chiles with boiling water, weigh them down with a plate, and soak 30 min, until they bend like wet paper.
+3. Meanwhile, toast the coriander and caraway in a dry skillet over medium-low until fragrant and a shade darker, 1–2 min. Grind to a coarse powder.
+4. Drain the chiles and squeeze them dry in your hands. Discard the soaking water — it runs bitter.
+5. Combine the chiles, garlic, ground spices, salt, and vinegar in the food processor. Blend 2–3 min, scraping down the sides, to a thick paste. If the blades won't catch, add fresh warm water a tablespoon at a time — no more than that.
+6. With the motor running, stream in the olive oil until it turns glossy and holds a ridge, about the consistency of peanut butter. Stop there.
+7. Taste for salt and adjust.
+8. Scoop into a jar, smooth the top, and float a thin layer of olive oil over the surface.
 
 ## Notes
 
-- Ground cumin and coriander rather than toasting and grinding whole seeds — slightly less by volume than the whole-seed amounts, since ground spice packs tighter. The caraway stays whole; the food processor deals with it.
-- The árbol count is the heat dial. Ten New Mexico chiles to seven árbol lands medium-hot. Fewer árbol for a paste that tastes of chile rather than burn.
+- This replaces an earlier version that had tomato paste, smoked paprika, ground cumin, and New Mexico chiles in it. Every one of those is gone on purpose. Zwita's label is only water, sun-dried chiles, white wine vinegar, garlic, olive oil, coriander, salt, and caraway — no tomato, no bell pepper, no paprika, no cumin. Tomato was making it taste like a mediocre pasta sauce; cumin is the Moroccan spice, not the Tunisian one, and it walks on top of the caraway; smoked paprika is what Zwita's separate Smoky jar is for.
+- Toasting whole coriander and caraway and grinding them fresh is the single biggest improvement over the old version. Pre-ground spice out of a jar is most of what "bland" was.
+- Never thin it with water. The old version said to loosen it with oil or water to taste, and water is what made it watery. Olive oil, sparingly, is the only loosener; squeezing the soaked chiles dry in step 4 is what keeps it thick.
+- Guajillo is the everyday stand-in for the Tunisian sun-dried chiles, and it is what Zwita actually uses. Fruity and deep. New Mexico chiles read thin and faintly tomato-ish, which was working against the goal.
+- The árbol count is the heat dial. Twelve guajillo to ten árbol lands where Zwita Spicy does — warm and lingering rather than punishing. Five or six árbol gets close to their Mild.
 - Wear gloves for stemming and seeding, especially the árbol.
+- To salt by weight instead: Zwita's panel works out to about 2.3 g of salt per 100 g of paste. Weigh the finished paste and match that.
+- The oil cap on the jar is preservation, the Tunisian way. Re-smooth the surface and top the oil back up after each dig.
 - Keeps 1 month refrigerated. For longer, freeze in an ice cube tray and bag the cubes — 2 months. A cube is about 1 Tbsp., which is the unit most recipes want. Drop frozen cubes straight into anything hot; thaw them first for a dressing or a dip.
-- The nutrition above is the source's own per-serving panel, not an estimate worked out here — one serving is 2 Tbsp., an eighth of the batch.
-- Used in [Cava-style chicken](https://calebstewart.github.io/recipes/mains/cava-style-chicken/) and [harissa baked feta pasta](https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/).
+- The nutrition above is estimated from the ingredient list, at 12 servings of 2 Tbsp. Check the actual yield the first time and scale the servings to the jar — the number that moves is how dry you got the chiles in step 4.
+- Used in [Cava-style chicken](https://calebstewart.github.io/recipes/mains/cava-style-chicken/) and [harissa baked feta pasta](https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/). This paste is hotter and less sweet than the old one at the same volume, so start at the low end of what those recipes call for.
