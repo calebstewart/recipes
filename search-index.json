@@ -78,6 +78,36 @@
     "servings": "4 servings"
   },
   {
+    "id": "mains/harissa-tempeh",
+    "title": "Harissa Tempeh",
+    "url": "/recipes/mains/harissa-tempeh/",
+    "category": "mains",
+    "categoryLabel": "Mains",
+    "description": "The Cava-style chicken marinade — lemon, honey, garlic, paprika, and cumin over harissa — on tempeh instead of thighs. Steamed first so it stops tasting bitter and starts drinking the marinade, then baked and broiled the same way. It comes out chewy and crusted at the corners, and it goes in exactly the same bowls.",
+    "tags": [
+      "tempeh",
+      "meal-prep",
+      "oven",
+      "spicy",
+      "vegetarian"
+    ],
+    "ingredients": [
+      "2 (8-oz.) packages tempeh (Lightlife Plant-Based Superfood), 1 lb. total",
+      "3 Tbsp. harissa paste",
+      "2 Tbsp. olive oil",
+      "3 Tbsp. water",
+      "1 1/2 Tbsp. fresh lemon juice",
+      "1 1/2 Tbsp. honey",
+      "2 garlic cloves, minced",
+      "1 1/2 tsp. paprika",
+      "1 1/2 tsp. ground cumin",
+      "1 tsp. black pepper",
+      "1/2 tsp. kosher salt"
+    ],
+    "time": "1 hr 15 min",
+    "servings": "4 servings"
+  },
+  {
     "id": "mains/mediterranean-lunch-bowl",
     "title": "Mediterranean Lunch Bowl",
     "url": "/recipes/mains/mediterranean-lunch-bowl/",
