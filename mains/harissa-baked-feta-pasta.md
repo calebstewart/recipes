@@ -68,6 +68,7 @@ fresh each night. Pasta does not survive storage in sauce; everything else does.
 - Store it loose — looser than looks right. Chickpeas keep drinking sauce in the fridge, so a batch that looks perfect on Sunday is stiff by Wednesday.
 - Salt late. Feta, harissa, and sausage all bring salt, and it tastes saltier after sitting.
 - For vegetables: broccolini or green beans into the pasta water for the last 2 min, or baby spinach wilted into the hot sauce. Both on eating day, so they stay bright.
+- Homemade pasta fits here: [extruded semolina pasta](https://calebstewart.github.io/recipes/basics/extruded-semolina-pasta/) on the rigatoni or large macaroni plate, dried, 3 oz. per serving just like boxed pasta. Fresh, it cooks in 4–6 min instead of the box time.
 - If you baked in ceramic, move the sauce to a pot before the step 5 simmer. Ceramic on a burner cracks.
 
 ## Meatless variant
