@@ -187,6 +187,26 @@
     "servings": "6 servings"
   },
   {
+    "id": "basics/extruded-semolina-pasta",
+    "title": "Extruded Semolina Pasta",
+    "url": "/recipes/basics/extruded-semolina-pasta/",
+    "category": "basics",
+    "categoryLabel": "Basics",
+    "description": "Semolina and water, with no eggs: the same dough boxed pasta is made from, pushed through the KitchenAid pasta press as short tubes. It's leaner and chewier than egg pasta and holds up under a chunky sauce. It also dries hard and keeps in the pantry, so it works for meal prep in a way fresh egg pasta can't. Makes about 1 lb. dried, which is six 3-oz. portions.",
+    "tags": [
+      "make-ahead",
+      "meal-prep",
+      "pasta",
+      "vegan"
+    ],
+    "ingredients": [
+      "500 g fine semolina flour (semola rimacinata), plus more for dusting",
+      "185 g warm water, plus up to 15 g more as needed"
+    ],
+    "time": "1 hr 15 min",
+    "servings": "6 servings"
+  },
+  {
     "id": "basics/harissa-paste",
     "title": "Harissa Paste",
     "url": "/recipes/basics/harissa-paste/",
@@ -212,6 +232,29 @@
     ],
     "time": "45 min",
     "servings": "12 servings"
+  },
+  {
+    "id": "basics/homemade-pasta",
+    "title": "Homemade Pasta",
+    "url": "/recipes/basics/homemade-pasta/",
+    "category": "basics",
+    "categoryLabel": "Basics",
+    "description": "Egg pasta dough with semolina for bite and all-purpose flour for silkiness. Firm enough to run through a pasta roller without tearing, and it holds a fettuccine or pappardelle cut cleanly. Makes about 1 1/2 lb. of fresh noodles. Mostly hands-on time: 10 min of kneading, a 30 min rest, then rolling and cutting.",
+    "tags": [
+      "make-ahead",
+      "pasta",
+      "vegetarian"
+    ],
+    "ingredients": [
+      "270 g semolina flour (semola rimacinata), plus more for dusting",
+      "188 g all-purpose flour",
+      "1 tsp. fine sea salt",
+      "4 large eggs, room temperature",
+      "2 Tbsp. extra-virgin olive oil",
+      "1 to 4 Tbsp. room-temperature water, only as needed"
+    ],
+    "time": "1 hr 20 min",
+    "servings": "8 servings"
   },
   {
     "id": "basics/lemon-herb-tahini",

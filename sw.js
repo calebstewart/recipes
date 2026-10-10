@@ -4,7 +4,7 @@
 // works with no signal, and each visit quietly re-fetches what it served. A new
 // build changes VERSION, so the install step below replaces the whole cache.
 
-const VERSION = '3de0d79eb3182089';
+const VERSION = 'f464f631d252558c';
 const CACHE = 'recipes-' + VERSION;
 const SCOPE = '/recipes/';
 const START_URL = '/recipes/';
@@ -17,7 +17,9 @@ const PRECACHE = [
   "/recipes/assets/recipe.js",
   "/recipes/assets/search.js",
   "/recipes/assets/style.css",
+  "/recipes/basics/extruded-semolina-pasta/",
   "/recipes/basics/harissa-paste/",
+  "/recipes/basics/homemade-pasta/",
   "/recipes/basics/lemon-herb-tahini/",
   "/recipes/basics/quick-pickled-red-onions/",
   "/recipes/breakfast/yogurt-granola-and-strawberries/",
