@@ -21,7 +21,7 @@ nutrition:
 
 # Harissa Tempeh
 
-The [Cava-style chicken](https://calebstewart.github.io/recipes/mains/cava-style-chicken/)
+The [Cava-style chicken](https://calebstew.art/recipes/mains/cava-style-chicken/)
 marinade — lemon, honey, garlic, paprika, and cumin over harissa — on tempeh
 instead of thighs. Steamed first so it stops tasting bitter and starts drinking
 the marinade, then baked and broiled the same way. It comes out chewy and
@@ -66,8 +66,8 @@ crusted at the corners, and it goes in exactly the same bowls.
 - Cubes or planks: cubes have more surface area and come out with more crust, planks slice cleanly into a pita or lie flat on a bowl. Cubes for meal prep, planks for a sandwich.
 - Honey keeps this vegetarian, not vegan. Maple syrup at the same 1 1/2 Tbsp. is a straight swap — slightly less browning under the broiler, no other difference.
 - Foil-line the pan, same as the chicken. Honey plus harissa welds itself to bare metal.
-- Uses [homemade harissa paste](https://calebstewart.github.io/recipes/basics/harissa-paste/), which is where all the heat comes from.
-- Good with [lemon herb tahini](https://calebstewart.github.io/recipes/basics/lemon-herb-tahini/) and [cucumber tomato salad](https://calebstewart.github.io/recipes/sides/cucumber-tomato-salad/) — the CAVA bowl, without the chicken.
+- Uses [homemade harissa paste](https://calebstew.art/recipes/basics/harissa-paste/), which is where all the heat comes from.
+- Good with [lemon herb tahini](https://calebstew.art/recipes/basics/lemon-herb-tahini/) and [cucumber tomato salad](https://calebstew.art/recipes/sides/cucumber-tomato-salad/) — the CAVA bowl, without the chicken.
 
 ## Compared to the chicken
 

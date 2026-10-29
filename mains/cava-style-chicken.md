@@ -56,12 +56,12 @@ Built for lunches, over rice or salad or in a pita.
 - Space the pieces out on the pan. Crowded, they steam in their own juices and never brown, which wastes the honey in the marinade.
 - Foil-line the pan. Honey plus harissa welds itself to bare metal.
 - Marinate up to overnight but not much past it — the lemon juice starts working on the texture of the meat.
-- The harissa sets the heat. Uses [homemade harissa paste](https://calebstewart.github.io/recipes/basics/harissa-paste/); a hot commercial one at 2 Tbsp. is a lot.
+- The harissa sets the heat. Uses [homemade harissa paste](https://calebstew.art/recipes/basics/harissa-paste/); a hot commercial one at 2 Tbsp. is a lot.
 - No salt in the marinade, on purpose. The harissa is already salted, and this chicken is built for bowls that also carry feta, hummus, tzatziki, and tahini — the salt was stacking on top of four other salty things. A serving lands around 185 mg of sodium instead of the ~735 mg a teaspoon of salt would make it, which is close to 1,000 mg per bowl at the prep-batch scale.
 - Add 1 tsp. of salt per pound back if you're eating it plain — over rice, in a pita, with nothing else going on. On its own it does read flat without it.
 - What the salt was quietly doing is brining: it helps the meat hold moisture. Thighs at 400° are forgiving enough that skipping it barely shows, but breasts would notice.
 - The pan juices are worth keeping. Spoon them back over the sliced chicken instead of leaving them on the foil.
-- Good with [lemon herb tahini](https://calebstewart.github.io/recipes/basics/lemon-herb-tahini/) and [cucumber tomato salad](https://calebstewart.github.io/recipes/sides/cucumber-tomato-salad/) — that's the whole CAVA bowl.
+- Good with [lemon herb tahini](https://calebstew.art/recipes/basics/lemon-herb-tahini/) and [cucumber tomato salad](https://calebstew.art/recipes/sides/cucumber-tomato-salad/) — that's the whole CAVA bowl.
 
 ## Meal prep
 

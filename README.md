@@ -43,11 +43,11 @@ nutrition:
 
 ## Site
 
-The collection is published at <https://calebstewart.github.io/recipes/> and
+The collection is published at <https://calebstew.art/recipes/> and
 rebuilt automatically on every push to `main`. Each recipe gets its own URL:
 
 ```
-https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/
+https://calebstew.art/recipes/mains/harissa-baked-feta-pasta/
 ```
 
 Those pages embed schema.org Recipe JSON-LD, with microdata as a fallback, which

@@ -57,4 +57,4 @@ can't. Makes about 1 lb. dried, which is six 3-oz. portions.
 - The press's plates are plastic, not bronze, so the surface comes out smoother than artisan dried pasta. Rigatoni's ridges make up for most of that.
 - Rigatoni or large macaroni for chunky sauces. The tubes catch chickpeas and crumbled sausage. Fusilli for thick sauces without big pieces.
 - The nutrition is calculated for 500 g of semolina split into 6 portions, not counting dusting semolina.
-- Made for [harissa baked feta pasta](https://calebstewart.github.io/recipes/mains/harissa-baked-feta-pasta/). For ribbons and filled pasta, use the egg-based [homemade pasta](https://calebstewart.github.io/recipes/basics/homemade-pasta/) instead.
+- Made for [harissa baked feta pasta](https://calebstew.art/recipes/mains/harissa-baked-feta-pasta/). For ribbons and filled pasta, use the egg-based [homemade pasta](https://calebstew.art/recipes/basics/homemade-pasta/) instead.

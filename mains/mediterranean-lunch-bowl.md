@@ -29,11 +29,11 @@ mixed together in the bowl. One weekend of cooking builds five of these.
 
 - About 1 oz. lettuce blend, 1/5 of a 5 oz. box (H-E-B Organics romaine, butter lettuce, and arugula)
 - 1/2 pouch ready brown rice (Ben's Original Whole Grain, 8.8 oz. pouch)
-- 1/5 of a batch of [Cava-style chicken](https://calebstewart.github.io/recipes/mains/cava-style-chicken/)
-- 1/5 of a batch of [cucumber tomato salad](https://calebstewart.github.io/recipes/sides/cucumber-tomato-salad/)
+- 1/5 of a batch of [Cava-style chicken](https://calebstew.art/recipes/mains/cava-style-chicken/)
+- 1/5 of a batch of [cucumber tomato salad](https://calebstew.art/recipes/sides/cucumber-tomato-salad/)
 - 2 Tbsp. tzatziki (Cedar's Cucumber Garlic Dill)
 - 2 Tbsp. roasted red pepper hummus (H-E-B Deli)
-- 2 Tbsp. [lemon herb tahini](https://calebstewart.github.io/recipes/basics/lemon-herb-tahini/)
+- 2 Tbsp. [lemon herb tahini](https://calebstew.art/recipes/basics/lemon-herb-tahini/)
 - 2 Tbsp. crumbled feta
 
 ## Instructions

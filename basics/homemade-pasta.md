@@ -63,4 +63,4 @@ cutting.
 - No need to boil sheets for lasagna; layer them in raw.
 - Storage: refrigerate nests in an airtight container up to 1 day — longer and egg pasta turns gray and sticky. To keep it, freeze the nests on the sheet pan until firm, then bag them; good for 3 months. Cook straight from frozen, adding about a minute. Don't thaw first, or they clump.
 - Eight servings is about 3 oz. of fresh pasta each, which is a side or a light plate. For dinner portions with a hearty sauce, call it 6.
-- This egg dough is for ribbons, sheets, and filled pasta. For short extruded shapes, use [extruded semolina pasta](https://calebstewart.github.io/recipes/basics/extruded-semolina-pasta/), which dries for the pantry.
+- This egg dough is for ribbons, sheets, and filled pasta. For short extruded shapes, use [extruded semolina pasta](https://calebstew.art/recipes/basics/extruded-semolina-pasta/), which dries for the pantry.

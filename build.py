@@ -51,6 +51,10 @@ SITE_DESCRIPTION = "A personal collection of recipes, kept as plain Markdown."
 
 DEFAULT_REPOSITORY = "calebstewart/recipes"
 DEFAULT_BRANCH = "main"
+#: Where DEFAULT_REPOSITORY is published. The custom domain is set on the
+#: owner's user site (calebstewart.github.io), not in this repo, so it can't be
+#: derived from GITHUB_REPOSITORY; forks fall back to their github.io URL.
+DEFAULT_SITE_URL = "https://calebstew.art/recipes/"
 
 #: Category directories in display order, with their human labels.
 CATEGORIES: tuple[tuple[str, str], ...] = (
@@ -1849,7 +1853,11 @@ def default_locations() -> tuple[str, str, str]:
     else:
         owner, name = DEFAULT_REPOSITORY.split("/")
         repository = DEFAULT_REPOSITORY
-    return f"/{name}/", f"https://{owner}.github.io/{name}/", repository
+    if repository == DEFAULT_REPOSITORY:
+        site_url = DEFAULT_SITE_URL
+    else:
+        site_url = f"https://{owner}.github.io/{name}/"
+    return f"/{name}/", site_url, repository
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
