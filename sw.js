@@ -4,7 +4,7 @@
 // works with no signal, and each visit quietly re-fetches what it served. A new
 // build changes VERSION, so the install step below replaces the whole cache.
 
-const VERSION = 'f464f631d252558c';
+const VERSION = '60ecaf3f488006a5';
 const CACHE = 'recipes-' + VERSION;
 const SCOPE = '/recipes/';
 const START_URL = '/recipes/';
@@ -25,6 +25,7 @@ const PRECACHE = [
   "/recipes/breakfast/yogurt-granola-and-strawberries/",
   "/recipes/drinks/ginger-mint-limeade/",
   "/recipes/",
+  "/recipes/mains/autumn-harvest-turkey-chili/",
   "/recipes/mains/cava-style-chicken/",
   "/recipes/mains/harissa-baked-feta-pasta/",
   "/recipes/mains/harissa-tempeh/",

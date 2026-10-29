@@ -48,6 +48,47 @@
     "servings": "3 servings"
   },
   {
+    "id": "mains/autumn-harvest-turkey-chili",
+    "title": "Crockpot Autumn Harvest Turkey Chili",
+    "url": "/recipes/mains/autumn-harvest-turkey-chili/",
+    "category": "mains",
+    "categoryLabel": "Mains",
+    "description": "Ground turkey chili with butternut squash and pumpkin purée, warmed up with pumpkin pie spice next to the usual chili powder and cumin. It's thick and a little sweet, and you serve it over rice or quinoa. Brown everything on the stove first, then leave it in the slow cooker all afternoon.",
+    "tags": [
+      "turkey",
+      "slow-cooker",
+      "chili",
+      "fall",
+      "meal-prep"
+    ],
+    "ingredients": [
+      "2 tsp. olive oil",
+      "1 large onion, chopped",
+      "3 bell peppers, any color, seeded and chopped",
+      "1 jalapeño, chopped (optional)",
+      "2 lb. ground turkey",
+      "2 cups raw butternut squash or pumpkin, chopped",
+      "1 can (28 oz.) crushed tomatoes",
+      "1 can (28 oz.) diced tomatoes, drained",
+      "1 can (15 oz.) 100% pumpkin purée (not pie filling)",
+      "2–3 cups mixed canned beans, rinsed and drained",
+      "1½ tsp. pumpkin pie spice",
+      "1–2 Tbsp. chili powder",
+      "1 Tbsp. ground cumin",
+      "1 tsp. garlic powder",
+      "1 tsp. dried oregano",
+      "1 tsp. kosher salt",
+      "Hot sauce, to taste (optional)",
+      "4 cups cooked brown rice or quinoa",
+      "Shredded cheddar or Mexican-blend cheese",
+      "Plain Greek yogurt",
+      "Chopped bell pepper",
+      "Fresh cilantro or parsley"
+    ],
+    "time": "6 hr 20 min",
+    "servings": "8 servings"
+  },
+  {
     "id": "mains/harissa-baked-feta-pasta",
     "title": "Harissa Baked Feta Pasta",
     "url": "/recipes/mains/harissa-baked-feta-pasta/",
