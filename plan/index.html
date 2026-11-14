@@ -1,0 +1,3038 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan &amp; shop — Recipes</title>
+<meta name="description" content="Pick the week&#x27;s recipes and how many meals of each; get the shopping list.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf7f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17140f" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://calebstew.art/recipes/plan/">
+<link rel="icon" type="image/svg+xml" href="/recipes/assets/favicon.svg">
+<link rel="apple-touch-icon" href="/recipes/assets/icon-192.png">
+<link rel="manifest" href="/recipes/manifest.webmanifest">
+<link rel="stylesheet" href="/recipes/assets/style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Plan &amp; shop — Recipes">
+<meta property="og:description" content="Pick the week&#x27;s recipes and how many meals of each; get the shopping list.">
+<meta property="og:url" content="https://calebstew.art/recipes/plan/">
+<meta property="og:site_name" content="Recipes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Plan &amp; shop — Recipes">
+<meta name="twitter:description" content="Pick the week&#x27;s recipes and how many meals of each; get the shopping list.">
+</head>
+<body class="plan-page">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-title" href="/recipes/">Recipes</a>
+  <nav class="site-nav"><a href="/recipes/">All recipes</a><a href="/recipes/plan/">Plan &amp; shop</a></nav>
+</header>
+
+<main id="main"><div class="plan" id="plan">
+  <header class="plan-head">
+    <h1>Plan &amp; shop</h1>
+    <p class="tagline">Pick the week&rsquo;s recipes and how many meals of each. The list adds up the rest, sub-recipes included.</p>
+    <div class="plan-tabs" role="tablist" aria-label="Plan or list" hidden>
+      <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="true">Plan</button>
+      <button type="button" role="tab" id="tab-list" aria-controls="panel-list" aria-selected="false">Shopping list</button>
+    </div>
+  </header>
+
+  <noscript>
+    <p class="empty-state">The planner runs in the browser and needs JavaScript. Every recipe is still on the <a href="../">home page</a>.</p>
+  </noscript>
+
+  <section class="plan-panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden></section>
+  <section class="plan-panel" id="panel-list" role="tabpanel" aria-labelledby="tab-list" hidden></section>
+</div>
+
+<script type="application/json" id="shopping-data">{
+  "sections": [
+    {
+      "id": "produce",
+      "label": "Produce",
+      "pantry": false
+    },
+    {
+      "id": "meat",
+      "label": "Meat",
+      "pantry": false
+    },
+    {
+      "id": "refrigerated",
+      "label": "Dairy & refrigerated",
+      "pantry": false
+    },
+    {
+      "id": "canned",
+      "label": "Canned & jarred",
+      "pantry": false
+    },
+    {
+      "id": "dry",
+      "label": "Pasta, grains & baking",
+      "pantry": false
+    },
+    {
+      "id": "spices",
+      "label": "Spices & dried chiles",
+      "pantry": false
+    },
+    {
+      "id": "pantry",
+      "label": "Check the pantry",
+      "pantry": true
+    },
+    {
+      "id": "other",
+      "label": "Other",
+      "pantry": false
+    }
+  ],
+  "items": {
+    "basil": {
+      "name": "basil",
+      "section": "produce"
+    },
+    "bell pepper": {
+      "name": "bell pepper",
+      "section": "produce"
+    },
+    "butternut squash": {
+      "name": "butternut squash",
+      "section": "produce"
+    },
+    "cherry or grape tomatoes": {
+      "name": "cherry or grape tomatoes",
+      "section": "produce"
+    },
+    "cilantro": {
+      "name": "cilantro",
+      "section": "produce"
+    },
+    "garlic": {
+      "name": "garlic",
+      "section": "produce"
+    },
+    "ginger": {
+      "name": "ginger",
+      "section": "produce"
+    },
+    "jalapeño": {
+      "name": "jalapeño",
+      "section": "produce"
+    },
+    "lemon juice": {
+      "name": "lemon juice",
+      "section": "produce"
+    },
+    "lettuce blend": {
+      "name": "lettuce blend",
+      "section": "produce"
+    },
+    "lime juice": {
+      "name": "lime juice",
+      "section": "produce"
+    },
+    "lime wheels and mint sprigs": {
+      "name": "lime wheels and mint sprigs",
+      "section": "produce"
+    },
+    "mint": {
+      "name": "mint",
+      "section": "produce"
+    },
+    "onion": {
+      "name": "onion",
+      "section": "produce"
+    },
+    "parsley": {
+      "name": "parsley",
+      "section": "produce"
+    },
+    "persian cucumbers": {
+      "name": "persian cucumbers",
+      "section": "produce"
+    },
+    "pumpkin": {
+      "name": "pumpkin",
+      "section": "produce"
+    },
+    "red onion": {
+      "name": "red onion",
+      "section": "produce"
+    },
+    "roma tomatoes": {
+      "name": "roma tomatoes",
+      "section": "produce"
+    },
+    "shallot": {
+      "name": "shallot",
+      "section": "produce"
+    },
+    "strawberries": {
+      "name": "strawberries",
+      "section": "produce"
+    },
+    "chicken thighs": {
+      "name": "chicken thighs",
+      "section": "meat"
+    },
+    "ground turkey": {
+      "name": "ground turkey",
+      "section": "meat"
+    },
+    "pork sausage": {
+      "name": "pork sausage",
+      "section": "meat"
+    },
+    "cheddar": {
+      "name": "cheddar",
+      "section": "refrigerated"
+    },
+    "eggs": {
+      "name": "eggs",
+      "section": "refrigerated"
+    },
+    "feta": {
+      "name": "feta",
+      "section": "refrigerated"
+    },
+    "greek yogurt": {
+      "name": "greek yogurt",
+      "section": "refrigerated"
+    },
+    "mexican-blend cheese": {
+      "name": "mexican-blend cheese",
+      "section": "refrigerated"
+    },
+    "roasted red pepper hummus": {
+      "name": "roasted red pepper hummus",
+      "section": "refrigerated"
+    },
+    "tempeh": {
+      "name": "tempeh",
+      "section": "refrigerated"
+    },
+    "tzatziki": {
+      "name": "tzatziki",
+      "section": "refrigerated"
+    },
+    "vanilla greek yogurt": {
+      "name": "vanilla greek yogurt",
+      "section": "refrigerated"
+    },
+    "chickpeas": {
+      "name": "chickpeas",
+      "section": "canned"
+    },
+    "crushed tomatoes": {
+      "name": "crushed tomatoes",
+      "section": "canned"
+    },
+    "diced tomatoes": {
+      "name": "diced tomatoes",
+      "section": "canned"
+    },
+    "mixed canned beans": {
+      "name": "mixed canned beans",
+      "section": "canned"
+    },
+    "pumpkin purée": {
+      "name": "pumpkin purée",
+      "section": "canned"
+    },
+    "sparkling water": {
+      "name": "sparkling water",
+      "section": "canned"
+    },
+    "tahini": {
+      "name": "tahini",
+      "section": "canned"
+    },
+    "all-purpose flour": {
+      "name": "all-purpose flour",
+      "section": "dry"
+    },
+    "brown rice": {
+      "name": "brown rice",
+      "section": "dry"
+    },
+    "granola": {
+      "name": "granola",
+      "section": "dry"
+    },
+    "quinoa": {
+      "name": "quinoa",
+      "section": "dry"
+    },
+    "ready brown rice": {
+      "name": "ready brown rice",
+      "section": "dry"
+    },
+    "semolina flour": {
+      "name": "semolina flour",
+      "section": "dry"
+    },
+    "short tubular pasta": {
+      "name": "short tubular pasta",
+      "section": "dry"
+    },
+    "dried chiles de árbol": {
+      "name": "dried chiles de árbol",
+      "section": "spices"
+    },
+    "dried guajillo chiles": {
+      "name": "dried guajillo chiles",
+      "section": "spices"
+    },
+    "bay leaves": {
+      "name": "bay leaves",
+      "section": "pantry"
+    },
+    "black pepper": {
+      "name": "black pepper",
+      "section": "pantry"
+    },
+    "black peppercorns": {
+      "name": "black peppercorns",
+      "section": "pantry"
+    },
+    "caraway seeds": {
+      "name": "caraway seeds",
+      "section": "pantry"
+    },
+    "chili powder": {
+      "name": "chili powder",
+      "section": "pantry"
+    },
+    "coriander seeds": {
+      "name": "coriander seeds",
+      "section": "pantry"
+    },
+    "distilled white vinegar": {
+      "name": "distilled white vinegar",
+      "section": "pantry"
+    },
+    "dried oregano": {
+      "name": "dried oregano",
+      "section": "pantry"
+    },
+    "dried thyme": {
+      "name": "dried thyme",
+      "section": "pantry"
+    },
+    "fine sea salt": {
+      "name": "fine sea salt",
+      "section": "pantry"
+    },
+    "garlic powder": {
+      "name": "garlic powder",
+      "section": "pantry"
+    },
+    "granulated sugar": {
+      "name": "granulated sugar",
+      "section": "pantry"
+    },
+    "ground cumin": {
+      "name": "ground cumin",
+      "section": "pantry"
+    },
+    "honey": {
+      "name": "honey",
+      "section": "pantry"
+    },
+    "hot sauce": {
+      "name": "hot sauce",
+      "section": "pantry"
+    },
+    "kosher salt": {
+      "name": "kosher salt",
+      "section": "pantry"
+    },
+    "olive oil": {
+      "name": "olive oil",
+      "section": "pantry"
+    },
+    "paprika": {
+      "name": "paprika",
+      "section": "pantry"
+    },
+    "pumpkin pie spice": {
+      "name": "pumpkin pie spice",
+      "section": "pantry"
+    },
+    "salt": {
+      "name": "salt",
+      "section": "pantry"
+    },
+    "white wine vinegar": {
+      "name": "white wine vinegar",
+      "section": "pantry"
+    },
+    "ice": {
+      "name": "ice",
+      "section": "none"
+    },
+    "water": {
+      "name": "water",
+      "section": "none"
+    }
+  },
+  "recipes": [
+    {
+      "id": "breakfast/yogurt-granola-and-strawberries",
+      "title": "Yogurt, Granola, and Strawberries",
+      "url": "/recipes/breakfast/yogurt-granola-and-strawberries/",
+      "category": "breakfast",
+      "categoryLabel": "Breakfast",
+      "servings": 1.0,
+      "servingsLabel": "1 serving",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "vanilla-greek-yogurt",
+          "text": "1 c. (8 oz.) vanilla Greek yogurt (Oikos Triple Zero)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 c. (8 oz.) vanilla Greek yogurt (Oikos Triple Zero)",
+              "name": "vanilla Greek yogurt",
+              "item": "vanilla greek yogurt",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 48.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "oat-and-honey-granola",
+          "text": "1/3 c. oat and honey granola (H-E-B Organics)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/3 c. oat and honey granola (H-E-B Organics)",
+              "name": "oat and honey granola",
+              "item": "granola",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.333333,
+              "family": "volume",
+              "base": 16.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "fresh-strawberries",
+          "text": "3 to 4 fresh strawberries",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 to 4 fresh strawberries",
+              "name": "fresh strawberries",
+              "item": "strawberries",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "count:",
+              "base": 4.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mains/cava-style-chicken",
+      "title": "Cava-Style Chicken",
+      "url": "/recipes/mains/cava-style-chicken/",
+      "category": "mains",
+      "categoryLabel": "Mains",
+      "servings": 3.0,
+      "servingsLabel": "3 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "skinless-chicken-thighs",
+          "text": "1 lb. boneless, skinless chicken thighs (4 to 6 pieces)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 lb. boneless, skinless chicken thighs (4 to 6 pieces)",
+              "name": "skinless chicken thighs",
+              "item": "chicken thighs",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 453.59237,
+              "unit": "lb.",
+              "plural": "lb."
+            }
+          ]
+        },
+        {
+          "id": "marinade-harissa-paste",
+          "text": "2 Tbsp. harissa paste",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. harissa paste",
+              "name": "harissa paste",
+              "item": null,
+              "recipe": "basics/harissa-paste",
+              "batches": 0.083333,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-olive-oil",
+          "text": "2 Tbsp. olive oil",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. olive oil",
+              "name": "olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-fresh-lemon-juice",
+          "text": "1 Tbsp. fresh lemon juice",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 Tbsp. fresh lemon juice",
+              "name": "fresh lemon juice",
+              "item": "lemon juice",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 3.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-honey",
+          "text": "1 Tbsp. honey",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 Tbsp. honey",
+              "name": "honey",
+              "item": "honey",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 3.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-garlic-clove",
+          "text": "1 garlic clove, minced",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 garlic clove, minced",
+              "name": "garlic clove",
+              "item": "garlic",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:clove",
+              "base": 1.0,
+              "unit": "clove",
+              "plural": "cloves"
+            }
+          ]
+        },
+        {
+          "id": "marinade-paprika",
+          "text": "1 tsp. paprika",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. paprika",
+              "name": "paprika",
+              "item": "paprika",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-ground-cumin",
+          "text": "1 tsp. ground cumin",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. ground cumin",
+              "name": "ground cumin",
+              "item": "ground cumin",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-black-pepper",
+          "text": "1 tsp. black pepper",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. black pepper",
+              "name": "black pepper",
+              "item": "black pepper",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mains/autumn-harvest-turkey-chili",
+      "title": "Crockpot Autumn Harvest Turkey Chili",
+      "url": "/recipes/mains/autumn-harvest-turkey-chili/",
+      "category": "mains",
+      "categoryLabel": "Mains",
+      "servings": 8.0,
+      "servingsLabel": "8 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "olive-oil",
+          "text": "2 tsp. olive oil",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 tsp. olive oil",
+              "name": "olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 2.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "large-onion",
+          "text": "1 large onion, chopped",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 large onion, chopped",
+              "name": "large onion",
+              "item": "onion",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:",
+              "base": 1.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "bell-peppers",
+          "text": "3 bell peppers, any color, seeded and chopped",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 bell peppers, any color, seeded and chopped",
+              "name": "bell peppers",
+              "item": "bell pepper",
+              "recipe": null,
+              "batches": null,
+              "amount": 3.0,
+              "family": "count:",
+              "base": 3.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "jalape-o",
+          "text": "1 jalapeño, chopped (optional)",
+          "group": null,
+          "optional": true,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 jalapeño, chopped",
+              "name": "jalapeño",
+              "item": "jalapeño",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:",
+              "base": 1.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "ground-turkey",
+          "text": "2 lb. ground turkey",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 lb. ground turkey",
+              "name": "ground turkey",
+              "item": "ground turkey",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "weight",
+              "base": 907.18474,
+              "unit": "lb.",
+              "plural": "lb."
+            }
+          ]
+        },
+        {
+          "id": "raw-butternut-squash",
+          "text": "2 cups raw butternut squash or pumpkin, chopped",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "butternut squash",
+              "text": "2 cups raw butternut squash, chopped",
+              "name": "raw butternut squash",
+              "item": "butternut squash",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 96.0,
+              "unit": "c.",
+              "plural": "c."
+            },
+            {
+              "label": "pumpkin",
+              "text": "2 cups raw pumpkin, chopped",
+              "name": "raw pumpkin",
+              "item": "pumpkin",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 96.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "crushed-tomatoes",
+          "text": "1 can (28 oz.) crushed tomatoes",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 can (28 oz.) crushed tomatoes",
+              "name": "crushed tomatoes",
+              "item": "crushed tomatoes",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:(28 oz.) can",
+              "base": 1.0,
+              "unit": "(28 oz.) can",
+              "plural": "(28 oz.) cans"
+            }
+          ]
+        },
+        {
+          "id": "diced-tomatoes",
+          "text": "1 can (28 oz.) diced tomatoes, drained",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 can (28 oz.) diced tomatoes, drained",
+              "name": "diced tomatoes",
+              "item": "diced tomatoes",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:(28 oz.) can",
+              "base": 1.0,
+              "unit": "(28 oz.) can",
+              "plural": "(28 oz.) cans"
+            }
+          ]
+        },
+        {
+          "id": "100-pumpkin-pur-e",
+          "text": "1 can (15 oz.) 100% pumpkin purée (not pie filling)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 can (15 oz.) 100% pumpkin purée (not pie filling)",
+              "name": "100% pumpkin purée",
+              "item": "pumpkin purée",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:(15 oz.) can",
+              "base": 1.0,
+              "unit": "(15 oz.) can",
+              "plural": "(15 oz.) cans"
+            }
+          ]
+        },
+        {
+          "id": "mixed-canned-beans",
+          "text": "2–3 cups mixed canned beans, rinsed and drained",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2–3 cups mixed canned beans, rinsed and drained",
+              "name": "mixed canned beans",
+              "item": "mixed canned beans",
+              "recipe": null,
+              "batches": null,
+              "amount": 3.0,
+              "family": "volume",
+              "base": 144.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "pumpkin-pie-spice",
+          "text": "1½ tsp. pumpkin pie spice",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1½ tsp. pumpkin pie spice",
+              "name": "pumpkin pie spice",
+              "item": "pumpkin pie spice",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 1.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "chili-powder",
+          "text": "1–2 Tbsp. chili powder",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1–2 Tbsp. chili powder",
+              "name": "chili powder",
+              "item": "chili powder",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "ground-cumin",
+          "text": "1 Tbsp. ground cumin",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 Tbsp. ground cumin",
+              "name": "ground cumin",
+              "item": "ground cumin",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 3.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "garlic-powder",
+          "text": "1 tsp. garlic powder",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. garlic powder",
+              "name": "garlic powder",
+              "item": "garlic powder",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "dried-oregano",
+          "text": "1 tsp. dried oregano",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. dried oregano",
+              "name": "dried oregano",
+              "item": "dried oregano",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "kosher-salt",
+          "text": "1 tsp. kosher salt",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. kosher salt",
+              "name": "kosher salt",
+              "item": "kosher salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "hot-sauce",
+          "text": "Hot sauce, to taste (optional)",
+          "group": null,
+          "optional": true,
+          "choices": [
+            {
+              "label": "",
+              "text": "Hot sauce, to taste",
+              "name": "Hot sauce",
+              "item": "hot sauce",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "to-serve-cooked-brown-rice",
+          "text": "4 cups cooked brown rice or quinoa",
+          "group": "To serve",
+          "optional": false,
+          "choices": [
+            {
+              "label": "brown rice",
+              "text": "4 cups cooked brown rice",
+              "name": "cooked brown rice",
+              "item": "brown rice",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "volume",
+              "base": 192.0,
+              "unit": "c.",
+              "plural": "c."
+            },
+            {
+              "label": "quinoa",
+              "text": "4 cups cooked quinoa",
+              "name": "cooked quinoa",
+              "item": "quinoa",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "volume",
+              "base": 192.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "to-serve-shredded-cheddar-cheese",
+          "text": "Shredded cheddar or Mexican-blend cheese",
+          "group": "To serve",
+          "optional": false,
+          "choices": [
+            {
+              "label": "cheddar",
+              "text": "Shredded cheddar cheese",
+              "name": "Shredded cheddar cheese",
+              "item": "cheddar",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            },
+            {
+              "label": "Mexican-blend",
+              "text": "Shredded Mexican-blend cheese",
+              "name": "Shredded Mexican-blend cheese",
+              "item": "mexican-blend cheese",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "to-serve-plain-greek-yogurt",
+          "text": "Plain Greek yogurt",
+          "group": "To serve",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Plain Greek yogurt",
+              "name": "Plain Greek yogurt",
+              "item": "greek yogurt",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "to-serve-chopped-bell-pepper",
+          "text": "Chopped bell pepper",
+          "group": "To serve",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Chopped bell pepper",
+              "name": "Chopped bell pepper",
+              "item": "bell pepper",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "to-serve-fresh-cilantro",
+          "text": "Fresh cilantro or parsley",
+          "group": "To serve",
+          "optional": false,
+          "choices": [
+            {
+              "label": "cilantro",
+              "text": "Fresh cilantro",
+              "name": "Fresh cilantro",
+              "item": "cilantro",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            },
+            {
+              "label": "parsley",
+              "text": "Fresh parsley",
+              "name": "Fresh parsley",
+              "item": "parsley",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mains/harissa-baked-feta-pasta",
+      "title": "Harissa Baked Feta Pasta",
+      "url": "/recipes/mains/harissa-baked-feta-pasta/",
+      "category": "mains",
+      "categoryLabel": "Mains",
+      "servings": 4.0,
+      "servingsLabel": "4 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "sauce-cherry-or-grape-tomatoes",
+          "text": "2 pt. cherry or grape tomatoes",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 pt. cherry or grape tomatoes",
+              "name": "cherry or grape tomatoes",
+              "item": "cherry or grape tomatoes",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 192.0,
+              "unit": "pt.",
+              "plural": "pt."
+            }
+          ]
+        },
+        {
+          "id": "sauce-shallot",
+          "text": "1 shallot, quartered",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 shallot, quartered",
+              "name": "shallot",
+              "item": "shallot",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:",
+              "base": 1.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "sauce-garlic-cloves",
+          "text": "3 garlic cloves, smashed",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 garlic cloves, smashed",
+              "name": "garlic cloves",
+              "item": "garlic",
+              "recipe": null,
+              "batches": null,
+              "amount": 3.0,
+              "family": "count:clove",
+              "base": 3.0,
+              "unit": "clove",
+              "plural": "cloves"
+            }
+          ]
+        },
+        {
+          "id": "sauce-extra-virgin-olive-oil",
+          "text": "1/2 c. extra-virgin olive oil, divided",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 c. extra-virgin olive oil, divided",
+              "name": "extra-virgin olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 24.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "sauce-harissa-paste",
+          "text": "1 1/2 to 2 Tbsp. harissa paste",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 to 2 Tbsp. harissa paste",
+              "name": "harissa paste",
+              "item": null,
+              "recipe": "basics/harissa-paste",
+              "batches": 0.083333,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "sauce-dried-thyme-leaves",
+          "text": "1/2 tsp. dried thyme leaves",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 tsp. dried thyme leaves",
+              "name": "dried thyme leaves",
+              "item": "dried thyme",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 0.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "sauce-kosher-salt",
+          "text": "Kosher salt",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Kosher salt",
+              "name": "Kosher salt",
+              "item": "kosher salt",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "sauce-feta",
+          "text": "1 (8-oz.) block feta",
+          "group": "Sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 (8-oz.) block feta",
+              "name": "feta",
+              "item": "feta",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:(8 oz.) block",
+              "base": 1.0,
+              "unit": "(8 oz.) block",
+              "plural": "(8 oz.) blocks"
+            }
+          ]
+        },
+        {
+          "id": "sauce-chickpeas",
+          "text": "1 (15-oz.) can chickpeas, drained, rinsed, patted dry (optional)",
+          "group": "Sauce",
+          "optional": true,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 (15-oz.) can chickpeas, drained, rinsed, patted dry",
+              "name": "chickpeas",
+              "item": "chickpeas",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:(15 oz.) can",
+              "base": 1.0,
+              "unit": "(15 oz.) can",
+              "plural": "(15 oz.) cans"
+            }
+          ]
+        },
+        {
+          "id": "to-finish-short-tubular-pasta",
+          "text": "12 oz. short tubular pasta (macaroni or cavatappi) or extruded semolina pasta (3 oz. per serving)",
+          "group": "To finish",
+          "optional": false,
+          "choices": [
+            {
+              "label": "short tubular pasta (macaroni or cavatappi)",
+              "text": "12 oz. short tubular pasta (macaroni or cavatappi) (3 oz. per serving)",
+              "name": "short tubular pasta",
+              "item": "short tubular pasta",
+              "recipe": null,
+              "batches": null,
+              "amount": 12.0,
+              "family": "weight",
+              "base": 340.194277,
+              "unit": "oz.",
+              "plural": "oz."
+            },
+            {
+              "label": "extruded semolina pasta",
+              "text": "12 oz. extruded semolina pasta (3 oz. per serving)",
+              "name": "extruded semolina pasta",
+              "item": null,
+              "recipe": "basics/extruded-semolina-pasta",
+              "batches": 0.75,
+              "amount": 12.0,
+              "family": "weight",
+              "base": 340.194277,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "to-finish-pork-sausage",
+          "text": "12 oz. pork sausage, casings removed (3 oz. per serving) (optional)",
+          "group": "To finish",
+          "optional": true,
+          "choices": [
+            {
+              "label": "",
+              "text": "12 oz. pork sausage, casings removed (3 oz. per serving)",
+              "name": "pork sausage",
+              "item": "pork sausage",
+              "recipe": null,
+              "batches": null,
+              "amount": 12.0,
+              "family": "weight",
+              "base": 340.194277,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "to-finish-fresh-lemon-juice",
+          "text": "1 Tbsp. fresh lemon juice (about 1 tsp. per serving)",
+          "group": "To finish",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 Tbsp. fresh lemon juice (about 1 tsp. per serving)",
+              "name": "fresh lemon juice",
+              "item": "lemon juice",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 3.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "to-finish-fresh-basil-leaves",
+          "text": "Fresh basil leaves",
+          "group": "To finish",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Fresh basil leaves",
+              "name": "Fresh basil leaves",
+              "item": "basil",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mains/harissa-tempeh",
+      "title": "Harissa Tempeh",
+      "url": "/recipes/mains/harissa-tempeh/",
+      "category": "mains",
+      "categoryLabel": "Mains",
+      "servings": 4.0,
+      "servingsLabel": "4 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "tempeh",
+          "text": "2 (8-oz.) packages tempeh (Lightlife Plant-Based Superfood), 1 lb. total",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 (8-oz.) packages tempeh (Lightlife Plant-Based Superfood), 1 lb. total",
+              "name": "tempeh",
+              "item": "tempeh",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "count:(8 oz.) package",
+              "base": 2.0,
+              "unit": "(8 oz.) package",
+              "plural": "(8 oz.) packages"
+            }
+          ]
+        },
+        {
+          "id": "marinade-harissa-paste",
+          "text": "3 Tbsp. harissa paste",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 Tbsp. harissa paste",
+              "name": "harissa paste",
+              "item": null,
+              "recipe": "basics/harissa-paste",
+              "batches": 0.125,
+              "amount": 3.0,
+              "family": "volume",
+              "base": 9.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-olive-oil",
+          "text": "2 Tbsp. olive oil",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. olive oil",
+              "name": "olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-water",
+          "text": "3 Tbsp. water",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 Tbsp. water",
+              "name": "water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 3.0,
+              "family": "volume",
+              "base": 9.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-fresh-lemon-juice",
+          "text": "1 1/2 Tbsp. fresh lemon juice",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 Tbsp. fresh lemon juice",
+              "name": "fresh lemon juice",
+              "item": "lemon juice",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 4.5,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-honey",
+          "text": "1 1/2 Tbsp. honey",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 Tbsp. honey",
+              "name": "honey",
+              "item": "honey",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 4.5,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-garlic-cloves",
+          "text": "2 garlic cloves, minced",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 garlic cloves, minced",
+              "name": "garlic cloves",
+              "item": "garlic",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "count:clove",
+              "base": 2.0,
+              "unit": "clove",
+              "plural": "cloves"
+            }
+          ]
+        },
+        {
+          "id": "marinade-paprika",
+          "text": "1 1/2 tsp. paprika",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 tsp. paprika",
+              "name": "paprika",
+              "item": "paprika",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 1.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-ground-cumin",
+          "text": "1 1/2 tsp. ground cumin",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 tsp. ground cumin",
+              "name": "ground cumin",
+              "item": "ground cumin",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 1.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-black-pepper",
+          "text": "1 tsp. black pepper",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. black pepper",
+              "name": "black pepper",
+              "item": "black pepper",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "marinade-kosher-salt",
+          "text": "1/2 tsp. kosher salt",
+          "group": "Marinade",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 tsp. kosher salt",
+              "name": "kosher salt",
+              "item": "kosher salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 0.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mains/mediterranean-lunch-bowl",
+      "title": "Mediterranean Lunch Bowl",
+      "url": "/recipes/mains/mediterranean-lunch-bowl/",
+      "category": "mains",
+      "categoryLabel": "Mains",
+      "servings": 1.0,
+      "servingsLabel": "1 serving",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "lettuce-blend",
+          "text": "About 1 oz. lettuce blend, 1/5 of a 5 oz. box (H-E-B Organics romaine, butter lettuce, and arugula)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "About 1 oz. lettuce blend, 1/5 of a 5 oz. box (H-E-B Organics romaine, butter lettuce, and arugula)",
+              "name": "lettuce blend",
+              "item": "lettuce blend",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 28.349523,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "ready-brown-rice",
+          "text": "1/2 pouch ready brown rice (Ben's Original Whole Grain, 8.8 oz. pouch)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 pouch ready brown rice (Ben's Original Whole Grain, 8.8 oz. pouch)",
+              "name": "ready brown rice",
+              "item": "ready brown rice",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "count:pouch",
+              "base": 0.5,
+              "unit": "pouch",
+              "plural": "pouches"
+            }
+          ]
+        },
+        {
+          "id": "cava-style-chicken",
+          "text": "1/5 of a batch of Cava-style chicken or 1/4 of a batch of harissa tempeh",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "Cava-style chicken",
+              "text": "1/5 of a batch of Cava-style chicken",
+              "name": "Cava-style chicken",
+              "item": null,
+              "recipe": "mains/cava-style-chicken",
+              "batches": 0.2,
+              "amount": 0.2,
+              "family": "count:batch",
+              "base": 0.2,
+              "unit": "batch",
+              "plural": "batches"
+            },
+            {
+              "label": "harissa tempeh",
+              "text": "1/4 of a batch of harissa tempeh",
+              "name": "harissa tempeh",
+              "item": null,
+              "recipe": "mains/harissa-tempeh",
+              "batches": 0.25,
+              "amount": 0.25,
+              "family": "count:batch",
+              "base": 0.25,
+              "unit": "batch",
+              "plural": "batches"
+            }
+          ]
+        },
+        {
+          "id": "cucumber-tomato-salad",
+          "text": "1/5 of a batch of cucumber tomato salad",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/5 of a batch of cucumber tomato salad",
+              "name": "cucumber tomato salad",
+              "item": null,
+              "recipe": "sides/cucumber-tomato-salad",
+              "batches": 0.2,
+              "amount": 0.2,
+              "family": "count:batch",
+              "base": 0.2,
+              "unit": "batch",
+              "plural": "batches"
+            }
+          ]
+        },
+        {
+          "id": "tzatziki",
+          "text": "2 Tbsp. tzatziki (Cedar's Cucumber Garlic Dill)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. tzatziki (Cedar's Cucumber Garlic Dill)",
+              "name": "tzatziki",
+              "item": "tzatziki",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "roasted-red-pepper-hummus",
+          "text": "2 Tbsp. roasted red pepper hummus (H-E-B Deli)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. roasted red pepper hummus (H-E-B Deli)",
+              "name": "roasted red pepper hummus",
+              "item": "roasted red pepper hummus",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "lemon-herb-tahini",
+          "text": "2 Tbsp. lemon herb tahini",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. lemon herb tahini",
+              "name": "lemon herb tahini",
+              "item": null,
+              "recipe": "basics/lemon-herb-tahini",
+              "batches": 0.125,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "crumbled-feta",
+          "text": "2 Tbsp. crumbled feta",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. crumbled feta",
+              "name": "crumbled feta",
+              "item": "feta",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sides/cucumber-tomato-salad",
+      "title": "Cucumber Tomato Salad",
+      "url": "/recipes/sides/cucumber-tomato-salad/",
+      "category": "sides",
+      "categoryLabel": "Sides",
+      "servings": 4.0,
+      "servingsLabel": "4 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "persian-cucumbers",
+          "text": "1 lb. Persian cucumbers",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 lb. Persian cucumbers",
+              "name": "Persian cucumbers",
+              "item": "persian cucumbers",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 453.59237,
+              "unit": "lb.",
+              "plural": "lb."
+            }
+          ]
+        },
+        {
+          "id": "roma-tomatoes",
+          "text": "1 lb. Roma tomatoes",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 lb. Roma tomatoes",
+              "name": "Roma tomatoes",
+              "item": "roma tomatoes",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 453.59237,
+              "unit": "lb.",
+              "plural": "lb."
+            }
+          ]
+        },
+        {
+          "id": "red-onion",
+          "text": "1/3 lb. red onion, finely diced",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/3 lb. red onion, finely diced",
+              "name": "red onion",
+              "item": "red onion",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.333333,
+              "family": "weight",
+              "base": 151.197457,
+              "unit": "lb.",
+              "plural": "lb."
+            }
+          ]
+        },
+        {
+          "id": "fresh-parsley",
+          "text": "1 1/2 oz. fresh parsley, minced",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 oz. fresh parsley, minced",
+              "name": "fresh parsley",
+              "item": "parsley",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "weight",
+              "base": 42.524285,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "extra-virgin-olive-oil",
+          "text": "2 Tbsp. extra-virgin olive oil",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. extra-virgin olive oil",
+              "name": "extra-virgin olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "fresh-lemon-juice",
+          "text": "2 Tbsp. fresh lemon juice",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. fresh lemon juice",
+              "name": "fresh lemon juice",
+              "item": "lemon juice",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "salt",
+          "text": "1/4 tsp. salt, plus more to taste",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/4 tsp. salt, plus more to taste",
+              "name": "salt",
+              "item": "salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.25,
+              "family": "volume",
+              "base": 0.25,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "black-pepper",
+          "text": "1/4 tsp. black pepper, plus more to taste",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/4 tsp. black pepper, plus more to taste",
+              "name": "black pepper",
+              "item": "black pepper",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.25,
+              "family": "volume",
+              "base": 0.25,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drinks/ginger-mint-limeade",
+      "title": "Ginger Mint Limeade",
+      "url": "/recipes/drinks/ginger-mint-limeade/",
+      "category": "drinks",
+      "categoryLabel": "Drinks",
+      "servings": 6.0,
+      "servingsLabel": "6 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "ginger-mint-syrup-water",
+          "text": "1 c. water",
+          "group": "Ginger-mint syrup",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 c. water",
+              "name": "water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 48.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "ginger-mint-syrup-granulated-sugar",
+          "text": "1 c. granulated sugar",
+          "group": "Ginger-mint syrup",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 c. granulated sugar",
+              "name": "granulated sugar",
+              "item": "granulated sugar",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 48.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "ginger-mint-syrup-fresh-ginger",
+          "text": "3 oz. fresh ginger (a 4-inch piece), unpeeled, sliced into thin coins",
+          "group": "Ginger-mint syrup",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 oz. fresh ginger (a 4-inch piece), unpeeled, sliced into thin coins",
+              "name": "fresh ginger",
+              "item": "ginger",
+              "recipe": null,
+              "batches": null,
+              "amount": 3.0,
+              "family": "weight",
+              "base": 85.048569,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "ginger-mint-syrup-fresh-mint-leaves-and-tender-stems",
+          "text": "1 packed c. fresh mint leaves and tender stems",
+          "group": "Ginger-mint syrup",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 packed c. fresh mint leaves and tender stems",
+              "name": "fresh mint leaves and tender stems",
+              "item": "mint",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 48.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "to-assemble-fresh-lime-juice",
+          "text": "1 c. fresh lime juice (from about 8 limes)",
+          "group": "To assemble",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 c. fresh lime juice (from about 8 limes)",
+              "name": "fresh lime juice",
+              "item": "lime juice",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 48.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "to-assemble-cold-water",
+          "text": "4 c. cold water or sparkling water",
+          "group": "To assemble",
+          "optional": false,
+          "choices": [
+            {
+              "label": "cold water",
+              "text": "4 c. cold water",
+              "name": "cold water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "volume",
+              "base": 192.0,
+              "unit": "c.",
+              "plural": "c."
+            },
+            {
+              "label": "sparkling water",
+              "text": "4 c. sparkling water",
+              "name": "sparkling water",
+              "item": "sparkling water",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "volume",
+              "base": 192.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "to-assemble-ice",
+          "text": "Ice",
+          "group": "To assemble",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Ice",
+              "name": "Ice",
+              "item": "ice",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "to-assemble-lime-wheels-and-mint-sprigs",
+          "text": "Lime wheels and mint sprigs, to serve",
+          "group": "To assemble",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Lime wheels and mint sprigs, to serve",
+              "name": "Lime wheels and mint sprigs",
+              "item": "lime wheels and mint sprigs",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basics/extruded-semolina-pasta",
+      "title": "Extruded Semolina Pasta",
+      "url": "/recipes/basics/extruded-semolina-pasta/",
+      "category": "basics",
+      "categoryLabel": "Basics",
+      "servings": 6.0,
+      "servingsLabel": "6 servings",
+      "yield": "1 lb.",
+      "yieldFamily": "weight",
+      "yieldBase": 453.59237,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "fine-semolina-flour",
+          "text": "500 g fine semolina flour (semola rimacinata), plus more for dusting",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "500 g fine semolina flour (semola rimacinata), plus more for dusting",
+              "name": "fine semolina flour",
+              "item": "semolina flour",
+              "recipe": null,
+              "batches": null,
+              "amount": 500.0,
+              "family": "weight",
+              "base": 500.0,
+              "unit": "g",
+              "plural": "g"
+            }
+          ]
+        },
+        {
+          "id": "warm-water",
+          "text": "185 g warm water, plus up to 15 g more as needed",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "185 g warm water, plus up to 15 g more as needed",
+              "name": "warm water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 185.0,
+              "family": "weight",
+              "base": 185.0,
+              "unit": "g",
+              "plural": "g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basics/harissa-paste",
+      "title": "Harissa Paste",
+      "url": "/recipes/basics/harissa-paste/",
+      "category": "basics",
+      "categoryLabel": "Basics",
+      "servings": 12.0,
+      "servingsLabel": "12 servings",
+      "yield": "1 1/2 c.",
+      "yieldFamily": "volume",
+      "yieldBase": 72.0,
+      "minBatch": 1.0,
+      "lines": [
+        {
+          "id": "dried-guajillo-chiles",
+          "text": "12 dried guajillo chiles",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "12 dried guajillo chiles",
+              "name": "dried guajillo chiles",
+              "item": "dried guajillo chiles",
+              "recipe": null,
+              "batches": null,
+              "amount": 12.0,
+              "family": "count:",
+              "base": 12.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "dried-chiles-de-rbol",
+          "text": "10 dried chiles de árbol",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "10 dried chiles de árbol",
+              "name": "dried chiles de árbol",
+              "item": "dried chiles de árbol",
+              "recipe": null,
+              "batches": null,
+              "amount": 10.0,
+              "family": "count:",
+              "base": 10.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "garlic-cloves",
+          "text": "6 garlic cloves, peeled",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "6 garlic cloves, peeled",
+              "name": "garlic cloves",
+              "item": "garlic",
+              "recipe": null,
+              "batches": null,
+              "amount": 6.0,
+              "family": "count:clove",
+              "base": 6.0,
+              "unit": "clove",
+              "plural": "cloves"
+            }
+          ]
+        },
+        {
+          "id": "coriander-seeds",
+          "text": "2 tsp. coriander seeds",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 tsp. coriander seeds",
+              "name": "coriander seeds",
+              "item": "coriander seeds",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 2.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "caraway-seeds",
+          "text": "1 1/2 tsp. caraway seeds",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 tsp. caraway seeds",
+              "name": "caraway seeds",
+              "item": "caraway seeds",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 1.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "fine-sea-salt",
+          "text": "1 1/2 tsp. fine sea salt, plus more to taste",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 tsp. fine sea salt, plus more to taste",
+              "name": "fine sea salt",
+              "item": "fine sea salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 1.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "white-wine-vinegar",
+          "text": "1 Tbsp. white wine vinegar",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 Tbsp. white wine vinegar",
+              "name": "white wine vinegar",
+              "item": "white wine vinegar",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 3.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "extra-virgin-olive-oil",
+          "text": "1/4 c. extra-virgin olive oil, plus more for the jar",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/4 c. extra-virgin olive oil, plus more for the jar",
+              "name": "extra-virgin olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.25,
+              "family": "volume",
+              "base": 12.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basics/homemade-pasta",
+      "title": "Homemade Pasta",
+      "url": "/recipes/basics/homemade-pasta/",
+      "category": "basics",
+      "categoryLabel": "Basics",
+      "servings": 8.0,
+      "servingsLabel": "8 servings",
+      "yield": "1 1/2 lb.",
+      "yieldFamily": "weight",
+      "yieldBase": 680.388555,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "semolina-flour",
+          "text": "270 g semolina flour (semola rimacinata), plus more for dusting",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "270 g semolina flour (semola rimacinata), plus more for dusting",
+              "name": "semolina flour",
+              "item": "semolina flour",
+              "recipe": null,
+              "batches": null,
+              "amount": 270.0,
+              "family": "weight",
+              "base": 270.0,
+              "unit": "g",
+              "plural": "g"
+            }
+          ]
+        },
+        {
+          "id": "all-purpose-flour",
+          "text": "188 g all-purpose flour",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "188 g all-purpose flour",
+              "name": "all-purpose flour",
+              "item": "all-purpose flour",
+              "recipe": null,
+              "batches": null,
+              "amount": 188.0,
+              "family": "weight",
+              "base": 188.0,
+              "unit": "g",
+              "plural": "g"
+            }
+          ]
+        },
+        {
+          "id": "fine-sea-salt",
+          "text": "1 tsp. fine sea salt",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. fine sea salt",
+              "name": "fine sea salt",
+              "item": "fine sea salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "large-eggs",
+          "text": "4 large eggs, room temperature",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "4 large eggs, room temperature",
+              "name": "large eggs",
+              "item": "eggs",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "count:",
+              "base": 4.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "extra-virgin-olive-oil",
+          "text": "2 Tbsp. extra-virgin olive oil",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 Tbsp. extra-virgin olive oil",
+              "name": "extra-virgin olive oil",
+              "item": "olive oil",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "volume",
+              "base": 6.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "room-temperature-water",
+          "text": "1 to 4 Tbsp. room-temperature water, only as needed",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 to 4 Tbsp. room-temperature water, only as needed",
+              "name": "room-temperature water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "volume",
+              "base": 12.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basics/lemon-herb-tahini",
+      "title": "Lemon Herb Tahini",
+      "url": "/recipes/basics/lemon-herb-tahini/",
+      "category": "basics",
+      "categoryLabel": "Basics",
+      "servings": 8.0,
+      "servingsLabel": "8 servings",
+      "yield": "1 c.",
+      "yieldFamily": "volume",
+      "yieldBase": 48.0,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "tahini",
+          "text": "1/2 c. tahini",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 c. tahini",
+              "name": "tahini",
+              "item": "tahini",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 24.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "fresh-lemon-juice",
+          "text": "1/4 c. fresh lemon juice (about 2 medium lemons)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/4 c. fresh lemon juice (about 2 medium lemons)",
+              "name": "fresh lemon juice",
+              "item": "lemon juice",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.25,
+              "family": "volume",
+              "base": 12.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "cilantro",
+          "text": "3/4 c. cilantro, roughly chopped, stems included",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3/4 c. cilantro, roughly chopped, stems included",
+              "name": "cilantro",
+              "item": "cilantro",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.75,
+              "family": "volume",
+              "base": 36.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "garlic-cloves",
+          "text": "2 garlic cloves",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 garlic cloves",
+              "name": "garlic cloves",
+              "item": "garlic",
+              "recipe": null,
+              "batches": null,
+              "amount": 2.0,
+              "family": "count:clove",
+              "base": 2.0,
+              "unit": "clove",
+              "plural": "cloves"
+            }
+          ]
+        },
+        {
+          "id": "salt",
+          "text": "3/8 tsp. salt (1/4 tsp. plus 1/8 tsp.)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3/8 tsp. salt (1/4 tsp. plus 1/8 tsp.)",
+              "name": "salt",
+              "item": "salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.375,
+              "family": "volume",
+              "base": 0.375,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "water",
+          "text": "2 to 4 Tbsp. water",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "2 to 4 Tbsp. water",
+              "name": "water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.0,
+              "family": "volume",
+              "base": 12.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basics/quick-pickled-red-onions",
+      "title": "Quick Pickled Red Onions",
+      "url": "/recipes/basics/quick-pickled-red-onions/",
+      "category": "basics",
+      "categoryLabel": "Basics",
+      "servings": 8.0,
+      "servingsLabel": "8 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "large-red-onion",
+          "text": "1 large red onion (about 8 oz.), halved and sliced thin",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 large red onion (about 8 oz.), halved and sliced thin",
+              "name": "large red onion",
+              "item": "red onion",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:",
+              "base": 1.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "distilled-white-vinegar",
+          "text": "1/2 c. distilled white vinegar",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 c. distilled white vinegar",
+              "name": "distilled white vinegar",
+              "item": "distilled white vinegar",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 24.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "water",
+          "text": "1/2 c. water",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 c. water",
+              "name": "water",
+              "item": "water",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 24.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "granulated-sugar",
+          "text": "1 Tbsp. granulated sugar",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 Tbsp. granulated sugar",
+              "name": "granulated sugar",
+              "item": "granulated sugar",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 3.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "kosher-salt",
+          "text": "1 1/2 tsp. kosher salt",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 1/2 tsp. kosher salt",
+              "name": "kosher salt",
+              "item": "kosher salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.5,
+              "family": "volume",
+              "base": 1.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "black-peppercorns",
+          "text": "1 tsp. black peppercorns",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. black peppercorns",
+              "name": "black peppercorns",
+              "item": "black peppercorns",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "bay-leaf",
+          "text": "1 bay leaf",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 bay leaf",
+              "name": "bay leaf",
+              "item": "bay leaves",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "count:",
+              "base": 1.0,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "order": [
+    "mains/mediterranean-lunch-bowl",
+    "sides/cucumber-tomato-salad",
+    "mains/harissa-tempeh",
+    "mains/harissa-baked-feta-pasta",
+    "mains/cava-style-chicken",
+    "mains/autumn-harvest-turkey-chili",
+    "drinks/ginger-mint-limeade",
+    "breakfast/yogurt-granola-and-strawberries",
+    "basics/quick-pickled-red-onions",
+    "basics/lemon-herb-tahini",
+    "basics/homemade-pasta",
+    "basics/harissa-paste",
+    "basics/extruded-semolina-pasta"
+  ]
+}</script>
+</main>
+
+<footer class="site-footer">
+  <p class="colophon">A personal collection, kept as plain Markdown.</p>
+  <p class="colophon"><a href="https://github.com/calebstewart/recipes">Source on GitHub</a></p>
+</footer>
+
+<script src="/recipes/assets/plan.js" defer></script>
+<script>
+  // Registers the service worker that makes the site installable and lets an
+  // installed copy work with no signal. Nothing else depends on it, so a
+  // browser without support just gets the ordinary site.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/recipes/sw.js', { scope: '/recipes/' });
+    });
+  }
+</script>
+</body>
+</html>
