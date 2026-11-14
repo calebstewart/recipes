@@ -15,10 +15,23 @@
 #   section: where it sits in the store (one of `sections:` below)
 #   also:    other ways recipes write it, merged into this line
 #   unit:    what a bare count means — `unit: clove` makes "3 garlic" 3 cloves
+#   buy:     how it is bought, as `<what you buy> = <what one covers>`:
+#
+#              buy: 1 head = 10 cloves
+#
+#            The list then says "2 heads (13 cloves)": what to buy, rounded up
+#            to whole ones, with what the recipes call for beside it. Give a
+#            list when recipes measure it more than one way; every line buys
+#            the same thing. The left side can be a measure with a note
+#            instead — `1 c. dry = 3 c.` buys cooked rice as dry rice.
 #
 # Matching ignores case and a plural on the last word, so "garlic cloves" and
 # "garlic clove" are one alias. The build warns about any ingredient that is not
-# here; it still shows up, under Other, until it is added.
+# here; it still shows up, under Other, until it is added. It also warns about a
+# `buy:` line no recipe needs, which is usually a unit typo.
+#
+# `# check` marks a conversion that is a typical value rather than one taken
+# from a recipe or a label. Correct it against what the store actually sells.
 
 # Store sections, in the order the list shows them — the order you walk the
 # store. `pantry` is special: things you probably have, shown last and collapsed
@@ -44,56 +57,74 @@ ingredients:
   butternut squash:
     section: produce
     also: [raw butternut squash]
+    buy: 1 squash = 4 c. # check: a medium one, peeled and cubed
   cherry or grape tomatoes:
     section: produce
     also: [cherry tomatoes, grape tomatoes]
   cilantro:
     section: produce
     also: [fresh cilantro]
+    buy: 1 bunch = 1 c. # check: chopped, stems in
   garlic:
     section: produce
     also: [garlic clove]
     unit: clove
+    buy: 1 head = 10 cloves # check: heads run about 8 to 12
   ginger:
     section: produce
     also: [fresh ginger]
   jalapeño: produce
-  lemon juice:
+  lemons:
     section: produce
-    also: [fresh lemon juice]
-  lettuce blend: produce
-  lime juice:
+    also: [lemon juice, fresh lemon juice]
+    buy: 1 lemon = 2 Tbsp. # the tahini: 1/4 c. juice is about 2 medium lemons
+  lettuce blend:
     section: produce
-    also: [fresh lime juice]
+    buy: 1 (5 oz.) box = 5 oz. # the lunch bowl's box
+  limes:
+    section: produce
+    also: [lime juice, fresh lime juice]
+    buy: 1 lime = 2 Tbsp. # the limeade: 1 c. juice from about 8 limes
   lime wheels and mint sprigs: produce
   mint:
     section: produce
     also: [fresh mint, fresh mint leaves and tender stems]
+    buy: 1 bunch = 1 c. # check: packed leaves
   onion:
     section: produce
     also: [large onion]
   parsley:
     section: produce
     also: [fresh parsley]
+    buy: 1 bunch = 2 oz. # check
   persian cucumbers: produce
   pumpkin:
     section: produce
     also: [raw pumpkin]
+    buy: 1 pie pumpkin = 3 c. # check: the least certain of these
   red onion:
     section: produce
     also: [large red onion]
-  roma tomatoes: produce
+    buy: 1 large onion = 8 oz. # the pickled onions: a large one is about 8 oz.
+  roma tomatoes:
+    section: produce
+    buy: 1 tomato = 4 oz. # check
   shallot: produce
   strawberries:
     section: produce
     also: [fresh strawberries]
+    buy: 1 (1 lb.) container = 16 # check: berries vary a lot
 
   # Meat
   chicken thighs:
     section: meat
     also: [skinless chicken thighs]
-  ground turkey: meat
-  pork sausage: meat
+  ground turkey:
+    section: meat
+    buy: 1 (1 lb.) package = 1 lb. # check
+  pork sausage:
+    section: meat
+    buy: 1 (1 lb.) package = 1 lb. # check: some brands are 12 or 19 oz.
 
   # Dairy & refrigerated
   cheddar:
@@ -102,53 +133,77 @@ ingredients:
   eggs:
     section: refrigerated
     also: [large eggs]
+    buy: 1 dozen = 12
   feta:
     section: refrigerated
     also: [crumbled feta]
+    buy: 1 (8 oz.) block = 1 1/2 c. # crumbled; recipes buying it by the block need nothing
   greek yogurt:
     section: refrigerated
     also: [plain greek yogurt]
   mexican-blend cheese:
     section: refrigerated
     also: [shredded mexican-blend cheese]
-  roasted red pepper hummus: refrigerated
+  roasted red pepper hummus:
+    section: refrigerated
+    buy: 1 (10 oz.) tub = 1 1/4 c. # check: H-E-B Deli
   tempeh: refrigerated
-  tzatziki: refrigerated
-  vanilla greek yogurt: refrigerated
+  tzatziki:
+    section: refrigerated
+    buy: 1 (12 oz.) tub = 1 1/2 c. # check: Cedar's
+  vanilla greek yogurt:
+    section: refrigerated
+    buy: 1 (32 oz.) tub = 4 c. # check: or 5.3 oz. cups, if that is how it is bought
 
   # Canned & jarred
   chickpeas: canned
   crushed tomatoes: canned
   diced tomatoes: canned
-  mixed canned beans: canned
+  mixed canned beans:
+    section: canned
+    buy: 1 (15 oz.) can = 1 1/2 c. # drained
   pumpkin purée:
     section: canned
     also: [100% pumpkin purée]
-  sparkling water: canned
-  tahini: canned
+  sparkling water:
+    section: canned
+    buy: 1 (1 l) bottle = 1 l
+  tahini:
+    section: canned
+    buy: 1 (16 oz.) jar = 1 3/4 c. # check
 
   # Pasta, grains & baking
-  all-purpose flour: dry
   brown rice:
     section: dry
     also: [cooked brown rice]
+    buy: 1 c. dry = 3 c. # cooked
   granola:
     section: dry
     also: [oat and honey granola]
+    buy: 1 (12 oz.) bag = 3 c. # check: H-E-B Organics
   quinoa:
     section: dry
     also: [cooked quinoa]
+    buy: 1 c. dry = 3 c. # cooked
   ready brown rice: dry
   semolina flour:
     section: dry
     also: [fine semolina flour]
-  short tubular pasta: dry
+    buy: 1 (24 oz.) bag = 24 oz. # check: Bob's Red Mill
+  short tubular pasta:
+    section: dry
+    buy: 1 (1 lb.) box = 1 lb.
 
   # Spices & dried chiles
-  dried chiles de árbol: spices
-  dried guajillo chiles: spices
+  dried chiles de árbol:
+    section: spices
+    buy: 1 (1 oz.) bag = 40 # check: bag sizes vary widely
+  dried guajillo chiles:
+    section: spices
+    buy: 1 (2 oz.) bag = 10 # check: bag sizes vary widely
 
   # Check the pantry
+  all-purpose flour: pantry
   bay leaves:
     section: pantry
     also: [bay leaf]

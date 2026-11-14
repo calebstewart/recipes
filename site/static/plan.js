@@ -141,7 +141,7 @@
 
   /* A summed volume or weight, in the unit the recipes used if they all
      agree, and otherwise the one a shopper would say. */
-  function measure(family, total, units) {
+  function measure(family, total, units, fine) {
     var table = family === "volume" ? VOLUME : WEIGHT;
     var used = Object.keys(units || {});
     var unit;
@@ -156,6 +156,10 @@
       unit = total >= WEIGHT["lb."] ? "lb." : "oz.";
     }
     var step = unit === "g" || unit === "ml" ? 5 : unit === "tsp." ? 0.125 : unit === "Tbsp." ? 0.5 : 0.25;
+    /* `fine` is for an amount shown for reference next to what to buy, which
+       should agree with the count beside it: 10 Tbsp. of juice is 5/8 c. next
+       to 5 lemons, not the 3/4 c. a shopping amount would round to. */
+    if (fine && step === 0.25) step = 0.125;
     return quantity(roundUp(total / table[unit], step)) + " " + unit;
   }
 
@@ -290,14 +294,72 @@
     family.units[choice.unit] = true;
   }
 
+  /* One family's total as the recipes measured it: `9 Tbsp.`, `13 cloves`. */
+  function familyAmount(row, name, fine) {
+    var family = row.families[name];
+    if (name === "volume" || name === "weight") return measure(name, family.total, family.units, fine);
+    return counted(family.total, family.unit, family.plural);
+  }
+
+  /* What a row says to buy. With a `buy:` in ingredients.yml, every family it
+     can convert is summed into the purchase unit and rounded up there — 13
+     cloves is 2 heads — with the recipe amounts kept beside it in parentheses
+     so you know how much of it the week uses. A family it cannot convert is
+     listed after, the same as a row with no `buy:` at all.
+
+     Returns the two halves apart — what to buy, and the recipe amounts it
+     covers — so the row can put the second on a line of its own. */
+  function rowParts(row) {
+    var item = data.items[row.key] || {};
+    var buy = item.buy;
+    if (!buy) {
+      return {
+        buy: row.order.map(function (name) {
+          return familyAmount(row, name);
+        }).join(" + "),
+        covers: ""
+      };
+    }
+
+    var bought = 0;
+    var used = [];
+    var converted = false;
+    var rest = [];
+    row.order.forEach(function (name) {
+      var family = row.families[name];
+      if (buy.per[name]) {
+        bought += family.total / buy.per[name];
+        used.push(familyAmount(row, name, true));
+        converted = true;
+      } else if (name === buy.family) {
+        /* Already in the unit it is bought in: counts toward it as it is, and
+           is listed with the converted amounts so the total adds up on sight. */
+        bought += family.total;
+        used.push(familyAmount(row, name, true));
+      } else {
+        rest.push(familyAmount(row, name));
+      }
+    });
+    if (!bought) return { buy: rest.join(" + "), covers: "" };
+
+    var text;
+    if (buy.kind === "measure") {
+      var units = {};
+      units[buy.one] = true;
+      text = measure(buy.family, bought, units) + (buy.suffix ? " " + buy.suffix : "");
+    } else {
+      var n = roundUp(bought, 1);
+      text = buy.bare ? String(n) : n + " " + (n === 1 ? buy.one : buy.many);
+    }
+    /* Only worth showing when something was converted; a row bought just as
+       the recipes wrote it would only repeat itself. */
+    return { buy: [text].concat(rest).join(" + "), covers: converted ? used.join(" + ") : "" };
+  }
+
+  /* The same on one line, for the copied list: `2 heads (14 cloves)`. */
   function rowAmount(row) {
-    return row.order
-      .map(function (name) {
-        var family = row.families[name];
-        if (name === "volume" || name === "weight") return measure(name, family.total, family.units);
-        return counted(family.total, family.unit, family.plural);
-      })
-      .join(" + ");
+    var parts = rowParts(row);
+    return parts.covers ? parts.buy + " (" + parts.covers + ")" : parts.buy;
   }
 
   /* ------------------------------------------------------------------ DOM */
@@ -594,7 +656,7 @@
 
   function rowNode(row) {
     var checked = !!plan.checked[row.key];
-    var amount = rowAmount(row);
+    var parts = rowParts(row);
     var detailsId = "src-" + row.key.replace(/[^a-z0-9]+/gi, "-");
     var open = expanded[row.key];
     return el("li", { class: "shop-row" + (checked ? " is-checked" : "") }, [
@@ -611,7 +673,10 @@
           }
         }),
         el("span", { class: "shop-name", text: capitalise(row.name) }),
-        el("span", { class: "shop-amount", text: amount })
+        el("span", { class: "shop-amount" }, [
+          parts.buy,
+          parts.covers ? el("span", { class: "shop-covers", text: "for " + parts.covers }) : null
+        ])
       ]),
       button(open ? "Hide" : "From", {
         class: "src-toggle",

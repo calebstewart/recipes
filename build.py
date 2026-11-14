@@ -1055,6 +1055,7 @@ _COUNT_UNITS: dict[str, tuple[str, str]] = {
     "can": ("can", "cans"),
     "clove": ("clove", "cloves"),
     "container": ("container", "containers"),
+    "dozen": ("dozen", "dozen"),
     "head": ("head", "heads"),
     "jar": ("jar", "jars"),
     "pack": ("pack", "packs"),
@@ -1065,6 +1066,7 @@ _COUNT_UNITS: dict[str, tuple[str, str]] = {
     "slice": ("slice", "slices"),
     "sprig": ("sprig", "sprigs"),
     "stalk": ("stalk", "stalks"),
+    "tub": ("tub", "tubs"),
 }
 
 
@@ -1112,6 +1114,30 @@ class CatalogEntry:
     name: str
     section: str
     unit: str | None  # what a bare count of this means: `3 garlic` is 3 cloves
+    buy: Purchase | None = None
+
+
+@dataclass
+class Purchase:
+    """How an ingredient is bought, from the catalog's `buy:` lines.
+
+    `1 head = 10 cloves` reads as: buy it by the head, and one head covers 10
+    cloves. ``per`` maps each family a recipe can measure it in to how much of
+    that family one purchase unit covers, in the family's base unit.
+
+    Two kinds. A ``count`` is bought in whole things (heads, lemons, a 5 oz.
+    box) and rounds up to the next one. A ``measure`` is bought by volume or
+    weight with a note (`1 c. dry = 3 c.`: cooked rice bought as dry rice), and
+    rounds the way any measure on the list does.
+    """
+
+    kind: str  # "count" | "measure"
+    family: str  # the purchase unit's own family; recipes using it need no conversion
+    one: str  # `head`, `(5 oz.) box`, `lemon`; for a measure, its unit (`c.`)
+    many: str
+    suffix: str  # for a measure: what it is a measure of (`dry`)
+    bare: bool  # the unit is the item itself: show `5`, not `5 lemons`
+    per: dict[str, float]  # recipe family → base units covered by one purchase unit
 
 
 @dataclass
@@ -1344,7 +1370,7 @@ def load_catalog(errors: list[str]) -> Catalog:
         if not isinstance(details, dict):
             errors.append(f"{rel}: {name!r} must be a section name or a mapping")
             continue
-        unknown = set(details) - {"section", "also", "unit"}
+        unknown = set(details) - {"section", "also", "unit", "buy"}
         if unknown:
             errors.append(f"{rel}: {name!r} has unknown keys {sorted(unknown)}")
         section = as_text(details.get("section")) or OTHER_SECTION[0]
@@ -1354,11 +1380,100 @@ def load_catalog(errors: list[str]) -> Catalog:
         if unit and unit_key(unit) not in _COUNT_UNITS:
             errors.append(f"{rel}: {name!r} has unit {unit!r}, which is not a counted unit")
         entries[name] = CatalogEntry(name=name, section=section, unit=unit)
+        if details.get("buy") is not None:
+            try:
+                entries[name].buy = parse_purchase(name, details["buy"])
+            except ValidationError as exc:
+                errors.append(f"{rel}: {name!r}: {exc}")
         claim(name_key(name), name)
         for alias in as_list(details.get("also")):
             claim(name_key(alias), name)
 
     return Catalog(sections, entries, index)
+
+
+def _plural_phrase(phrase: str) -> str:
+    """`lemon` → `lemons`, `large onion` → `large onions`, `squash` → `squashes`."""
+    head, _, word = phrase.rpartition(" ")
+    lowered = word.lower()
+    if lowered in ("dozen",) or not word:
+        plural = word
+    elif lowered.endswith(("s", "sh", "ch", "x", "o")):
+        plural = word + "es"
+    elif lowered.endswith("y") and lowered[-2:-1] not in ("a", "e", "i", "o", "u"):
+        plural = word[:-1] + "ies"
+    else:
+        plural = word + "s"
+    return f"{head} {plural}" if head else plural
+
+
+def parse_purchase(name: str, value: object) -> Purchase:
+    """Read an entry's `buy:` — one `A = B` line, or a list of them.
+
+    Every line must buy the same thing (the left side); each right side is one
+    way recipes measure the ingredient, and says how much one of the left
+    covers. Two lines converting the same kind of measure would contradict
+    each other, so that is an error too.
+    """
+    if isinstance(value, str):
+        lines = [value]
+    elif isinstance(value, list) and all(isinstance(line, str) for line in value):
+        lines = value
+    else:
+        raise ValidationError("`buy:` must be a line like `1 head = 10 cloves`, or a list of them")
+
+    purchase: Purchase | None = None
+    for line in lines:
+        left_raw, sep, right_raw = line.partition("=")
+        if not sep or "=" in right_raw:
+            raise ValidationError(f"`buy: {line}` needs exactly one `=`")
+        left, left_rest = parse_quantity(collapse(left_raw))
+        right, right_rest = parse_quantity(collapse(right_raw))
+        if not left.amount or not right.amount or right.base is None:
+            raise ValidationError(f"`buy: {line}` needs an amount on both sides")
+        if right_rest.strip():
+            raise ValidationError(
+                f"`buy: {line}`: the right side is only an amount and a unit, "
+                f"not {right_rest.strip()!r}"
+            )
+
+        left_rest = collapse(left_rest)
+        if left.family in ("volume", "weight"):
+            current = Purchase(
+                kind="measure", family=left.family, one=left.unit, many=left.plural,
+                suffix=left_rest, bare=False, per={},
+            )
+            covers = right.base / (left.base or 1)
+        else:
+            if left.family == "count:" and not left_rest:
+                raise ValidationError(f"`buy: {line}`: say what is bought, e.g. `1 lemon`")
+            if left.unit:
+                # A unit word: `1 head`, `1 (5 oz.) box`, `1 dozen`.
+                one, many = left.unit, left.plural
+            else:
+                # The thing itself: `1 lemon`, `1 large onion`.
+                one, many = left_rest, _plural_phrase(left_rest)
+            current = Purchase(
+                kind="count", family=left.family, one=one, many=many, suffix="",
+                bare=name_key(one) == name_key(name), per={},
+            )
+            covers = right.base / left.amount
+
+        if purchase is None:
+            purchase = current
+        elif (purchase.kind, purchase.family, purchase.one, purchase.suffix) != (
+            current.kind, current.family, current.one, current.suffix
+        ):
+            raise ValidationError(
+                f"every `buy:` line must buy the same thing; {line!r} buys "
+                f"{current.one!r} where an earlier line buys {purchase.one!r}"
+            )
+        if right.family in purchase.per:
+            raise ValidationError(f"two `buy:` lines convert {right.family.removeprefix('count:') or 'a bare count'}")
+        purchase.per[right.family] = covers
+
+    assert purchase is not None
+    return purchase
 
 
 def recipe_link(raw: str, ids: set[str]) -> tuple[str | None, str | None]:
@@ -1618,10 +1733,31 @@ def build_shopping_data(
         warn(f"{CATALOG_PATH.name} has no entry for {key!r} (first seen in {rel_path}); "
              "it will be listed under Other")
 
-    items: dict[str, dict[str, str]] = {
-        name: {"name": entry.name, "section": entry.section}
-        for name, entry in catalog.entries.items()
-    }
+    measured: dict[str, set[str]] = {}
+    for entry in entries:
+        for line in entry["lines"]:
+            for choice in line["choices"]:
+                if choice["item"] and choice["amount"] is not None:
+                    measured.setdefault(choice["item"], set()).add(choice["family"])
+
+    items: dict[str, dict[str, object]] = {}
+    for name, entry in catalog.entries.items():
+        items[name] = {"name": entry.name, "section": entry.section}
+        buy = entry.buy
+        if buy is None:
+            continue
+        for family in sorted(set(buy.per) - measured.get(name, set())):
+            shown = family.removeprefix("count:") or "a bare count"
+            warn(f"{CATALOG_PATH.name}: {name!r} converts {shown}, which no recipe measures it in")
+        items[name]["buy"] = {
+            "kind": buy.kind,
+            "family": buy.family,
+            "one": buy.one,
+            "many": buy.many,
+            "suffix": buy.suffix,
+            "bare": buy.bare,
+            "per": {family: _number(covers) for family, covers in buy.per.items()},
+        }
     for key in uncatalogued:
         items[key] = {"name": key, "section": OTHER_SECTION[0]}
 

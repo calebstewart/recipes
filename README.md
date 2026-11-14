@@ -73,8 +73,11 @@ recipe reads on its page or in a recipe app's import:
 On the list, ingredients from different recipes are merged using
 [`ingredients.yml`](ingredients.yml), which gives each ingredient a name, a
 store section, and the other ways recipes write it ("extra-virgin olive oil"
-is olive oil). The build warns about any ingredient that isn't in it; add an
-entry when that happens. A broken sub-recipe link, a missing `yield:`, or two
+is olive oil). An entry can also say how the ingredient is bought —
+`buy: 1 head = 10 cloves` — and the list then shows "2 heads", with the 14
+cloves the recipes call for underneath. Values marked `# check` there are
+typical sizes, not measured ones; correct them as you shop. The build warns
+about any ingredient that isn't in it; add an entry when that happens. A broken sub-recipe link, a missing `yield:`, or two
 recipes that use each other fail the build.
 
 ## Site
