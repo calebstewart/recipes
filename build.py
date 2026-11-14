@@ -1534,6 +1534,10 @@ def shopping_lines(
     for group in recipe.ingredients.groups:
         group_text = group.name.text if group.name is not None else None
         group_optional = bool(group_text and _OPTIONAL_RE.search(group_text))
+        if group_text:
+            # Line ids are built from the heading and key the remembered
+            # choices, so marking a group optional must not change them.
+            group_text = _OPTIONAL_RE.sub("", group_text) or None
         for item in group.items:
             source = item.raw or item.text
             optional = group_optional or bool(_OPTIONAL_RE.search(source))

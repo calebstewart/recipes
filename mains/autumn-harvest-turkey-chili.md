@@ -45,7 +45,7 @@ stove first, then leave it in the slow cooker all afternoon.
 - 1 tsp. kosher salt
 - Hot sauce, to taste (optional)
 
-### To serve
+### To serve (optional)
 
 - 4 cups cooked {brown rice | quinoa}
 - Shredded {cheddar | Mexican-blend} cheese
