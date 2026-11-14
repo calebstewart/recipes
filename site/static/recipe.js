@@ -1,4 +1,5 @@
-/* Recipe page behaviour: copy the import URL to the clipboard.
+/* Recipe page behaviour: copy the import URL to the clipboard, and add the
+   recipe to the week's plan.
    Everything else on the page works without JS. */
 (function () {
   "use strict";
@@ -121,5 +122,87 @@
       if (legacyCopy(field)) succeed(button);
       else fail(button, field);
     });
+  });
+})();
+
+/* "Add to plan": puts this recipe on the plan page at one batch's worth of
+   meals, or says how many meals it is already down for. The plan itself lives
+   in localStorage under the same key plan.js reads. */
+(function () {
+  "use strict";
+
+  var recipe = document.querySelector(".recipe[data-recipe-id]");
+  if (!recipe) return;
+
+  var KEY = "recipes:plan";
+  var id = recipe.getAttribute("data-recipe-id");
+  var servings = Math.max(1, Math.round(parseFloat(recipe.getAttribute("data-servings")) || 1));
+  var planUrl = recipe.getAttribute("data-plan-url");
+
+  function read() {
+    try {
+      var plan = JSON.parse(window.localStorage.getItem(KEY) || "null");
+      return plan && typeof plan === "object" ? plan : {};
+    } catch (err) {
+      return null;
+    }
+  }
+
+  /* Storage that cannot be read cannot be written either; no button then. */
+  if (read() === null) return;
+
+  var box = document.createElement("span");
+  box.className = "plan-add";
+
+  function draw() {
+    var plan = read() || {};
+    var meals = plan.meals && plan.meals[id];
+    box.textContent = "";
+    if (meals > 0) {
+      var link = document.createElement("a");
+      link.className = "plan-add-btn";
+      link.href = planUrl;
+      link.textContent = "In this week’s plan · " + meals + (meals === 1 ? " meal" : " meals");
+      box.appendChild(link);
+      return;
+    }
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "plan-add-btn";
+    button.textContent = "Add to plan";
+    button.addEventListener("click", function () {
+      var plan = read() || {};
+      if (!plan.meals || typeof plan.meals !== "object") plan.meals = {};
+      plan.meals[id] = servings;
+      try {
+        window.localStorage.setItem(KEY, JSON.stringify(plan));
+      } catch (err) {
+        return;
+      }
+      draw();
+      var link = box.querySelector("a");
+      if (link) link.focus();
+    });
+    box.appendChild(button);
+  }
+
+  window.addEventListener("storage", function (event) {
+    if (event.key === KEY) draw();
+  });
+
+  /* After every deferred script, so cooking mode's button row exists to join. */
+  document.addEventListener("DOMContentLoaded", function () {
+    var head = recipe.querySelector(".recipe-head");
+    if (!head) return;
+    var actions = head.querySelector(".cook-actions");
+    if (!actions) {
+      actions = document.createElement("div");
+      actions.className = "cook-actions";
+      var meta = head.querySelector(".recipe-meta");
+      if (meta && meta.nextSibling) head.insertBefore(actions, meta.nextSibling);
+      else head.appendChild(actions);
+    }
+    actions.appendChild(box);
+    draw();
   });
 })();

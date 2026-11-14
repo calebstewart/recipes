@@ -32,7 +32,7 @@ Built for lunches, over rice or salad or in a pita.
 
 ### Marinade
 
-- 2 Tbsp. harissa paste
+- 2 Tbsp. [harissa paste](https://calebstew.art/recipes/basics/harissa-paste/)
 - 2 Tbsp. olive oil
 - 1 Tbsp. fresh lemon juice
 - 1 Tbsp. honey

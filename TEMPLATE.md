@@ -1,6 +1,8 @@
 ---
 title: Recipe Name
 servings: 4
+yield: 1 1/2 c. # optional; how much a batch makes, for recipes used inside others
+min_batch: 1 # optional; the least the plan makes when another recipe uses this
 prep_time: 15m
 cook_time: 30m
 source: where this came from (cookbook, person, URL) or "original"
@@ -28,6 +30,9 @@ worth knowing before starting.
 - 1 lb ingredient, prepped how
 - 2 tbsp something else
 - Salt and pepper, to taste
+- 4 cups cooked {brown rice | quinoa}
+- 1 jalapeño, chopped (optional)
+- 2 Tbsp. [harissa paste](https://calebstew.art/recipes/basics/harissa-paste/)
 
 ### For the sauce
 

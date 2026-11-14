@@ -1,0 +1,184 @@
+# Ingredients, for the shopping list on the plan page.
+#
+# Recipes write ingredients however reads best in the recipe: "3 garlic cloves,
+# smashed", "1/2 c. extra-virgin olive oil, divided". The shopping list strips
+# the amount, the unit, anything in parentheses and everything after the first
+# comma, then looks what is left up here so the same thing from two recipes
+# lands on one line.
+#
+# Each entry is the name the list shows, then either just its store section:
+#
+#   shallot: produce
+#
+# or a mapping with any of:
+#
+#   section: where it sits in the store (one of `sections:` below)
+#   also:    other ways recipes write it, merged into this line
+#   unit:    what a bare count means — `unit: clove` makes "3 garlic" 3 cloves
+#
+# Matching ignores case and a plural on the last word, so "garlic cloves" and
+# "garlic clove" are one alias. The build warns about any ingredient that is not
+# here; it still shows up, under Other, until it is added.
+
+# Store sections, in the order the list shows them — the order you walk the
+# store. `pantry` is special: things you probably have, shown last and collapsed
+# so you check the cupboard instead of buying another jar. `none` is for things
+# that never go on a list at all, like water.
+sections:
+  produce: Produce
+  meat: Meat
+  refrigerated: Dairy & refrigerated
+  canned: Canned & jarred
+  dry: Pasta, grains & baking
+  spices: Spices & dried chiles
+  pantry: Check the pantry
+
+ingredients:
+  # Produce
+  basil:
+    section: produce
+    also: [fresh basil leaves]
+  bell pepper:
+    section: produce
+    also: [chopped bell pepper]
+  butternut squash:
+    section: produce
+    also: [raw butternut squash]
+  cherry or grape tomatoes:
+    section: produce
+    also: [cherry tomatoes, grape tomatoes]
+  cilantro:
+    section: produce
+    also: [fresh cilantro]
+  garlic:
+    section: produce
+    also: [garlic clove]
+    unit: clove
+  ginger:
+    section: produce
+    also: [fresh ginger]
+  jalapeño: produce
+  lemon juice:
+    section: produce
+    also: [fresh lemon juice]
+  lettuce blend: produce
+  lime juice:
+    section: produce
+    also: [fresh lime juice]
+  lime wheels and mint sprigs: produce
+  mint:
+    section: produce
+    also: [fresh mint, fresh mint leaves and tender stems]
+  onion:
+    section: produce
+    also: [large onion]
+  parsley:
+    section: produce
+    also: [fresh parsley]
+  persian cucumbers: produce
+  pumpkin:
+    section: produce
+    also: [raw pumpkin]
+  red onion:
+    section: produce
+    also: [large red onion]
+  roma tomatoes: produce
+  shallot: produce
+  strawberries:
+    section: produce
+    also: [fresh strawberries]
+
+  # Meat
+  chicken thighs:
+    section: meat
+    also: [skinless chicken thighs]
+  ground turkey: meat
+  pork sausage: meat
+
+  # Dairy & refrigerated
+  cheddar:
+    section: refrigerated
+    also: [shredded cheddar cheese]
+  eggs:
+    section: refrigerated
+    also: [large eggs]
+  feta:
+    section: refrigerated
+    also: [crumbled feta]
+  greek yogurt:
+    section: refrigerated
+    also: [plain greek yogurt]
+  mexican-blend cheese:
+    section: refrigerated
+    also: [shredded mexican-blend cheese]
+  roasted red pepper hummus: refrigerated
+  tempeh: refrigerated
+  tzatziki: refrigerated
+  vanilla greek yogurt: refrigerated
+
+  # Canned & jarred
+  chickpeas: canned
+  crushed tomatoes: canned
+  diced tomatoes: canned
+  mixed canned beans: canned
+  pumpkin purée:
+    section: canned
+    also: [100% pumpkin purée]
+  sparkling water: canned
+  tahini: canned
+
+  # Pasta, grains & baking
+  all-purpose flour: dry
+  brown rice:
+    section: dry
+    also: [cooked brown rice]
+  granola:
+    section: dry
+    also: [oat and honey granola]
+  quinoa:
+    section: dry
+    also: [cooked quinoa]
+  ready brown rice: dry
+  semolina flour:
+    section: dry
+    also: [fine semolina flour]
+  short tubular pasta: dry
+
+  # Spices & dried chiles
+  dried chiles de árbol: spices
+  dried guajillo chiles: spices
+
+  # Check the pantry
+  bay leaves:
+    section: pantry
+    also: [bay leaf]
+  black pepper: pantry
+  black peppercorns: pantry
+  caraway seeds: pantry
+  chili powder: pantry
+  coriander seeds: pantry
+  distilled white vinegar: pantry
+  dried oregano: pantry
+  dried thyme:
+    section: pantry
+    also: [dried thyme leaves]
+  fine sea salt: pantry
+  garlic powder: pantry
+  granulated sugar: pantry
+  ground cumin: pantry
+  honey: pantry
+  hot sauce: pantry
+  kosher salt: pantry
+  olive oil:
+    section: pantry
+    also: [extra-virgin olive oil]
+  paprika: pantry
+  pumpkin pie spice: pantry
+  salt: pantry
+  white wine vinegar: pantry
+
+  # Never on a list
+  ice: none
+  water:
+    section: none
+    also: [cold water, warm water, room-temperature water]

@@ -1,6 +1,7 @@
 ---
 title: Lemon Herb Tahini
 servings: 8
+yield: 1 c.
 prep_time: 5m
 total_time: 5m
 source: https://infinetaste.com/lemon-herb-tahini/

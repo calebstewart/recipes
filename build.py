@@ -83,6 +83,8 @@ KNOWN_KEYS = {
     "image",
     "notes_in_jsonld",
     "nutrition",
+    "yield",
+    "min_batch",
 }
 
 #: Nutrition fields in display order: frontmatter key, label, schema.org
@@ -163,6 +165,9 @@ class Item:
 
     html: str
     text: str
+    #: The Markdown the item was rendered from. The shopping list reads links
+    #: and `{a | b}` choices out of it, which the two rendered forms have lost.
+    raw: str = ""
 
 
 @dataclass
@@ -239,6 +244,13 @@ class Recipe:
     notes_in_jsonld: bool
     nutrition: list[Nutrient]
     date_published: str | None
+    #: How much one batch makes (`1 1/2 c.`), so a recipe that calls for
+    #: `3 Tbsp.` of this one can be costed in batches on the shopping list.
+    yield_text: str | None = None
+    #: The least the plan page will make of this as a sub-recipe, in batches.
+    #: For things worth a whole batch even when a recipe needs a spoonful, like
+    #: a paste that keeps for a month.
+    min_batch: float | None = None
 
     @property
     def id(self) -> str:
@@ -250,7 +262,8 @@ class Recipe:
         if not self.servings:
             return None
         if re.fullmatch(r"[\d\s./-]+", self.servings):
-            return f"{self.servings.strip()} servings"
+            count = self.servings.strip()
+            return f"{count} serving" if count == "1" else f"{count} servings"
         return self.servings
 
     def ingredient_texts(self) -> list[str]:
@@ -328,7 +341,7 @@ def render_inline(raw: str) -> Item:
         html_form = html_form.replace(token, f"<code>{esc(code)}</code>")
         text_form = text_form.replace(token, code)
 
-    return Item(html=html_form.strip(), text=collapse(text_form))
+    return Item(html=html_form.strip(), text=collapse(text_form), raw=raw)
 
 
 def _inline_html(text: str) -> str:
@@ -838,6 +851,10 @@ def load_recipe(path: Path, category: str, errors: list[str]) -> Recipe | None:
             blocks=blocks if kind == "extra" else [],
         )
         if kind == "ingredients" and ingredients is None:
+            try:
+                expand_choices(section)
+            except ValidationError as exc:
+                fail(str(exc))
             ingredients = section
         elif kind == "instructions" and instructions is None:
             instructions = section
@@ -888,6 +905,16 @@ def load_recipe(path: Path, category: str, errors: list[str]) -> Recipe | None:
         fail(str(exc))
         nutrition = []
 
+    min_batch: float | None = None
+    raw_min = as_text(meta.get("min_batch"))
+    if raw_min:
+        # A number or a written fraction: `1`, `0.5`, `1/2`.
+        if re.fullmatch(r"\d+(?:\.\d+)?|\d+/\d+|\d+\s+\d+/\d+", raw_min):
+            min_batch = amount_value(raw_min)
+        if not min_batch:
+            fail(f"min_batch must be a positive number of batches, not {raw_min!r}")
+            min_batch = None
+
     return Recipe(
         path=path,
         rel_path=rel_path,
@@ -911,6 +938,8 @@ def load_recipe(path: Path, category: str, errors: list[str]) -> Recipe | None:
         notes_in_jsonld=as_bool(meta.get("notes_in_jsonld"), default=True),
         nutrition=nutrition,
         date_published=git_date(path),
+        yield_text=as_text(meta.get("yield")) or None,
+        min_batch=min_batch,
     )
 
 
@@ -941,6 +970,670 @@ def discover(errors: list[str]) -> list[Recipe]:
         else:
             seen[recipe.id] = recipe
     return recipes
+
+
+# --------------------------------------------------------------------------
+# Shopping list
+# --------------------------------------------------------------------------
+#
+# The plan page (`/plan/`) turns "these recipes, this many meals each" into a
+# shopping list. Everything that needs judgement happens here, at build time,
+# so a recipe the list cannot make sense of fails CI instead of quietly
+# producing a wrong list. The browser only multiplies and adds.
+#
+# Three conventions in the Markdown feed it, none of which change how a recipe
+# reads on its page or in a recipe app's importer:
+#
+# - A link to another recipe in an ingredient line makes that recipe a
+#   sub-recipe: `2 Tbsp. [harissa paste](…/basics/harissa-paste/)`. The amount
+#   is costed in batches against the sub-recipe's `yield:`, or written as one
+#   directly (`1/5 of a batch of [Cava-style chicken](…)`).
+# - `(optional)` at the end of a line, or of a `###` group heading, makes the
+#   line something the plan can leave out.
+# - `{brown rice | quinoa}` is a choice between alternatives. The page shows
+#   "brown rice or quinoa"; the plan asks which, and remembers.
+
+CATALOG_PATH = REPO_ROOT / "ingredients.yml"
+
+#: The catalog section whose items are things you probably have, listed apart
+#: so they are checked at home rather than bought by reflex.
+PANTRY_SECTION = "pantry"
+#: The catalog section for things a recipe uses but nobody buys: water, ice.
+NONE_SECTION = "none"
+OTHER_SECTION = ("other", "Other")
+
+_OPTIONAL_RE = re.compile(r"\s*\(optional\)\s*$", re.IGNORECASE)
+_CHOICE_RE = re.compile(r"\{([^{}]*)\}")
+_PAREN_RE = re.compile(r"\s*\([^()]*\)")
+_UNIT_WORD_RE = re.compile(r"([A-Za-z]+)\.?(?=[\s(,]|$)")
+_BATCH_OF_RE = re.compile(r"^of\s+an?\s+batch\s+of\s+", re.IGNORECASE)
+#: How a measure is filled, written between the amount and the unit:
+#: `1 packed c. mint`. Stepped over so the unit is still found.
+_FILL_RE = re.compile(
+    r"^(?:(?:loosely|firmly|lightly|tightly)\s+)?"
+    r"(?:packed|heaping|heaped|level|scant|generous|rounded)\s+",
+    re.IGNORECASE,
+)
+#: Descriptions written ahead of the name with a comma after them —
+#: `boneless, skinless chicken thighs` — which are not where the prep starts.
+_LEADING_DESCRIPTORS = {"boneless", "skinless", "bone-in", "skin-on", "peeled", "deveined"}
+
+#: Volume in teaspoons and weight in grams, so either can be summed across
+#: recipes that wrote them differently. The value is (factor, display unit).
+_VOLUME_UNITS: dict[str, tuple[float, str]] = {
+    "tsp": (1, "tsp."),
+    "teaspoon": (1, "tsp."),
+    "tbsp": (3, "Tbsp."),
+    "tablespoon": (3, "Tbsp."),
+    "c": (48, "c."),
+    "cup": (48, "c."),
+    "pt": (96, "pt."),
+    "pint": (96, "pt."),
+    "qt": (192, "qt."),
+    "quart": (192, "qt."),
+    "ml": (0.202884, "ml"),
+    "l": (202.884, "l"),
+}
+_WEIGHT_UNITS: dict[str, tuple[float, str]] = {
+    "g": (1, "g"),
+    "gram": (1, "g"),
+    "kg": (1000, "kg"),
+    "oz": (28.349523125, "oz."),
+    "ounce": (28.349523125, "oz."),
+    "lb": (453.59237, "lb."),
+    "pound": (453.59237, "lb."),
+}
+#: Things counted rather than measured, as (singular, plural). Two of these
+#: only add up when the unit — and the package size, if one is given — match.
+_COUNT_UNITS: dict[str, tuple[str, str]] = {
+    "bag": ("bag", "bags"),
+    "batch": ("batch", "batches"),
+    "block": ("block", "blocks"),
+    "bottle": ("bottle", "bottles"),
+    "box": ("box", "boxes"),
+    "bunch": ("bunch", "bunches"),
+    "can": ("can", "cans"),
+    "clove": ("clove", "cloves"),
+    "container": ("container", "containers"),
+    "head": ("head", "heads"),
+    "jar": ("jar", "jars"),
+    "pack": ("pack", "packs"),
+    "package": ("package", "packages"),
+    "packet": ("packet", "packets"),
+    "pinch": ("pinch", "pinches"),
+    "pouch": ("pouch", "pouches"),
+    "slice": ("slice", "slices"),
+    "sprig": ("sprig", "sprigs"),
+    "stalk": ("stalk", "stalks"),
+}
+
+
+@dataclass
+class Quantity:
+    """An amount and what it is measured in, ready to be summed in the browser.
+
+    ``family`` says what can be added to what: ``volume`` (base is teaspoons),
+    ``weight`` (grams), ``count:<unit>`` for counted things, and an empty
+    string when there is no amount at all.
+    """
+
+    amount: float | None
+    family: str
+    base: float | None
+    unit: str  # as displayed for one: `Tbsp.`, `8 oz. block`, ``
+    plural: str  # as displayed for several: `Tbsp.`, `8 oz. blocks`, ``
+
+
+@dataclass
+class Choice:
+    """One way of making an ingredient line, after any `{a | b}` is resolved."""
+
+    label: str  # the alternative chosen, or "" for a line with no choice
+    raw: str  # Markdown with the choice substituted in
+    text: str  # plain text of the same
+    quantity: Quantity
+    name: str  # what is being bought: `garlic clove`, `chickpeas`
+    item: str | None = None  # catalog key, for a bought ingredient
+    recipe: str | None = None  # recipe id, for a sub-recipe
+    batches: float | None = None  # this line's share of one sub-recipe batch
+
+
+@dataclass
+class ShoppingLine:
+    id: str
+    text: str
+    group: str | None
+    optional: bool
+    choices: list[Choice]
+
+
+@dataclass
+class CatalogEntry:
+    name: str
+    section: str
+    unit: str | None  # what a bare count of this means: `3 garlic` is 3 cloves
+
+
+@dataclass
+class Catalog:
+    sections: list[tuple[str, str]]
+    entries: dict[str, CatalogEntry]  # canonical name → entry
+    index: dict[str, str]  # normalised name or alias → canonical name
+
+
+def join_alternatives(options: list[str]) -> str:
+    if len(options) == 2:
+        return f"{options[0]} or {options[1]}"
+    return ", ".join(options[:-1]) + f", or {options[-1]}"
+
+
+def split_choices(raw: str) -> tuple[str, list[tuple[str, str]]]:
+    """Split `{a | b}` into the line as the page shows it and each way to make it.
+
+    Returns the display Markdown (`a or b`) and a list of (label, Markdown with
+    that alternative substituted). A line with no choice is its own only option,
+    with an empty label.
+    """
+    matches = list(_CHOICE_RE.finditer(raw))
+    if not matches:
+        if "{" in raw or "}" in raw:
+            raise ValidationError(f"unbalanced {{ }} in ingredient {raw!r}")
+        return raw, [("", raw)]
+    if len(matches) > 1:
+        raise ValidationError(f"only one {{a | b}} choice per ingredient line: {raw!r}")
+    match = matches[0]
+    options = [collapse(option) for option in match.group(1).split("|")]
+    if len(options) < 2 or not all(options):
+        raise ValidationError(
+            f"a {{ }} choice needs two or more alternatives split by |: {raw!r}"
+        )
+    head, tail = raw[: match.start()], raw[match.end() :]
+    display = head + join_alternatives(options) + tail
+    return display, [(option, head + option + tail) for option in options]
+
+
+def expand_choices(section: Section) -> None:
+    """Re-render ingredient lines so `{a | b}` reads as `a or b` everywhere.
+
+    The page, the JSON-LD and the search index all take the rendered forms, so
+    doing it here is what keeps the braces out of all three. ``raw`` stays the
+    original, braces included, for the shopping list to read.
+    """
+    for group in section.groups:
+        for index, item in enumerate(group.items):
+            display, choices = split_choices(item.raw)
+            if len(choices) > 1:
+                rendered = render_inline(display)
+                rendered.raw = item.raw
+                match = _CHOICE_RE.search(item.raw)
+                if match and not item.raw[: match.start()].strip():
+                    rendered.html = _leading_choice_html(match, item.raw[match.end() :])
+                group.items[index] = rendered
+
+
+def _leading_choice_html(match: re.Match[str], tail: str) -> str:
+    """Display HTML for a line that opens on a choice with its own amounts.
+
+    `{1/5 of a batch of chicken | 1/4 of a batch of tempeh}` carries one amount
+    per alternative, and cooking mode should scale both. Each alternative gets
+    its own amount span here; render_ingredients then finds the line already
+    starting with markup and leaves it alone.
+    """
+    options = [collapse(option) for option in match.group(1).split("|")]
+    html_form = join_alternatives([render_amount(render_inline(option).html) for option in options])
+    if tail.strip():
+        space = " " if tail[:1].isspace() else ""
+        html_form += space + render_inline(tail).html
+    return html_form
+
+
+def unit_key(word: str) -> str | None:
+    """The table key for a unit as written — `Tbsp.`, `cups`, `pouches` — or None."""
+    lowered = word.lower().rstrip(".")
+    for candidate in (lowered, lowered[:-2] if lowered.endswith("es") else "",
+                      lowered[:-1] if lowered.endswith("s") else ""):
+        if candidate and (
+            candidate in _VOLUME_UNITS or candidate in _WEIGHT_UNITS or candidate in _COUNT_UNITS
+        ):
+            return candidate
+    return None
+
+
+def _package_size(text: str) -> str:
+    """`8-oz.` → `8 oz.`: the package size as it should read before a unit."""
+    return collapse(re.sub(r"(\d)-(?=[A-Za-z])", r"\1 ", text))
+
+
+def parse_quantity(text: str) -> tuple[Quantity, str]:
+    """Read the amount and unit off the front of a plain-text ingredient line.
+
+    Returns the quantity and the rest of the line. A range buys the top of it —
+    `1 1/2 to 2 Tbsp.` is 2 — because a shopping list that comes up short is
+    worse than one that leaves a spoonful over.
+    """
+    match = _AMOUNT_RE.match(text)
+    if not match:
+        return Quantity(None, "", None, "", ""), text
+
+    amount = amount_value(match.group("high") or match.group("low"))
+    rest = text[match.end() :].lstrip()
+
+    size = ""
+    if rest.startswith("("):
+        close = rest.find(")")
+        if close > 0:
+            size = _package_size(rest[1:close])
+            rest = rest[close + 1 :].lstrip()
+
+    batch_of = _BATCH_OF_RE.match(rest)
+    if batch_of:
+        return Quantity(amount, "count:batch", amount, "batch", "batches"), rest[batch_of.end() :]
+
+    rest = _FILL_RE.sub("", rest)
+    key = None
+    word = _UNIT_WORD_RE.match(rest)
+    if word:
+        key = unit_key(word.group(1))
+        if key:
+            rest = rest[word.end() :].lstrip()
+
+    if key in _VOLUME_UNITS or key in _WEIGHT_UNITS:
+        factor, shown = (_VOLUME_UNITS.get(key) or _WEIGHT_UNITS[key])
+        family = "volume" if key in _VOLUME_UNITS else "weight"
+        # A size after a measure is an equivalent (`1 c. (8 oz.) yogurt`), not
+        # a package, so it is left for the name cleanup to drop.
+        return Quantity(amount, family, amount * factor, shown, shown), rest
+
+    if key:
+        one, many = _COUNT_UNITS[key]
+        if not size and rest.startswith("("):
+            close = rest.find(")")
+            if close > 0:
+                size = _package_size(rest[1:close])
+                rest = rest[close + 1 :].lstrip()
+        if size:
+            # Written the way the recipes write it: `2 (8 oz.) blocks`.
+            one, many = f"({size}) {one}", f"({size}) {many}"
+        return Quantity(amount, f"count:{one}", amount, one, many), re.sub(r"^of\s+", "", rest)
+
+    if size:
+        return Quantity(amount, f"count:{size}", amount, size, size), rest
+    return Quantity(amount, "count:", amount, "", ""), rest
+
+
+def ingredient_name(rest: str) -> str:
+    """What is being bought, from what follows the quantity.
+
+    Asides in parentheses go first (they can hold commas: a brand, a package
+    size), then everything after the first comma, which is preparation:
+    `garlic cloves, smashed` is bought as garlic cloves.
+    """
+    parts = _PAREN_RE.sub("", rest).split(",")
+    while len(parts) > 1 and parts[0].strip().lower() in _LEADING_DESCRIPTORS:
+        parts.pop(0)
+    return collapse(parts[0]).strip(" .;:-–—")
+
+
+def _singular(word: str) -> str:
+    if len(word) <= 3 or word.endswith(("ss", "us", "is")):
+        return word
+    if word.endswith("ies"):
+        return word[:-3] + "y"
+    if word.endswith(("oes", "ches", "shes", "xes")):
+        return word[:-2]
+    if word.endswith("s"):
+        return word[:-1]
+    return word
+
+
+def name_key(name: str) -> str:
+    """Normalise an ingredient name for matching: case, punctuation, plurals."""
+    lowered = re.sub(r"[^\w\s'-]", " ", name.lower())
+    words = lowered.split()
+    if not words:
+        return ""
+    words[-1] = _singular(words[-1])
+    return " ".join(words)
+
+
+def load_catalog(errors: list[str]) -> Catalog:
+    """Read `ingredients.yml`: store sections, and names to merge on the list."""
+    rel = CATALOG_PATH.name
+    sections: list[tuple[str, str]] = []
+    entries: dict[str, CatalogEntry] = {}
+    index: dict[str, str] = {}
+    if not CATALOG_PATH.is_file():
+        warn(f"no {rel}; the shopping list will not merge or sort ingredients")
+        return Catalog([OTHER_SECTION], entries, index)
+
+    try:
+        data = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError as exc:
+        errors.append(f"{rel}: not valid YAML: {exc}")
+        return Catalog([OTHER_SECTION], entries, index)
+    if not isinstance(data, dict):
+        errors.append(f"{rel}: expected `sections:` and `ingredients:` at the top level")
+        return Catalog([OTHER_SECTION], entries, index)
+
+    raw_sections = data.get("sections") or {}
+    if not isinstance(raw_sections, dict):
+        errors.append(f"{rel}: `sections:` must map an id to a label")
+        raw_sections = {}
+    for section_id, label in raw_sections.items():
+        sections.append((str(section_id), as_text(label) or str(section_id)))
+    known_sections = {section_id for section_id, _ in sections} | {NONE_SECTION}
+    if OTHER_SECTION[0] not in known_sections:
+        sections.append(OTHER_SECTION)
+
+    raw_entries = data.get("ingredients") or {}
+    if not isinstance(raw_entries, dict):
+        errors.append(f"{rel}: `ingredients:` must map a name to its details")
+        raw_entries = {}
+
+    def claim(key: str, name: str) -> None:
+        if not key:
+            return
+        if key in index and index[key] != name:
+            errors.append(f"{rel}: {key!r} is listed under both {index[key]!r} and {name!r}")
+        index[key] = name
+
+    for raw_name, details in raw_entries.items():
+        name = collapse(str(raw_name))
+        if isinstance(details, str):
+            details = {"section": details}
+        if not isinstance(details, dict):
+            errors.append(f"{rel}: {name!r} must be a section name or a mapping")
+            continue
+        unknown = set(details) - {"section", "also", "unit"}
+        if unknown:
+            errors.append(f"{rel}: {name!r} has unknown keys {sorted(unknown)}")
+        section = as_text(details.get("section")) or OTHER_SECTION[0]
+        if section not in known_sections and section != OTHER_SECTION[0]:
+            errors.append(f"{rel}: {name!r} is in section {section!r}, which `sections:` lacks")
+        unit = as_text(details.get("unit")) or None
+        if unit and unit_key(unit) not in _COUNT_UNITS:
+            errors.append(f"{rel}: {name!r} has unit {unit!r}, which is not a counted unit")
+        entries[name] = CatalogEntry(name=name, section=section, unit=unit)
+        claim(name_key(name), name)
+        for alias in as_list(details.get("also")):
+            claim(name_key(alias), name)
+
+    return Catalog(sections, entries, index)
+
+
+def recipe_link(raw: str, ids: set[str]) -> tuple[str | None, str | None]:
+    """The recipe a Markdown line links to, as (id, error).
+
+    Any link whose path ends in `<category>/<slug>/` is taken as a link to a
+    recipe — absolute, root-relative, or relative — and must name one that
+    exists. Links anywhere else (a product page, a source) are not sub-recipes.
+    """
+    found: list[str] = []
+    for match in _LINK_RE.finditer(raw):
+        path = urlparse(match.group(2).strip()).path
+        parts = [part for part in path.split("/") if part and part not in (".", "..")]
+        if len(parts) < 2 or parts[-2] not in CATEGORY_LABELS:
+            continue
+        recipe_id = f"{parts[-2]}/{parts[-1].removesuffix('.md')}"
+        if recipe_id not in ids:
+            return None, f"links to {recipe_id!r}, which is not a recipe here"
+        found.append(recipe_id)
+    if len(set(found)) > 1:
+        return None, "links to more than one recipe; a sub-recipe line needs exactly one"
+    return (found[0] if found else None), None
+
+
+def yield_quantity(recipe: Recipe) -> Quantity | None:
+    if not recipe.yield_text:
+        return None
+    quantity, _rest = parse_quantity(recipe.yield_text)
+    return quantity if quantity.amount else None
+
+
+def servings_count(recipe: Recipe) -> float:
+    """How many meals one batch makes. A recipe that does not say is one meal."""
+    if recipe.servings:
+        match = _AMOUNT_RE.match(recipe.servings)
+        if match:
+            value = amount_value(match.group("low"))
+            if value > 0:
+                return value
+    return 1.0
+
+
+def shopping_lines(
+    recipe: Recipe,
+    by_id: dict[str, Recipe],
+    catalog: Catalog,
+    errors: list[str],
+    uncatalogued: dict[str, str],
+) -> list[ShoppingLine]:
+    if recipe.ingredients is None:
+        return []
+
+    def fail(message: str) -> None:
+        errors.append(f"{recipe.rel_path}: {message}")
+
+    lines: list[ShoppingLine] = []
+    seen_ids: set[str] = set()
+    for group in recipe.ingredients.groups:
+        group_text = group.name.text if group.name is not None else None
+        group_optional = bool(group_text and _OPTIONAL_RE.search(group_text))
+        for item in group.items:
+            source = item.raw or item.text
+            optional = group_optional or bool(_OPTIONAL_RE.search(source))
+            source = _OPTIONAL_RE.sub("", source)
+            try:
+                _display, options = split_choices(source)
+            except ValidationError:
+                continue  # load_recipe has already reported it
+
+            choices: list[Choice] = []
+            for label, raw in options:
+                text = render_inline(raw).text
+                quantity, rest = parse_quantity(text)
+                name = ingredient_name(rest)
+                choice = Choice(
+                    label=choice_label(label),
+                    raw=raw,
+                    text=text,
+                    quantity=quantity,
+                    name=name,
+                )
+                linked, problem = recipe_link(raw, set(by_id))
+                if problem:
+                    fail(f"ingredient {text!r} {problem}")
+                    continue
+                if linked:
+                    if linked == recipe.id:
+                        fail(f"ingredient {text!r} links to its own recipe")
+                        continue
+                    choice.recipe = linked
+                    choice.batches = sub_recipe_batches(choice, by_id[linked], fail)
+                else:
+                    key = name_key(name) or name_key(text)
+                    canonical = catalog.index.get(key)
+                    if canonical is None:
+                        uncatalogued.setdefault(key, recipe.rel_path)
+                        choice.item = key
+                    else:
+                        choice.item = canonical
+                        unit = catalog.entries[canonical].unit
+                        if unit and quantity.family == "count:":
+                            one, many = _COUNT_UNITS[unit_key(unit) or unit]
+                            quantity.family = f"count:{one}"
+                            quantity.unit, quantity.plural = one, many
+                choices.append(choice)
+
+            if not choices:
+                continue
+            base_id = slugify(" ".join(filter(None, [group_text, choices[0].name or choices[0].text])))
+            line_id, n = base_id, 2
+            while line_id in seen_ids:
+                line_id, n = f"{base_id}-{n}", n + 1
+            seen_ids.add(line_id)
+            lines.append(
+                ShoppingLine(
+                    id=line_id,
+                    text=item.text,
+                    group=group_text,
+                    optional=optional,
+                    choices=choices,
+                )
+            )
+    return lines
+
+
+def choice_label(raw: str) -> str:
+    """The button text for one alternative: what it is, without its amount.
+
+    `1/5 of a batch of [Cava-style chicken](…)` is offered as "Cava-style
+    chicken"; the amount is in the line's own text beside the buttons.
+    """
+    if not raw:
+        return ""
+    text = render_inline(raw).text
+    quantity, rest = parse_quantity(text)
+    return collapse(rest) if quantity.amount is not None and rest.strip() else text
+
+
+def sub_recipe_batches(choice: Choice, child: Recipe, fail) -> float | None:
+    """How much of one batch of ``child`` this line uses, at the parent's 1×."""
+    quantity = choice.quantity
+    if quantity.amount is None:
+        fail(
+            f"ingredient {choice.text!r} links to {child.id} but gives no amount, "
+            "so the shopping list cannot tell how much of it to make"
+        )
+        return None
+    if quantity.family == "count:batch":
+        return quantity.amount
+    made = yield_quantity(child)
+    if made is None:
+        fail(
+            f"ingredient {choice.text!r} uses {child.id} by the {quantity.unit or 'count'}, "
+            f"so {child.rel_path} needs a `yield:` (e.g. `yield: 1 1/2 c.`), "
+            "or write the line as a fraction of a batch"
+        )
+        return None
+    if made.family != quantity.family or not made.base:
+        fail(
+            f"ingredient {choice.text!r} is measured in {quantity.unit or 'a count'}, "
+            f"which cannot be compared with {child.id}'s yield of {child.yield_text!r}"
+        )
+        return None
+    return (quantity.base or 0) / made.base
+
+
+def topological_order(graph: dict[str, set[str]], errors: list[str]) -> list[str]:
+    """Recipes ordered so each comes before every recipe it uses.
+
+    The plan page walks this order once, handing each recipe's needs down to
+    its sub-recipes, so a sub-recipe's total is complete before it is read.
+    A cycle would make that total undefined, so it fails the build.
+    """
+    order: list[str] = []
+    state: dict[str, int] = {}  # 1 visiting, 2 done
+
+    def visit(node: str, trail: list[str]) -> None:
+        if state.get(node) == 2:
+            return
+        if state.get(node) == 1:
+            loop = trail[trail.index(node) :] + [node]
+            errors.append("recipes use each other in a loop: " + " → ".join(loop))
+            return
+        state[node] = 1
+        for child in sorted(graph.get(node, ())):
+            visit(child, trail + [node])
+        state[node] = 2
+        order.append(node)
+
+    for node in sorted(graph):
+        visit(node, [])
+    order.reverse()
+    return order
+
+
+def _number(value: float | None) -> float | None:
+    return None if value is None else round(value, 6)
+
+
+def build_shopping_data(
+    site_base: str, recipes: list[Recipe], catalog: Catalog, errors: list[str]
+) -> dict[str, object]:
+    """Everything the plan page needs, as JSON-ready data."""
+    by_id = {recipe.id: recipe for recipe in recipes}
+    uncatalogued: dict[str, str] = {}
+    graph: dict[str, set[str]] = {}
+    entries: list[dict[str, object]] = []
+
+    for recipe in recipes:
+        lines = shopping_lines(recipe, by_id, catalog, errors, uncatalogued)
+        made = yield_quantity(recipe)
+        graph[recipe.id] = {
+            choice.recipe for line in lines for choice in line.choices if choice.recipe
+        }
+        entries.append(
+            {
+                "id": recipe.id,
+                "title": recipe.title,
+                "url": f"{site_base}{recipe.category}/{recipe.slug}/",
+                "category": recipe.category,
+                "categoryLabel": recipe.category_label,
+                "servings": _number(servings_count(recipe)),
+                "servingsLabel": recipe.servings_display or "",
+                "yield": recipe.yield_text or "",
+                "yieldFamily": made.family if made else "",
+                "yieldBase": _number(made.base) if made else None,
+                "minBatch": _number(recipe.min_batch),
+                "lines": [
+                    {
+                        "id": line.id,
+                        "text": line.text,
+                        "group": line.group,
+                        "optional": line.optional,
+                        "choices": [
+                            {
+                                "label": choice.label,
+                                "text": choice.text,
+                                "name": choice.name,
+                                "item": choice.item,
+                                "recipe": choice.recipe,
+                                "batches": _number(choice.batches),
+                                "amount": _number(choice.quantity.amount),
+                                "family": choice.quantity.family,
+                                "base": _number(choice.quantity.base),
+                                "unit": choice.quantity.unit,
+                                "plural": choice.quantity.plural,
+                            }
+                            for choice in line.choices
+                        ],
+                    }
+                    for line in lines
+                ],
+            }
+        )
+
+    for key, rel_path in sorted(uncatalogued.items()):
+        warn(f"{CATALOG_PATH.name} has no entry for {key!r} (first seen in {rel_path}); "
+             "it will be listed under Other")
+
+    items: dict[str, dict[str, str]] = {
+        name: {"name": entry.name, "section": entry.section}
+        for name, entry in catalog.entries.items()
+    }
+    for key in uncatalogued:
+        items[key] = {"name": key, "section": OTHER_SECTION[0]}
+
+    return {
+        "sections": [
+            {"id": section_id, "label": label, "pantry": section_id == PANTRY_SECTION}
+            for section_id, label in catalog.sections
+        ],
+        "items": items,
+        "recipes": entries,
+        "order": topological_order(graph, errors),
+    }
 
 
 # --------------------------------------------------------------------------
@@ -1449,6 +2142,7 @@ class Site:
         self.base_tmpl = self._load(templates / "base.html")
         self.index_tmpl = self._load(templates / "index.html")
         self.recipe_tmpl = self._load(templates / "recipe.html")
+        self.plan_tmpl = self._load(templates / "plan.html")
 
     @staticmethod
     def _load(path: Path) -> Template:
@@ -1464,6 +2158,12 @@ class Site:
 
     def absolute(self, url: str) -> str:
         return urljoin(self.site_url, url)
+
+    def nav(self, *links: tuple[str, str]) -> str:
+        """The header links: the plan page on every page, after any others."""
+        links = links + (("Plan & shop", f"{self.base}plan/"),)
+        anchors = "".join(f'<a href="{esc(href)}">{esc(label)}</a>' for label, href in links)
+        return f'<nav class="site-nav">{anchors}</nav>'
 
     def shell(self, **values: str) -> str:
         defaults = {
@@ -1501,6 +2201,7 @@ def render_home(site: Site, recipes: list[Recipe], index_json: str) -> str:
             image=None,
         ),
         content=content,
+        nav=site.nav(),
         scripts=f'<script src="{esc(site.base)}assets/search.js" defer></script>',
     )
 
@@ -1532,6 +2233,9 @@ def render_recipe_page(site: Site, recipe: Recipe) -> str:
             "footer": render_footer(recipe, site.repository, site.branch),
             "canonical": esc(canonical),
             "microdata_meta": render_microdata(recipe, canonical, image_url),
+            "recipe_id": esc(recipe.id),
+            "servings_count": f"{servings_count(recipe):g}",
+            "plan_url": esc(f"{site.base}plan/"),
         }
     )
 
@@ -1550,11 +2254,35 @@ def render_recipe_page(site: Site, recipe: Recipe) -> str:
             image=image_url,
         ),
         content=content,
-        nav=f'<a class="back-link" href="{esc(site.base)}">All recipes</a>',
+        nav=site.nav(("All recipes", site.base)),
         scripts=(
             f'<script src="{esc(site.base)}assets/recipe.js" defer></script>\n'
             f'<script src="{esc(site.base)}assets/cooking.js" defer></script>'
         ),
+    )
+
+
+PLAN_DESCRIPTION = "Pick the week's recipes and how many meals of each; get the shopping list."
+
+
+def render_plan_page(site: Site, shopping_json: str) -> str:
+    canonical = site.absolute("plan/")
+    content = site.plan_tmpl.safe_substitute({"shopping_json": shopping_json})
+    return site.shell(
+        title=esc(f"Plan & shop — {SITE_TITLE}"),
+        meta_description=esc(PLAN_DESCRIPTION),
+        canonical=esc(canonical),
+        body_class="plan-page",
+        head_extra=social_meta(
+            title=f"Plan & shop — {SITE_TITLE}",
+            description=PLAN_DESCRIPTION,
+            url=canonical,
+            kind="website",
+            image=None,
+        ),
+        content=content,
+        nav=site.nav(("All recipes", site.base)),
+        scripts=f'<script src="{esc(site.base)}assets/plan.js" defer></script>',
     )
 
 
@@ -1811,11 +2539,12 @@ def copy_static(out: Path) -> None:
             shutil.copy2(entry, assets / entry.name)
 
 
-def build(site: Site, recipes: list[Recipe]) -> None:
+def build(site: Site, recipes: list[Recipe], shopping: dict[str, object]) -> None:
     out = site.out
     index_json = dump_json(build_search_index(site, recipes))
 
     write(out / "index.html", render_home(site, recipes, index_json))
+    write(out / "plan" / "index.html", render_plan_page(site, dump_json(shopping)))
     write(out / "search-index.json", index_json + "\n")
     write(out / ".nojekyll", "")
 
@@ -1908,6 +2637,8 @@ def main(argv: list[str] | None = None) -> int:
 
     errors: list[str] = []
     recipes = discover(errors)
+    catalog = load_catalog(errors)
+    shopping = build_shopping_data(args.base_url, recipes, catalog, errors)
 
     if errors:
         for message in errors:
@@ -1924,7 +2655,7 @@ def main(argv: list[str] | None = None) -> int:
         repository=args.repository,
         branch=args.branch,
     )
-    build(site, recipes)
+    build(site, recipes, shopping)
 
     plural = "" if len(recipes) == 1 else "s"
     try:

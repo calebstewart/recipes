@@ -33,7 +33,7 @@ crusted at the corners, and it goes in exactly the same bowls.
 
 ### Marinade
 
-- 3 Tbsp. harissa paste
+- 3 Tbsp. [harissa paste](https://calebstew.art/recipes/basics/harissa-paste/)
 - 2 Tbsp. olive oil
 - 3 Tbsp. water
 - 1 1/2 Tbsp. fresh lemon juice

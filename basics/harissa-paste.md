@@ -1,6 +1,8 @@
 ---
 title: Harissa Paste
 servings: 12
+yield: 1 1/2 c.
+min_batch: 1
 prep_time: 20m
 total_time: 45m
 source: original, mimicking Zwita Spicy Harissa (https://zwitafoods.com/products/spicy-harissa)

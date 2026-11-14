@@ -32,7 +32,7 @@ stove first, then leave it in the slow cooker all afternoon.
 - 3 bell peppers, any color, seeded and chopped
 - 1 jalapeño, chopped (optional)
 - 2 lb. ground turkey
-- 2 cups raw butternut squash or pumpkin, chopped
+- 2 cups raw {butternut squash | pumpkin}, chopped
 - 1 can (28 oz.) crushed tomatoes
 - 1 can (28 oz.) diced tomatoes, drained
 - 1 can (15 oz.) 100% pumpkin purée (not pie filling)
@@ -47,11 +47,11 @@ stove first, then leave it in the slow cooker all afternoon.
 
 ### To serve
 
-- 4 cups cooked brown rice or quinoa
-- Shredded cheddar or Mexican-blend cheese
+- 4 cups cooked {brown rice | quinoa}
+- Shredded {cheddar | Mexican-blend} cheese
 - Plain Greek yogurt
 - Chopped bell pepper
-- Fresh cilantro or parsley
+- Fresh {cilantro | parsley}
 
 ## Instructions
 

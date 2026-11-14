@@ -33,16 +33,16 @@ fresh each night. Pasta does not survive storage in sauce; everything else does.
 - 1 shallot, quartered
 - 3 garlic cloves, smashed
 - 1/2 c. extra-virgin olive oil, divided
-- 1 1/2 to 2 Tbsp. harissa paste (homemade)
+- 1 1/2 to 2 Tbsp. [harissa paste](https://calebstew.art/recipes/basics/harissa-paste/)
 - 1/2 tsp. dried thyme leaves
 - Kosher salt
 - 1 (8-oz.) block feta
-- 1 (15-oz.) can chickpeas, drained, rinsed, patted dry
+- 1 (15-oz.) can chickpeas, drained, rinsed, patted dry (optional)
 
 ### To finish
 
-- 12 oz. short tubular pasta, macaroni or cavatappi (3 oz. per serving)
-- 12 oz. pork sausage, casings removed (3 oz. per serving)
+- 12 oz. {short tubular pasta (macaroni or cavatappi) | [extruded semolina pasta](https://calebstew.art/recipes/basics/extruded-semolina-pasta/)} (3 oz. per serving)
+- 12 oz. pork sausage, casings removed (3 oz. per serving) (optional)
 - 1 Tbsp. fresh lemon juice (about 1 tsp. per serving)
 - Fresh basil leaves
 

@@ -41,6 +41,42 @@ nutrition:
   sodium: 640
 ```
 
+## Planning and the shopping list
+
+The site's [plan page](https://calebstew.art/recipes/plan/) takes the week's
+recipes and a number of meals for each (a meal is one serving) and adds up a
+shopping list. It runs entirely in the browser and keeps its state on the
+device: the week's plan, which sub-recipes are already on hand, and what's
+been checked off are cleared by "New week". Optional ingredients you've left
+out and alternatives you've picked are remembered from week to week.
+
+A few conventions in the ingredient lists feed it. None of them change how a
+recipe reads on its page or in a recipe app's import:
+
+- **Sub-recipes.** Link the recipe in the ingredient line:
+  `- 2 Tbsp. [harissa paste](https://calebstew.art/recipes/basics/harissa-paste/)`.
+  Planning the main dish then adds the harissa to the plan, rounded up to the
+  half batch, with an "I have this on hand" switch. A sub-recipe always worth
+  making in full, like a paste that keeps for a month, can set a floor with
+  `min_batch: 1`. The amount is turned into a
+  share of a batch using the sub-recipe's `yield:` frontmatter
+  (`yield: 1 1/2 c.`), or write the share of a batch directly:
+  `- 1/5 of a batch of [Cava-style chicken](…)`.
+- **Optional ingredients.** End the line with `(optional)`, or put it at the
+  end of a `###` group heading to make the whole group optional. Optional
+  ingredients start included; the plan page remembers when you leave one out.
+- **Alternatives.** `- 4 cups cooked {brown rice | quinoa}`. The page shows
+  "brown rice or quinoa"; the plan asks which, the first time, and has a swap
+  button after that. Use this for a choice that changes what you buy. "Cherry
+  or grape tomatoes" doesn't need it.
+
+On the list, ingredients from different recipes are merged using
+[`ingredients.yml`](ingredients.yml), which gives each ingredient a name, a
+store section, and the other ways recipes write it ("extra-virgin olive oil"
+is olive oil). The build warns about any ingredient that isn't in it; add an
+entry when that happens. A broken sub-recipe link, a missing `yield:`, or two
+recipes that use each other fail the build.
+
 ## Site
 
 The collection is published at <https://calebstew.art/recipes/> and

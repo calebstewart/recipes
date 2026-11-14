@@ -33,7 +33,7 @@ one-minute job once it's made.
 ### To assemble
 
 - 1 c. fresh lime juice (from about 8 limes)
-- 4 c. cold water or sparkling water
+- 4 c. {cold water | sparkling water}
 - Ice
 - Lime wheels and mint sprigs, to serve
 

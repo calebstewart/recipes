@@ -1,6 +1,7 @@
 ---
 title: Homemade Pasta
 servings: 8
+yield: 1 1/2 lb.
 prep_time: 45m
 cook_time: 5m
 total_time: 1h 20m

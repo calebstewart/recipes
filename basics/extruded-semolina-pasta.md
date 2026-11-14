@@ -1,6 +1,7 @@
 ---
 title: Extruded Semolina Pasta
 servings: 6
+yield: 1 lb.
 prep_time: 45m
 cook_time: 10m
 total_time: 1h 15m

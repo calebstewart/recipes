@@ -1,0 +1,19 @@
+<div class="plan" id="plan">
+  <header class="plan-head">
+    <h1>Plan &amp; shop</h1>
+    <p class="tagline">Pick the week&rsquo;s recipes and how many meals of each. The list adds up the rest, sub-recipes included.</p>
+    <div class="plan-tabs" role="tablist" aria-label="Plan or list" hidden>
+      <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="true">Plan</button>
+      <button type="button" role="tab" id="tab-list" aria-controls="panel-list" aria-selected="false">Shopping list</button>
+    </div>
+  </header>
+
+  <noscript>
+    <p class="empty-state">The planner runs in the browser and needs JavaScript. Every recipe is still on the <a href="../">home page</a>.</p>
+  </noscript>
+
+  <section class="plan-panel" id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden></section>
+  <section class="plan-panel" id="panel-list" role="tabpanel" aria-labelledby="tab-list" hidden></section>
+</div>
+
+<script type="application/json" id="shopping-data">$shopping_json</script>
