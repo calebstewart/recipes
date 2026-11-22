@@ -342,6 +342,21 @@
         }
       }
     },
+    "butter": {
+      "name": "butter",
+      "section": "refrigerated",
+      "buy": {
+        "kind": "count",
+        "family": "count:(1 lb.) box",
+        "one": "(1 lb.) box",
+        "many": "(1 lb.) boxes",
+        "suffix": "",
+        "bare": false,
+        "per": {
+          "volume": 96.0
+        }
+      }
+    },
     "cheddar": {
       "name": "cheddar",
       "section": "refrigerated"
@@ -380,8 +395,16 @@
       "name": "greek yogurt",
       "section": "refrigerated"
     },
+    "gruyère": {
+      "name": "gruyère",
+      "section": "refrigerated"
+    },
     "mexican-blend cheese": {
       "name": "mexican-blend cheese",
+      "section": "refrigerated"
+    },
+    "parmesan": {
+      "name": "parmesan",
       "section": "refrigerated"
     },
     "roasted red pepper hummus": {
@@ -430,6 +453,21 @@
         "bare": false,
         "per": {
           "volume": 192.0
+        }
+      }
+    },
+    "whole milk": {
+      "name": "whole milk",
+      "section": "refrigerated",
+      "buy": {
+        "kind": "count",
+        "family": "count:",
+        "one": "half gallon",
+        "many": "half gallons",
+        "suffix": "",
+        "bare": false,
+        "per": {
+          "volume": 384.0
         }
       }
     },
@@ -517,6 +555,21 @@
         "family": "count:(12 oz.) bag",
         "one": "(12 oz.) bag",
         "many": "(12 oz.) bags",
+        "suffix": "",
+        "bare": false,
+        "per": {
+          "volume": 144.0
+        }
+      }
+    },
+    "panko": {
+      "name": "panko",
+      "section": "dry",
+      "buy": {
+        "kind": "count",
+        "family": "count:(8 oz.) box",
+        "one": "(8 oz.) box",
+        "many": "(8 oz.) boxes",
         "suffix": "",
         "bare": false,
         "per": {
@@ -623,6 +676,10 @@
       "name": "caraway seeds",
       "section": "pantry"
     },
+    "cayenne": {
+      "name": "cayenne",
+      "section": "pantry"
+    },
     "chili powder": {
       "name": "chili powder",
       "section": "pantry"
@@ -637,6 +694,10 @@
     },
     "dried oregano": {
       "name": "dried oregano",
+      "section": "pantry"
+    },
+    "dry mustard": {
+      "name": "dry mustard",
       "section": "pantry"
     },
     "dried thyme": {
@@ -657,6 +718,10 @@
     },
     "ground cumin": {
       "name": "ground cumin",
+      "section": "pantry"
+    },
+    "ground nutmeg": {
+      "name": "ground nutmeg",
       "section": "pantry"
     },
     "honey": {
@@ -774,6 +839,357 @@
               "base": 4.0,
               "unit": "",
               "plural": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mains/baked-mac-and-cheese",
+      "title": "Baked Mac and Cheese",
+      "url": "/recipes/mains/baked-mac-and-cheese/",
+      "category": "mains",
+      "categoryLabel": "Mains",
+      "servings": 8.0,
+      "servingsLabel": "8 servings",
+      "yield": "",
+      "yieldFamily": "",
+      "yieldBase": null,
+      "minBatch": null,
+      "lines": [
+        {
+          "id": "extruded-semolina-pasta",
+          "text": "1 lb. extruded semolina pasta, large macaroni plate (one full batch)",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 lb. extruded semolina pasta, large macaroni plate (one full batch)",
+              "name": "extruded semolina pasta",
+              "item": null,
+              "recipe": "basics/extruded-semolina-pasta",
+              "batches": 1.0,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 453.59237,
+              "unit": "lb.",
+              "plural": "lb."
+            }
+          ]
+        },
+        {
+          "id": "kosher-salt",
+          "text": "Kosher salt, for the pasta water",
+          "group": null,
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "Kosher salt, for the pasta water",
+              "name": "Kosher salt",
+              "item": "kosher salt",
+              "recipe": null,
+              "batches": null,
+              "amount": null,
+              "family": "",
+              "base": null,
+              "unit": "",
+              "plural": ""
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-unsalted-butter",
+          "text": "6 Tbsp. unsalted butter, plus more for the dish",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "6 Tbsp. unsalted butter, plus more for the dish",
+              "name": "unsalted butter",
+              "item": "butter",
+              "recipe": null,
+              "batches": null,
+              "amount": 6.0,
+              "family": "volume",
+              "base": 18.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-all-purpose-flour",
+          "text": "6 Tbsp. all-purpose flour",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "6 Tbsp. all-purpose flour",
+              "name": "all-purpose flour",
+              "item": "all-purpose flour",
+              "recipe": null,
+              "batches": null,
+              "amount": 6.0,
+              "family": "volume",
+              "base": 18.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-whole-milk",
+          "text": "4 1/2 c. whole milk, warmed",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "4 1/2 c. whole milk, warmed",
+              "name": "whole milk",
+              "item": "whole milk",
+              "recipe": null,
+              "batches": null,
+              "amount": 4.5,
+              "family": "volume",
+              "base": 216.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-dry-mustard",
+          "text": "1 tsp. dry mustard",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. dry mustard",
+              "name": "dry mustard",
+              "item": "dry mustard",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-cayenne",
+          "text": "1/4 tsp. cayenne",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/4 tsp. cayenne",
+              "name": "cayenne",
+              "item": "cayenne",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.25,
+              "family": "volume",
+              "base": 0.25,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-ground-nutmeg",
+          "text": "1/8 tsp. ground nutmeg (optional)",
+          "group": "Cheese sauce",
+          "optional": true,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/8 tsp. ground nutmeg",
+              "name": "ground nutmeg",
+              "item": "ground nutmeg",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.125,
+              "family": "volume",
+              "base": 0.125,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-kosher-salt",
+          "text": "1 tsp. kosher salt (Diamond Crystal), plus more to taste",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 tsp. kosher salt (Diamond Crystal), plus more to taste",
+              "name": "kosher salt",
+              "item": "kosher salt",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 1.0,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-black-pepper",
+          "text": "1/2 tsp. black pepper",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1/2 tsp. black pepper",
+              "name": "black pepper",
+              "item": "black pepper",
+              "recipe": null,
+              "batches": null,
+              "amount": 0.5,
+              "family": "volume",
+              "base": 0.5,
+              "unit": "tsp.",
+              "plural": "tsp."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-sharp-cheddar",
+          "text": "10 oz. sharp cheddar, shredded",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "10 oz. sharp cheddar, shredded",
+              "name": "sharp cheddar",
+              "item": "cheddar",
+              "recipe": null,
+              "batches": null,
+              "amount": 10.0,
+              "family": "weight",
+              "base": 283.495231,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-gruy-re",
+          "text": "6 oz. Gruyère, shredded",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "6 oz. Gruyère, shredded",
+              "name": "Gruyère",
+              "item": "gruyère",
+              "recipe": null,
+              "batches": null,
+              "amount": 6.0,
+              "family": "weight",
+              "base": 170.097139,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "cheese-sauce-parmesan",
+          "text": "1 oz. Parmesan, finely grated (about 1/2 c.)",
+          "group": "Cheese sauce",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 oz. Parmesan, finely grated (about 1/2 c.)",
+              "name": "Parmesan",
+              "item": "parmesan",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 28.349523,
+              "unit": "oz.",
+              "plural": "oz."
+            }
+          ]
+        },
+        {
+          "id": "topping-panko",
+          "text": "1 c. panko",
+          "group": "Topping",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 c. panko",
+              "name": "panko",
+              "item": "panko",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "volume",
+              "base": 48.0,
+              "unit": "c.",
+              "plural": "c."
+            }
+          ]
+        },
+        {
+          "id": "topping-unsalted-butter",
+          "text": "3 Tbsp. unsalted butter, melted",
+          "group": "Topping",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "3 Tbsp. unsalted butter, melted",
+              "name": "unsalted butter",
+              "item": "butter",
+              "recipe": null,
+              "batches": null,
+              "amount": 3.0,
+              "family": "volume",
+              "base": 9.0,
+              "unit": "Tbsp.",
+              "plural": "Tbsp."
+            }
+          ]
+        },
+        {
+          "id": "topping-parmesan",
+          "text": "1 oz. Parmesan, finely grated (about 1/2 c.)",
+          "group": "Topping",
+          "optional": false,
+          "choices": [
+            {
+              "label": "",
+              "text": "1 oz. Parmesan, finely grated (about 1/2 c.)",
+              "name": "Parmesan",
+              "item": "parmesan",
+              "recipe": null,
+              "batches": null,
+              "amount": 1.0,
+              "family": "weight",
+              "base": 28.349523,
+              "unit": "oz.",
+              "plural": "oz."
             }
           ]
         }
@@ -3325,6 +3741,7 @@
     "mains/harissa-tempeh",
     "mains/harissa-baked-feta-pasta",
     "mains/cava-style-chicken",
+    "mains/baked-mac-and-cheese",
     "mains/autumn-harvest-turkey-chili",
     "drinks/ginger-mint-limeade",
     "breakfast/yogurt-granola-and-strawberries",
