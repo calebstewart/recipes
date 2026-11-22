@@ -64,13 +64,14 @@ before if you can. Fills a 9x13 dish; best eaten the day it's baked.
 6. Shake the loose semolina off the pasta and drop it into the boiling water. **Parboil by feel, not by the clock:** start tasting after 1 min and pull it when it bends but still has a firm, chalky-white core you can see when you bite it. That's roughly half its usual cooking time, so about 1–2 min fresh, 2–4 min partly dried, and 4–5 min fully dried. The oven finishes it.
 7. Drain well; don't rinse. Fold the pasta gently into the sauce with a spatula, which keeps the tubes from tearing. It should look loose and soupy, with sauce pooling around the pasta. If it doesn't, loosen it with a splash of milk.
 8. Spread into the dish. Scatter the topping evenly, then the rest of the topping Parmesan.
-9. Bake 20–25 min, until bubbling at the edges and the panko is deep golden. If the sauce is bubbling but the top is still pale, broil 1–2 min, watching it the whole time.
+9. Bake 20–25 min, until bubbling at the edges and the panko is deep golden. If the sauce is bubbling but the top is still pale: in a glass dish, turn the oven up to 425° for 3–5 min more; in metal or broiler-safe ceramic, broil 1–2 min instead, watching it the whole time.
 10. Rest 10 min before serving so the sauce sets.
 
 ## Notes
 
 - **Dry the pasta at least partly.** Fully fresh tubes work, but they're soft and fragile from an eggless dough. They overcook easily over a 20-minute bake, can collapse when folded into a heavy sauce, and give off more starch, which can make the sauce gluey. Pasta left on the sheet pans for a few hours, or overnight, firms up on the outside and holds up much better. It doesn't need to be dry all the way through for baking. The extruded pasta recipe's warning about mold only applies to sealing damp pasta for storage.
 - The parboil time for partly dried pasta depends on how long it sat out and how humid the kitchen is, which is why step 6 goes by feel. Bite a tube: a thin ring of white in the middle means pull it now. It will look underdone, and it should.
+- **Glass baking dishes work well, but don't broil in one.** Glass bakeware (Pyrex and the like) isn't rated for the broiler, which is why step 9 has the 425° option. Glass also heats more slowly than metal, so the center may need the full 25 min or a few minutes more. Judge it by the bubbling edges and browned top, not the clock. Set the hot dish on a dry towel, trivet, or wooden board, never a wet or cold counter or a stovetop. If you assemble it ahead and refrigerate it, let it sit out 30 min before it goes into the hot oven.
 - Shred the cheese from blocks. Pre-shredded cheese is coated in anti-caking starch that turns the sauce grainy.
 - Add the cheese off the heat. A boiling béchamel can make cheddar break and turn greasy.
 - Warm milk goes into the roux with fewer lumps than cold. A minute or two in the microwave is enough.
