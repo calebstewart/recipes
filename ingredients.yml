@@ -127,9 +127,13 @@ ingredients:
     buy: 1 (1 lb.) package = 1 lb. # check: some brands are 12 or 19 oz.
 
   # Dairy & refrigerated
+  butter:
+    section: refrigerated
+    also: [unsalted butter]
+    buy: 1 (1 lb.) box = 32 Tbsp. # four sticks
   cheddar:
     section: refrigerated
-    also: [shredded cheddar cheese]
+    also: [shredded cheddar cheese, sharp cheddar]
   eggs:
     section: refrigerated
     also: [large eggs]
@@ -141,9 +145,15 @@ ingredients:
   greek yogurt:
     section: refrigerated
     also: [plain greek yogurt]
+  gruyère:
+    section: refrigerated
+    also: [gruyere]
   mexican-blend cheese:
     section: refrigerated
     also: [shredded mexican-blend cheese]
+  parmesan:
+    section: refrigerated
+    also: [parmigiano-reggiano]
   roasted red pepper hummus:
     section: refrigerated
     buy: 1 (10 oz.) tub = 1 1/4 c. # check: H-E-B Deli
@@ -154,6 +164,10 @@ ingredients:
   vanilla greek yogurt:
     section: refrigerated
     buy: 1 (32 oz.) tub = 4 c. # check: or 5.3 oz. cups, if that is how it is bought
+  whole milk:
+    section: refrigerated
+    also: [milk]
+    buy: 1 half gallon = 8 c.
 
   # Canned & jarred
   chickpeas: canned
@@ -181,6 +195,10 @@ ingredients:
     section: dry
     also: [oat and honey granola]
     buy: 1 (12 oz.) bag = 3 c. # check: H-E-B Organics
+  panko:
+    section: dry
+    also: [panko breadcrumbs]
+    buy: 1 (8 oz.) box = 3 c. # check
   quinoa:
     section: dry
     also: [cooked quinoa]
@@ -210,10 +228,16 @@ ingredients:
   black pepper: pantry
   black peppercorns: pantry
   caraway seeds: pantry
+  cayenne:
+    section: pantry
+    also: [cayenne pepper]
   chili powder: pantry
   coriander seeds: pantry
   distilled white vinegar: pantry
   dried oregano: pantry
+  dry mustard:
+    section: pantry
+    also: [mustard powder, ground mustard]
   dried thyme:
     section: pantry
     also: [dried thyme leaves]
@@ -221,6 +245,9 @@ ingredients:
   garlic powder: pantry
   granulated sugar: pantry
   ground cumin: pantry
+  ground nutmeg:
+    section: pantry
+    also: [nutmeg]
   honey: pantry
   hot sauce: pantry
   kosher salt: pantry
